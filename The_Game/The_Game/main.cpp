@@ -43,6 +43,10 @@ int main()
 
 	std::cout << time.asMilliseconds() << std::endl;*/
 
+	int nextPose;
+
+	nextPose = 0;
+
 	while (Window.isOpen())
 	{
 		sf::Event Event;
@@ -94,7 +98,14 @@ int main()
 
 		// First player movement
 
-		double movement_speed = 0.05;
+		double movement_speed = 0.013;
+
+		// Increasing movement speed
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+		{
+			movement_speed *= 2;
+		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		{
@@ -122,18 +133,22 @@ int main()
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		{
 			source2.y = Up;
+			playerImage2.move(0, -movement_speed);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
 			source2.y = Down;
+			playerImage2.move(0, movement_speed);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		{
 			source2.y = Left;
+			playerImage2.move(-movement_speed, 0);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		{
 			source2.y = Right;
+			playerImage2.move(movement_speed, 0);
 		}
 
 		/* waitEvent ceka na nejakou udalost a pullEvent veme udalost, ktera je na rade.
@@ -151,8 +166,13 @@ int main()
 
 		clock.restart();*/
 
-		source1.x++;
-		source2.x++;
+		if ( nextPose == 2000 )
+		{
+			source1.x++;
+			source2.x++;
+			nextPose = 0;
+		}
+		else nextPose++;
 		
 		if (source1.x * 32 >= pTexture1.getSize().x)
 			source1.x = 0;
