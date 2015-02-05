@@ -1,6 +1,8 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
 #include <string>
+//#include "player.h"
+#include "armor.h"
 
 int main()
 {
@@ -8,6 +10,10 @@ int main()
 
 	sf::Vector2i source1(1, Down);
 	sf::Vector2i source2(1, Down);
+
+	//player hrac;
+
+	armor *brneni;
 
 	sf::RenderWindow Window;
 	Window.create(sf::VideoMode(800, 600), "Best Game");
@@ -60,6 +66,8 @@ int main()
 			case sf::Event::KeyPressed:
 				if (Event.key.code == sf::Keyboard::Escape)
 					Window.close();
+				else if (Event.key.code == sf::Keyboard::LAlt)
+					
 				break;
 			case sf::Event::JoystickConnected:
 				std::cout << "Joystick " << Event.joystickConnect.joystickId + 1 << " is connected!" << std::endl;
@@ -98,7 +106,7 @@ int main()
 
 		// First player movement
 
-		double movement_speed = 0.013;
+		float movement_speed = (float) 0.013;
 
 		// Increasing movement speed
 

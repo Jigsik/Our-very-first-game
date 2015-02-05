@@ -13,10 +13,22 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Runes">
+      <UniqueIdentifier>{85682004-3907-47c5-8b34-4f72d97f9147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Runes">
+      <UniqueIdentifier>{9259b8a3-0266-469d-af6b-cb0842bfadbe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="armor.cpp">
+      <Filter>Source Files\Runes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -26,5 +38,13 @@
     <Image Include="player_2.png">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Armor.h">
+      <Filter>Header Files\Runes</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
