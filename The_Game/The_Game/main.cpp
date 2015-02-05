@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 //#include "player.h"
-#include "armor.h"
+#include "Armor.h"
 
 int main()
 {
@@ -13,7 +13,8 @@ int main()
 
 	//player hrac;
 
-	armor *brneni;
+	armor brneni;
+	sf::Time cas_brneni;
 
 	sf::RenderWindow Window;
 	Window.create(sf::VideoMode(800, 600), "Best Game");
@@ -67,7 +68,15 @@ int main()
 				if (Event.key.code == sf::Keyboard::Escape)
 					Window.close();
 				else if (Event.key.code == sf::Keyboard::LAlt)
-					
+				{
+					brneni.~armor();
+					armor brneni;
+				}
+				else if (Event.key.code == sf::Keyboard::LControl)
+				{
+					cas_brneni = brneni.time_left();
+					std::cout << cas_brneni.asSeconds() << std::endl;
+				}
 				break;
 			case sf::Event::JoystickConnected:
 				std::cout << "Joystick " << Event.joystickConnect.joystickId + 1 << " is connected!" << std::endl;
@@ -102,6 +111,11 @@ int main()
 					std::cout << display;
 				}
 			}*/
+		}
+
+		if (brneni.time_left().asSeconds() > 10) 
+		{
+			brneni.~armor();
 		}
 
 		// First player movement
