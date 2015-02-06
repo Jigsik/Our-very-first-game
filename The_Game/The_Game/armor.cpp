@@ -3,18 +3,27 @@
 #include <iostream>
 
 armor::armor(double _armor_hp)
-: armor_hp(_armor_hp)
+: hp(_armor_hp)
 {
+	if (!pTexture.loadFromFile("Images/armor.gif"))
+		std::cout << "Error could not load player image 1" << std::endl;
+
+	armorImage.setTexture(pTexture);
+
 	std::cout << "Armor created" << std::endl;
 }
 
 armor::~armor()
 {
 	std::cout << "Armor destructed" << std::endl;
-	armor_time.restart();
 }
 
 sf::Time armor::time_left()
 {
-	return armor_time.getElapsedTime();
+	return time.getElapsedTime();
+}
+
+double armor::armor_left()
+{
+	return hp;
 }

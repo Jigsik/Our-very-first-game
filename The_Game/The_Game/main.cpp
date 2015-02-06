@@ -8,13 +8,12 @@ int main()
 {
 	enum Direction { Down, Left, Right, Up };
 
-	sf::Vector2i source1(1, Down);
-	sf::Vector2i source2(1, Down);
+	sf::Vector2u source1(1, Down);
+	sf::Vector2u source2(1, Down);
 
 	//player hrac;
 
-	armor brneni;
-	sf::Time cas_brneni;
+	armor *brneni = 0;
 
 	sf::RenderWindow Window;
 	Window.create(sf::VideoMode(800, 600), "Best Game");
@@ -27,10 +26,10 @@ int main()
 	sf::Sprite playerImage1;
 	sf::Sprite playerImage2;
 
-	if (!pTexture1.loadFromFile("player_1.png"))
+	if (!pTexture1.loadFromFile("Images/player_1.png"))
 		std::cout << "Error could not load player image 1" << std::endl;
 
-	if (!pTexture2.loadFromFile("player_2.png"))
+	if (!pTexture2.loadFromFile("Images/player_2.png"))
 		std::cout << "Error could not load player image 2" << std::endl;
 
 	playerImage1.setTexture(pTexture1);
@@ -69,13 +68,12 @@ int main()
 					Window.close();
 				else if (Event.key.code == sf::Keyboard::LAlt)
 				{
-					brneni.~armor();
-					armor brneni;
+					brneni = new armor;
 				}
-				else if (Event.key.code == sf::Keyboard::LControl)
+				else if (brneni && Event.key.code == sf::Keyboard::LControl)
 				{
-					cas_brneni = brneni.time_left();
-					std::cout << cas_brneni.asSeconds() << std::endl;
+					std::cout << brneni->time_left().asSeconds() << std::endl;
+					std::cout << brneni->armor_left() << std::endl;
 				}
 				break;
 			case sf::Event::JoystickConnected:
@@ -113,9 +111,19 @@ int main()
 			}*/
 		}
 
-		if (brneni.time_left().asSeconds() > 10) 
+
+		// Konec brneni?
+
+		if (brneni && brneni->time_left().asSeconds() > 2) 
 		{
-			brneni.~armor();
+			brneni->~armor();
+			brneni = 0;
+		}
+		else if (brneni)
+		{
+			brneni->armorImage.setPosition(playerImage1.getPosition().x - 10, playerImage1.getPosition().y - 10);
+
+			Window.draw(brneni->armorImage);
 		}
 
 		// First player movement
@@ -210,4 +218,6 @@ int main()
 		Window.display();
 		Window.clear();
 	}
+
+	delete brneni;
 }

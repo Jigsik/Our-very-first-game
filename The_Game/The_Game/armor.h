@@ -6,8 +6,11 @@ public:
 	armor(double armor_hp = 50);
 	~armor();
 	sf::Time time_left();
+	double armor_left();
+	sf::Sprite armorImage;
 
 private:
-	double armor_hp;
-	sf::Clock armor_time;
+	double hp;
+	sf::Clock time;
+	sf::Texture pTexture;
 };
