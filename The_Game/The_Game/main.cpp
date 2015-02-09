@@ -22,7 +22,9 @@ int main()
 	sf::Clock fpsClock;
 
 	sf::RenderWindow Window;
-	Window.create(sf::VideoMode(400, 400), "Best Game");
+	Window.create(sf::VideoMode(600, 400), "Best Game");
+
+	//Window.setFramerateLimit(100);
 
 	while (Window.isOpen())
 	{
