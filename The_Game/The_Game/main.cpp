@@ -11,16 +11,18 @@ int main()
 	sf::Vector2u source1(1, Down);
 	sf::Vector2u source2(1, Down);
 
+	sf::Clock hodiny;
+	sf::Clock moveClock;
+
 	player hrac;
 
 	armor *brneni = 0;
 
+	int fps = 0;
+	sf::Clock fpsClock;
+
 	sf::RenderWindow Window;
-	Window.create(sf::VideoMode(200, 200), "Best Game", sf::Style::Fullscreen);
-
-	int nextPose;
-
-	nextPose = 0;
+	Window.create(sf::VideoMode(400, 400), "Best Game");
 
 	while (Window.isOpen())
 	{
@@ -75,47 +77,19 @@ int main()
 			Window.draw(brneni->armorImage);
 		}
 
-		// Movement speed
-
-		float movement_speed = (float) 0.013;
-
-		// Increasing movement speed
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+		if (moveClock.getElapsedTime().asMilliseconds() > 10)
 		{
-			movement_speed *= 2;
+			source1.y = hrac.move();
+
+			moveClock.restart();
 		}
 
-		// First player movement
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		{
-			source1.y = Up;
-			hrac.playerImage.move(0, -movement_speed);
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		{
-			source1.y = Down;
-			hrac.playerImage.move(0, movement_speed);
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		{
-			source1.y = Left;
-			hrac.playerImage.move(-movement_speed, 0);
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		{
-			source1.y = Right;
-			hrac.playerImage.move(movement_speed, 0);
-		}
-
-		if ( nextPose == 2000 )
+		if (hodiny.getElapsedTime().asMilliseconds() > (400 / hrac.speed) )
 		{
 			source1.x++;
 			source2.x++;
-			nextPose = 0;
+			hodiny.restart();
 		}
-		else nextPose++;
 		
 		if (source1.x * 32 >= hrac.pTexture.getSize().x)
 			source1.x = 0;
@@ -125,6 +99,18 @@ int main()
 		Window.draw(hrac.playerImage);
 		Window.display();
 		Window.clear();
+
+		if (fpsClock.getElapsedTime().asSeconds() > 1)
+		{
+			system("cls");
+
+			std::cout << "FPS = " << fps << std::endl;
+
+			fpsClock.restart();
+
+			fps = 0;
+		}
+		else fps++;
 	}
 
 	delete brneni;

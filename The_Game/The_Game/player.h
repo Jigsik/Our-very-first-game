@@ -3,13 +3,14 @@
 class player
 {
 	public:
-		player(double HP = 100, double speed = 1);
+		player(double HP = 100, float speed = 1);
 		void HP_minus(double damaged);
 		double HP_left();
 		sf::Sprite playerImage;
 		sf::Texture pTexture;
+		int move();
+		float speed;
 
 	private:
 		double HP;
-		double speed;
 };
