@@ -11,6 +11,8 @@ player::player(double _hp, float _speed)
 	playerImage.setTexture(pTexture);
 
 	std::cout << "Player created" << std::endl;
+
+	source = sf::Vector2u(1, Down);
 }
 
 void player::HP_minus(double damaged)
@@ -23,14 +25,42 @@ double player::HP_left()
 	return HP;
 }
 
-int player::move()
+void player::nextAnimation()
 {
-	// It means - Down = 0, Left = 1, Right = 2, Up = 3
+	source.x++;
 
-	enum Direction { Down, Left, Right, Up };
+	// Reset Clock
+	animationClock.restart();
+}
 
+void player::draw(sf::RenderWindow* Window)
+{
+	if (moveClock.getElapsedTime().asMilliseconds() > 10
+		&& playerImage.getPosition().x >= 0
+		&& playerImage.getPosition().y >= 0
+		&& playerImage.getPosition().x <= Window->getSize().x - 32
+		&& playerImage.getPosition().y <= Window->getSize().y - 32)
+		player::move();
+
+	if (playerImage.getPosition().x < 0) playerImage.setPosition(playerImage.getPosition().x + 1, playerImage.getPosition().y);
+	else if (playerImage.getPosition().y < 0) playerImage.setPosition(playerImage.getPosition().x, playerImage.getPosition().y + 1);
+	else if (playerImage.getPosition().x > Window->getSize().x - 32) playerImage.setPosition(playerImage.getPosition().x - 1, playerImage.getPosition().y);
+	else if (playerImage.getPosition().y > Window->getSize().y - 32) playerImage.setPosition(playerImage.getPosition().x, playerImage.getPosition().y - 1);
+
+	if (animationClock.getElapsedTime().asMilliseconds() > (400 / speed))
+		player::nextAnimation();
+
+	if (source.x * 32 >= pTexture.getSize().x)
+		source.x = 0;
+
+	playerImage.setTextureRect(sf::IntRect(source.x * 32, source.y * 32, 32, 32));
+
+	Window->draw(playerImage);
+}
+
+void player::move()
+{
 	// Movement speed
-
 	speed = 1,5;
 
 	// Increasing movement speed
@@ -45,41 +75,44 @@ int player::move()
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		playerImage.move(-speed, -speed);
-		return Up;
+		source.y = Up;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		playerImage.move(speed, -speed);
-		return Up;
+		source.y = Up;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		playerImage.move(speed, speed);
-		return Down;
+		source.y = Down;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		playerImage.move(-speed, speed);
-		return Down;
+		source.y = Down;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
 		playerImage.move(0, -speed);
-		return Up;
+		source.y = Up;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
 		playerImage.move(0, speed);
-		return Down;
+		source.y = Down;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		playerImage.move(-speed, 0);
-		return Left;
+		source.y = Left;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		playerImage.move(speed, 0);
-		return Right;
+		source.y = Right;
 	}
+
+	// Reset Clock
+	moveClock.restart();
 }

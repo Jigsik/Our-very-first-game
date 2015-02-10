@@ -19,16 +19,25 @@
     <Filter Include="Source Files\Runes">
       <UniqueIdentifier>{9259b8a3-0266-469d-af6b-cb0842bfadbe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Characters">
+      <UniqueIdentifier>{634a0d0f-9ac6-4fc3-a0b8-9040b0c168bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Characters">
+      <UniqueIdentifier>{3be8ea10-e2ee-4660-bfa9-55d0a2d28112}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="armor.cpp">
       <Filter>Source Files\Runes</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Source Files\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>Source Files\Characters</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -40,11 +49,14 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Armor.h">
       <Filter>Header Files\Runes</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Header Files\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>Header Files\Characters</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
