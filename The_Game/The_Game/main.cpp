@@ -104,7 +104,9 @@ int main()
 
 		if (fpsClock.getElapsedTime().asSeconds() > 1)
 		{
-			system("cls");
+			/* Z nìjakého dùvodu se hra sekne, když zavolám clear do pøíkazové øádky,
+			   takže to asi žere moc výkonu a z toho dùvodu to nelze použít. */
+			// system("cls");
 
 			std::cout << "FPS = " << fps << std::endl;
 
