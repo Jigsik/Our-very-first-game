@@ -72,24 +72,26 @@ void player::move()
 
 	// Player movement
 
+	float diag_speed = sqrt((speed*speed)/2);
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		playerImage.move(-speed, -speed);
+		playerImage.move(-diag_speed, -diag_speed);
 		source.y = Up;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
-		playerImage.move(speed, -speed);
+		playerImage.move(diag_speed, -diag_speed);
 		source.y = Up;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
-		playerImage.move(speed, speed);
+		playerImage.move(diag_speed, diag_speed);
 		source.y = Down;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		playerImage.move(-speed, speed);
+		playerImage.move(-diag_speed, diag_speed);
 		source.y = Down;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))

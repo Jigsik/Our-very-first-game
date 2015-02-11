@@ -118,6 +118,6 @@ int main()
 	Window->~RenderWindow();
 
 	delete brneni;
-	//delete Window;
+	delete Window;
 	delete raketa;
 }
