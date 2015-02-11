@@ -10,6 +10,47 @@ rocket_missile::rocket_missile(sf::Vector2f playerPosition)
 	image.setTexture(pTexture);
 	image.setPosition(playerPosition);
 
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	{
+		x = -1;
+		y = -1;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		x = 1;
+		y = -1;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		x = 1;
+		y = 1;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	{
+		x = -1;
+		y = 1;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	{
+		x = 0;
+		y = -1;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	{
+		x = 0;
+		y = 1;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	{
+		x = -1;
+		y = 0;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		x = 1;
+		y = 0;
+	}
+
 	std::cout << "Missile launched" << std::endl;
 }
 
@@ -27,9 +68,18 @@ void rocket_missile::move(sf::Vector2f enemyPosition)
 {
 	// Enemy movement
 
-	speed = 1;
+	speed = 5;
 
-	if (enemyPosition.x > image.getPosition().x)
+	if (x == 0 || y == 0)
+		image.move(x * speed, y * speed);
+	else {
+		float pom = sqrt((speed*speed)/2);
+		image.move(x * pom, y * pom);
+	}
+
+	// Old move - it goes towards enemy - 100% kill - it can be used later
+
+	/*if (enemyPosition.x > image.getPosition().x)
 	{
 		image.move(speed, 0);
 	}
@@ -45,7 +95,7 @@ void rocket_missile::move(sf::Vector2f enemyPosition)
 	else if (enemyPosition.y < image.getPosition().y)
 	{
 		image.move(0, -speed);
-	}
+	}*/
 
 	// Reset Clock
 	moveClock.restart();

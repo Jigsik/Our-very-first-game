@@ -12,6 +12,8 @@ private:
 	sf::Texture pTexture;
 	sf::Sprite image;
 	sf::Clock moveClock;
+	float x;
+	float y;
 
 	void move(sf::Vector2f enemyPosition);
 };
