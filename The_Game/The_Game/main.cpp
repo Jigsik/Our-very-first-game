@@ -5,6 +5,7 @@
 #include "player.h"
 #include "Armor.h"
 #include "enemy.h"
+#include "rocket_missiles.h"
 
 int main()
 {
@@ -23,13 +24,15 @@ int main()
 	player hrac;
 	enemy nepritel;
 	armor *brneni = 0;
+	rocket_missile *raketa = 0;
 
 	int fps = 0;
 	sf::Clock fpsClock;
 
 	// Z nejakeho duvodu hlasi AVAST virus pri tomto volani.
-	sf::RenderWindow *Window = new sf::RenderWindow;
-	Window->create(sf::VideoMode(600, 400), "Best Game");
+	sf::RenderWindow *Window = 0;
+	Window = new sf::RenderWindow;
+	Window->create(sf::VideoMode(600, 400), "Hovnocuc");
 
 	//Window.setFramerateLimit(100);
 
@@ -42,17 +45,16 @@ int main()
 			{
 			case sf::Event::KeyPressed:
 				if (Event.key.code == sf::Keyboard::Escape)
+				{
 					Window->close();
+				}
 				else if (Event.key.code == sf::Keyboard::LAlt)
 				{
 					brneni = new armor;
 				}
-				else if (/*brneni && */Event.key.code == sf::Keyboard::LControl)
+				else if (Event.key.code == sf::Keyboard::LControl)
 				{
-					//std::cout << brneni->time_left().asSeconds() << std::endl;
-					//std::cout << brneni->armor_left() << std::endl;
-
-					//music.play();
+					raketa = new rocket_missile(hrac.playerImage.getPosition());
 				}
 				break;
 			case sf::Event::JoystickConnected:
@@ -74,6 +76,11 @@ int main()
 		}
 
 		// Konec brneni?
+
+		if (raketa)
+		{
+			raketa->draw(Window, nepritel.Image.getPosition());
+		}
 
 		if (brneni && brneni->time_left().asSeconds() > 10) 
 		{
@@ -108,6 +115,9 @@ int main()
 		else fps++;
 	}
 
+	Window->~RenderWindow();
+
 	delete brneni;
-	delete Window;
+	//delete Window;
+	delete raketa;
 }

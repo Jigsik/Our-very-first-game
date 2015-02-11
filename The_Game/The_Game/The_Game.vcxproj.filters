@@ -25,6 +25,15 @@
     <Filter Include="Header Files\Characters">
       <UniqueIdentifier>{3be8ea10-e2ee-4660-bfa9-55d0a2d28112}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Guns">
+      <UniqueIdentifier>{ebb20ccf-ae62-4da7-bc14-e65ee9f031e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Missiles">
+      <UniqueIdentifier>{72d21eb9-ac64-43d9-a48e-c3a5ab5e75e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Missiles">
+      <UniqueIdentifier>{43f0a7f2-9173-43db-baca-6fc3bb088bba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -38,6 +47,9 @@
     </ClCompile>
     <ClCompile Include="enemy.cpp">
       <Filter>Source Files\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="rocket_missile.cpp">
+      <Filter>Source Files\Missiles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +69,9 @@
     </ClInclude>
     <ClInclude Include="enemy.h">
       <Filter>Header Files\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="rocket_missiles.h">
+      <Filter>Header Files\Missiles</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

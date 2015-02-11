@@ -88,6 +88,7 @@
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="rocket_missile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="player_1.png" />
@@ -97,6 +98,7 @@
     <ClInclude Include="Armor.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="rocket_missiles.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

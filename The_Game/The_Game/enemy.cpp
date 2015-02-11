@@ -55,25 +55,49 @@ void enemy::move(sf::Vector2f playerPosition)
 {
 	// Enemy movement
 
-	if (playerPosition.x > Image.getPosition().x)
+	if ((playerPosition.x - Image.getPosition().x) > 1 && (playerPosition.y - Image.getPosition().y) > 1)
+	{
+		Image.move(sqrt((speed*speed) / 2), sqrt((speed*speed) / 2));
+		//source.y = Left;
+	}
+	else if ((playerPosition.x - Image.getPosition().x) > 1 && (Image.getPosition().y - playerPosition.y) > 1)
+	{
+		Image.move(sqrt((speed*speed) / 2), -(sqrt((speed*speed) / 2)));
+		//source.y = Left;
+	}
+	else if ((Image.getPosition().x - playerPosition.x) > 1 && (playerPosition.y - Image.getPosition().y) > 1)
+	{
+		Image.move(-(sqrt((speed*speed) / 2)), sqrt((speed*speed) / 2));
+		//source.y = Left;
+	}
+	else if ((Image.getPosition().x - playerPosition.x) > 1 && (Image.getPosition().y - playerPosition.y) > 1)
+	{
+		Image.move(-(sqrt((speed*speed) / 2)), -(sqrt((speed*speed) / 2)));
+		//source.y = Left;
+	}
+	else if ((playerPosition.x - Image.getPosition().x) > 1)
 	{
 		Image.move(speed, 0);
+		source.y = Right;
 	}
-	else if (playerPosition.x < Image.getPosition().x)
+	else if ((Image.getPosition().x - playerPosition.x) > 1)
 	{
 		Image.move(-speed, 0);
+		source.y = Left;
 	}
 
-	if (playerPosition.y > Image.getPosition().y)
+	else if ((playerPosition.y - Image.getPosition().y) > 1)
 	{
 		Image.move(0, speed);
 		source.y = Down;
 	}
-	else if (playerPosition.y < Image.getPosition().y)
+	else if ((Image.getPosition().y - playerPosition.y) > 1)
 	{
 		Image.move(0, -speed);
 		source.y = Up;
 	}
+
+	//std::cout << Image.getPosition().x << " " << Image.getPosition().y << std::endl;
 
 	/*if ((playerPosition.x - Image.getPosition().x) > (playerPosition.y - Image.getPosition().y))
 		source.y = Up;
