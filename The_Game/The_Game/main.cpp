@@ -54,7 +54,7 @@ int main()
 				}
 				else if (Event.key.code == sf::Keyboard::LControl)
 				{
-					raketa = new rocket_missile(hrac.playerImage.getPosition());
+					raketa = new rocket_missile(hrac.playerImage.getPosition(), hrac.rocket_direction);
 				}
 				break;
 			case sf::Event::JoystickConnected:

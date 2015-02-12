@@ -2,7 +2,7 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
 
-rocket_missile::rocket_missile(sf::Vector2f playerPosition)
+rocket_missile::rocket_missile(sf::Vector2f playerPosition, sf::Vector2i rocket_direction)
 {
 	if (!pTexture.loadFromFile("Images/rocket_missile.gif"))
 		std::cout << "Error could not load rocket missile image." << std::endl;
@@ -10,46 +10,7 @@ rocket_missile::rocket_missile(sf::Vector2f playerPosition)
 	image.setTexture(pTexture);
 	image.setPosition(playerPosition);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-	{
-		x = -1;
-		y = -1;
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-	{
-		x = 1;
-		y = -1;
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-	{
-		x = 1;
-		y = 1;
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-	{
-		x = -1;
-		y = 1;
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-	{
-		x = 0;
-		y = -1;
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-	{
-		x = 0;
-		y = 1;
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-	{
-		x = -1;
-		y = 0;
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-	{
-		x = 1;
-		y = 0;
-	}
+	this->rocket_direction = rocket_direction;
 
 	std::cout << "Missile launched" << std::endl;
 }
@@ -70,11 +31,11 @@ void rocket_missile::move(sf::Vector2f enemyPosition)
 
 	speed = 5;
 
-	if (x == 0 || y == 0)
-		image.move(x * speed, y * speed);
+	if (rocket_direction.x == 0 || rocket_direction.y == 0)
+		image.move(rocket_direction.x * speed, rocket_direction.y * speed);
 	else {
 		float pom = sqrt((speed*speed)/2);
-		image.move(x * pom, y * pom);
+		image.move(rocket_direction.x * pom, rocket_direction.y * pom);
 	}
 
 	// Old move - it goes towards enemy - 100% kill - it can be used later

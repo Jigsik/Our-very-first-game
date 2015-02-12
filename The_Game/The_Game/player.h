@@ -9,6 +9,7 @@ class player
 		void draw(sf::RenderWindow* Window);
 		float speed;
 		sf::Sprite playerImage;
+		sf::Vector2i rocket_direction;
 
 	private:
 		// It means - Down = 0, Left = 1, Right = 2, Up = 3

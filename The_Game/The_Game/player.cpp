@@ -13,6 +13,7 @@ player::player(double _hp, float _speed)
 	std::cout << "Player created" << std::endl;
 
 	source = sf::Vector2u(1, Down);
+	rocket_direction = sf::Vector2i(0,1);
 }
 
 void player::HP_minus(double damaged)
@@ -78,41 +79,49 @@ void player::move()
 	{
 		playerImage.move(-diag_speed, -diag_speed);
 		source.y = Up;
+		rocket_direction = sf::Vector2i(-1, -1);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		playerImage.move(diag_speed, -diag_speed);
 		source.y = Up;
+		rocket_direction = sf::Vector2i(1, -1);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		playerImage.move(diag_speed, diag_speed);
 		source.y = Down;
+		rocket_direction = sf::Vector2i(1, 1);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		playerImage.move(-diag_speed, diag_speed);
 		source.y = Down;
+		rocket_direction = sf::Vector2i(-1, 1);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
 		playerImage.move(0, -speed);
 		source.y = Up;
+		rocket_direction = sf::Vector2i(0, -1);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
 		playerImage.move(0, speed);
 		source.y = Down;
+		rocket_direction = sf::Vector2i(0, 1);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		playerImage.move(-speed, 0);
 		source.y = Left;
+		rocket_direction = sf::Vector2i(-1, 0);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		playerImage.move(speed, 0);
 		source.y = Right;
+		rocket_direction = sf::Vector2i(1, 0);
 	}
 
 	// Reset Clock
