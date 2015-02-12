@@ -10,6 +10,11 @@ armor::armor(double _armor_hp)
 
 	armorImage.setTexture(pTexture);
 
+	if (!pTexture1.loadFromFile("Images/armor.png"))
+		std::cout << "Error could not load player image 2" << std::endl;
+
+	armorImage1.setTexture(pTexture1);
+
 	std::cout << "Armor created" << std::endl;
 }
 

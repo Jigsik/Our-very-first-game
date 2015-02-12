@@ -158,15 +158,22 @@ void game(sf::RenderWindow* Window)
 		else if (brneni) // Else draw armor
 		{
 			brneni->armorImage.setPosition(hrac.playerImage.getPosition().x + 15, hrac.playerImage.getPosition().y + 15);
+			brneni->armorImage1.setPosition(hrac.playerImage.getPosition().x + 15, hrac.playerImage.getPosition().y + 15);
 
 			if (brneniClock.getElapsedTime().asMilliseconds() > 10)
 			{
-				brneni->armorImage.setOrigin(25, 25);
-				brneni->armorImage.rotate(3);
+				brneni->armorImage.setOrigin(28.5, 28.5);
+				brneni->armorImage.rotate(1);
+
+				brneni->armorImage1.setOrigin(28.5, 28.5);
+				brneni->armorImage1.rotate(-1);
+				brneni->armorImage1.setScale((float)0.8, (float)0.8);
+
 				brneniClock.restart();
 			}
 
 			Window->draw(brneni->armorImage);
+			Window->draw(brneni->armorImage1);
 		}
 
 		hrac.draw(Window);
