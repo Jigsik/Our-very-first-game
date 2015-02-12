@@ -1,0 +1,2 @@
+rocket_missile 		40x16
+armor			57x57
