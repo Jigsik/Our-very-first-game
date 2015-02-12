@@ -7,7 +7,7 @@
 #include "enemy.h"
 #include "rocket_missiles.h"
 
-void game()
+void game(sf::RenderWindow* Window)
 {
 	// Sound
 
@@ -31,11 +31,6 @@ void game()
 	int fps = 0;
 	sf::Clock fpsClock;
 
-	// Z nejakeho duvodu hlasi AVAST virus pri tomto volani.
-	sf::RenderWindow *Window = 0;
-	Window = new sf::RenderWindow;
-	Window->create(sf::VideoMode(600, 400), "Hovnocuc");
-
 	//Window.setFramerateLimit(100);
 
 	while (Window->isOpen())
@@ -48,7 +43,9 @@ void game()
 			case sf::Event::KeyPressed:
 				if (Event.key.code == sf::Keyboard::Escape)
 				{
-					Window->close();
+					//Window->close();
+
+					return;
 				}
 				else if (Event.key.code == sf::Keyboard::LAlt)
 				{
@@ -96,14 +93,6 @@ void game()
 			Window->draw(brneni->armorImage);
 		}
 
-		// Playing walk sound
-
-		/*walk.pause();
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			walk.play();
-		else walk.stop();*/
-
 		hrac.draw(Window);
 		nepritel.draw(Window, hrac.playerImage.getPosition());
 		Window->display();
@@ -126,31 +115,96 @@ void game()
 		else fps++;
 	}
 
-	Window->~RenderWindow();
-
 	delete brneni;
-	delete Window;
 	delete raketa;
 }
 
 void menu()
 {
-	char volba;
+	// Z nejakeho duvodu hlasi AVAST virus pri tomto volani.
+	sf::RenderWindow *Window = 0;
+	Window = new sf::RenderWindow;
+	Window->create(sf::VideoMode(600, 400), "Hovnocuc");
 
-	while (1)
+	enum choice { newGame, konec };
+
+	int active = newGame;
+	int choiceCount = 2;
+
+	sf::Font menuFont;
+	
+	if (!menuFont.loadFromFile("Fonts/HARNGTON.ttf"))
+		std::cout << "Cannot load font for Menu" << std::endl;
+
+	sf::String new_game = "NEW GAME";
+	sf::String exit = "EXIT";
+
+	sf::Text nova_hra;
+	sf::Text konec_hry;
+	nova_hra.setString(new_game);
+	konec_hry.setString(exit);
+	nova_hra.setFont(menuFont);
+	konec_hry.setFont(menuFont);
+
+	nova_hra.setPosition(sf::Vector2f((float)Window->getSize().x / 5, (float)Window->getSize().y / 5));
+	konec_hry.setPosition(sf::Vector2f((float)Window->getSize().x / 5, (float)Window->getSize().y / 3));
+
+	while (Window->isOpen())
 	{
-		system("cls");
+		sf::Event Event;
 
-		std::cout << "Press \"N\" to start a new game." << std::endl;
-		std::cout << "Press \"X\" to exit." << std::endl;
+		while (Window->pollEvent(Event))
+		{
+			switch (Event.type)
+			{
+			case sf::Event::KeyPressed:
+				if (Event.key.code == sf::Keyboard::Return)
+				{
+					if (active == newGame)
+					{
+						game(Window);
+					}
+					else if (active == konec)
+						Window->close();
+				}
+				else if (Event.key.code == sf::Keyboard::Down)
+				{
+					if (active == 0) active = choiceCount - 1;
+					else active--;
+				}
+				else if (Event.key.code == sf::Keyboard::Up)
+				{
+					if (active >= choiceCount - 1) active = 0;
+					else active++;
+				}
+				break;
+			}
+		}
 
-		std::cin >> volba;
+		if (active == 0)
+		{
+			nova_hra.setColor(sf::Color::Yellow);
+			nova_hra.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
-		if (volba == 'N')
-			game();
-		else if (volba == 'X')
-			return;
+			konec_hry.setColor(sf::Color::Blue);
+		}
+		else if (active == 1)
+		{
+			konec_hry.setColor(sf::Color::Yellow);
+			konec_hry.setStyle(sf::Text::Bold | sf::Text::Underlined);
+
+			nova_hra.setColor(sf::Color::Blue);
+		}
+
+		Window->draw(nova_hra);
+		Window->draw(konec_hry);
+		Window->display();
+		Window->clear();
 	}
+
+	Window->~RenderWindow();
+
+	delete Window;
 }
 
 int main()
