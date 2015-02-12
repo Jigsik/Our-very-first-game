@@ -5,7 +5,7 @@
 armor::armor(double _armor_hp)
 : hp(_armor_hp)
 {
-	if (!pTexture.loadFromFile("Images/armor.gif"))
+	if (!pTexture.loadFromFile("Images/armor.png"))
 		std::cout << "Error could not load player image 1" << std::endl;
 
 	armorImage.setTexture(pTexture);

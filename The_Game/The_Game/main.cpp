@@ -68,6 +68,8 @@ void game(sf::RenderWindow* Window)
 	int fps = 0;
 	sf::Clock fpsClock;
 
+	sf::Clock brneniClock;
+
 	//Window.setFramerateLimit(100);
 
 	while (Window->isOpen())
@@ -155,7 +157,14 @@ void game(sf::RenderWindow* Window)
 		}
 		else if (brneni) // Else draw armor
 		{
-			brneni->armorImage.setPosition(hrac.playerImage.getPosition().x - 10, hrac.playerImage.getPosition().y - 10);
+			brneni->armorImage.setPosition(hrac.playerImage.getPosition().x + 15, hrac.playerImage.getPosition().y + 15);
+
+			if (brneniClock.getElapsedTime().asMilliseconds() > 10)
+			{
+				brneni->armorImage.setOrigin(25, 25);
+				brneni->armorImage.rotate(3);
+				brneniClock.restart();
+			}
 
 			Window->draw(brneni->armorImage);
 		}
