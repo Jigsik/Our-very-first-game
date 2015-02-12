@@ -9,6 +9,8 @@ rocket_missile::rocket_missile(sf::Vector2f playerPosition, sf::Vector2i rocket_
 
 	image.setTexture(pTexture);
 
+	speed = 0.1;
+
 	this->rocket_direction = rocket_direction;
 	
 	std::cout << "rocket_direction.x = " << rocket_direction.x << std::endl;
@@ -73,7 +75,7 @@ void rocket_missile::move(sf::Vector2f enemyPosition)
 {
 	// Enemy movement
 
-	speed = 3;
+	speed *= 1.03;
 
 	if (rocket_direction.x == 0 || rocket_direction.y == 0)
 	{
