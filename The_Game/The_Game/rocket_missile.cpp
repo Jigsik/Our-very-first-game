@@ -4,7 +4,7 @@
 
 rocket_missile::rocket_missile(sf::Vector2f playerPosition, sf::Vector2i rocket_direction)
 {
-	if (!pTexture.loadFromFile("Images/rocket_missile.gif"))
+	if (!pTexture.loadFromFile("Images/rocket_missile.png"))
 		std::cout << "Error could not load rocket missile image." << std::endl;
 
 	image.setTexture(pTexture);
