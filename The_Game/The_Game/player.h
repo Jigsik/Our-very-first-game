@@ -1,4 +1,5 @@
 #include <SFML\Graphics.hpp>
+#include <SFML\Audio.hpp>
 
 class player
 {
@@ -21,4 +22,6 @@ class player
 		sf::Clock animationClock;
 		void move();
 		void nextAnimation();
+		sf::SoundBuffer walkBuffer;
+		sf::Sound walk;
 };

@@ -10,6 +10,12 @@ player::player(double _hp, float _speed)
 
 	playerImage.setTexture(pTexture);
 
+	if (!walkBuffer.loadFromFile("Sounds/walk.wav"))
+		std::cout << "Error could not load walk sound." << std::endl;
+
+	walk.setBuffer(walkBuffer);
+	walk.setLoop(true);
+
 	std::cout << "Player created" << std::endl;
 
 	source = sf::Vector2u(1, Down);
@@ -71,6 +77,14 @@ void player::move()
 		speed *= 2;
 	}
 
+	// Playing the walk sound
+
+	walk.pause();
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		walk.play();
+	else walk.stop();
+	
 	// Player movement
 
 	float diag_speed = sqrt((speed*speed)/2);
@@ -125,5 +139,6 @@ void player::move()
 	}
 
 	// Reset Clock
+
 	moveClock.restart();
 }

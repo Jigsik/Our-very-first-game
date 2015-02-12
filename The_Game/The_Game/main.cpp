@@ -7,7 +7,7 @@
 #include "enemy.h"
 #include "rocket_missiles.h"
 
-int main()
+void game()
 {
 	// Sound
 
@@ -20,6 +20,8 @@ int main()
 
 	music.setLoop(true);
 	music.play();
+
+	music.setVolume(50);
 
 	player hrac;
 	enemy nepritel;
@@ -82,7 +84,7 @@ int main()
 			raketa->draw(Window, nepritel.Image.getPosition());
 		}
 
-		if (brneni && brneni->time_left().asSeconds() > 10) 
+		if (brneni && brneni->time_left().asSeconds() > 10)
 		{
 			brneni->~armor();
 			brneni = 0;
@@ -93,6 +95,15 @@ int main()
 
 			Window->draw(brneni->armorImage);
 		}
+
+		// Playing walk sound
+
+		/*walk.pause();
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+			walk.play();
+		else walk.stop();*/
+
 		hrac.draw(Window);
 		nepritel.draw(Window, hrac.playerImage.getPosition());
 		Window->display();
@@ -101,7 +112,7 @@ int main()
 		if (fpsClock.getElapsedTime().asSeconds() > 1)
 		{
 			/* Z nìjakého dùvodu se hra sekne, když zavolám clear do pøíkazové øádky,
-			   takže to asi žere moc výkonu a z toho dùvodu to nelze použít. */
+			takže to asi žere moc výkonu a z toho dùvodu to nelze použít. */
 			// system("cls");
 
 			std::cout << "FPS = " << fps;
@@ -120,4 +131,29 @@ int main()
 	delete brneni;
 	delete Window;
 	delete raketa;
+}
+
+void menu()
+{
+	char volba;
+
+	while (1)
+	{
+		system("cls");
+
+		std::cout << "Press \"N\" to start a new game." << std::endl;
+		std::cout << "Press \"X\" to exit." << std::endl;
+
+		std::cin >> volba;
+
+		if (volba == 'N')
+			game();
+		else if (volba == 'X')
+			return;
+	}
+}
+
+int main()
+{
+	menu();
 }
