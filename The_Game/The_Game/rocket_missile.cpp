@@ -9,54 +9,51 @@ rocket_missile::rocket_missile(sf::Vector2f playerPosition, sf::Vector2i rocket_
 
 	image.setTexture(pTexture);
 
-	speed = 0.1;
+	speed = 2;
 
 	this->rocket_direction = rocket_direction;
 	
 	std::cout << "rocket_direction.x = " << rocket_direction.x << std::endl;
 	std::cout << "rocket_direction.y = " << rocket_direction.y << std::endl;
 
+	image.setOrigin(sf::Vector2f(0, 8));
+
+	image.setPosition(playerPosition.x + 16, playerPosition.y + 16);
+
+	image.setOrigin(sf::Vector2f(40, 8));
+
 	if (rocket_direction.x == 1 && rocket_direction.y == 0)
 	{
-		image.setPosition(playerPosition.x + 40, playerPosition.y + 20);
 		image.setRotation(180);
 	}
 	else if (rocket_direction.x == -1 && rocket_direction.y == 0)
 	{
-		image.setPosition(playerPosition.x, playerPosition.y + 10);
 		image.setRotation(0);
 	}
 	else if (rocket_direction.x == 0 && rocket_direction.y == 1)
 	{
-		image.setPosition(playerPosition.x + 12, playerPosition.y + 30);
 		image.setRotation(270);
 	}
 	else if (rocket_direction.x == 0 && rocket_direction.y == -1)
 	{
-		image.setPosition(playerPosition.x + 20, playerPosition.y);
 		image.setRotation(90);
 	}
 	else if (rocket_direction.x == 1 && rocket_direction.y == 1)
 	{
-		image.setPosition(playerPosition.x + 25, playerPosition.y + 25);
 		image.setRotation(225);
 	}
 	else if (rocket_direction.x == 1 && rocket_direction.y == -1)
 	{
-		image.setPosition(playerPosition.x + 25, playerPosition.y + 10);
 		image.setRotation(135);
 	}
 	else if (rocket_direction.x == -1 && rocket_direction.y == 1)
 	{
-		image.setPosition(playerPosition.x + 5, playerPosition.y + 25);
 		image.setRotation(315);
 	}
 	else if (rocket_direction.x == -1 && rocket_direction.y == -1)
 	{
-		image.setPosition(playerPosition.x + 10, playerPosition.y + 10);
 		image.setRotation(45);
 	}
-		
 
 	std::cout << "Missile launched" << std::endl;
 }
@@ -75,7 +72,7 @@ void rocket_missile::move(sf::Vector2f enemyPosition)
 {
 	// Enemy movement
 
-	speed *= 1.03;
+	speed *= 1.015;
 
 	if (rocket_direction.x == 0 || rocket_direction.y == 0)
 	{
