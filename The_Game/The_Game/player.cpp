@@ -34,6 +34,7 @@ double player::HP_left()
 
 void player::nextAnimation()
 {
+	// Go to next animation
 	source.x++;
 
 	// Reset Clock
@@ -45,8 +46,8 @@ void player::draw(sf::RenderWindow* Window)
 	if (moveClock.getElapsedTime().asMilliseconds() > 10
 		&& playerImage.getPosition().x >= 0
 		&& playerImage.getPosition().y >= 0
-		&& playerImage.getPosition().x <= Window->getSize().x - 32
-		&& playerImage.getPosition().y <= Window->getSize().y - 32)
+		&& playerImage.getPosition().x <= Window->getSize().x - playerImage.getLocalBounds().width / 3
+		&& playerImage.getPosition().y <= Window->getSize().y - playerImage.getLocalBounds().height / 4)
 		player::move();
 
 	if (playerImage.getPosition().x < 0) playerImage.setPosition(playerImage.getPosition().x + 1, playerImage.getPosition().y);

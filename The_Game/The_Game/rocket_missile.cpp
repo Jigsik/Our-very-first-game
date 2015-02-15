@@ -63,16 +63,31 @@ void rocket_missile::draw(sf::RenderWindow* Window, sf::Vector2f enemyPosition)
 	if (moveClock.getElapsedTime().asMilliseconds() > 10)
 		rocket_missile::move(enemyPosition);
 
-	image.setTextureRect(sf::IntRect(0, 0, 40, 16));
+	if (animationClock.getElapsedTime().asMilliseconds() > 150)
+		rocket_missile::nextAnimation();
+
+	if (source.x * 40 >= pTexture.getSize().x)
+		source.x = 0;
+
+	image.setTextureRect(sf::IntRect(source.x * 40, 0, 40, 15));
 
 	Window->draw(image);
+}
+
+void rocket_missile::nextAnimation()
+{
+	// Go to next animation
+	source.x++;
+
+	// Reset Clock
+	animationClock.restart();
 }
 
 void rocket_missile::move(sf::Vector2f enemyPosition)
 {
 	// Enemy movement
 
-	speed *= 1.015;
+	speed *= (float) 1.015;
 
 	if (rocket_direction.x == 0 || rocket_direction.y == 0)
 	{

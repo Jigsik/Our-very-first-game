@@ -12,9 +12,10 @@ private:
 	sf::Texture pTexture;
 	sf::Sprite image;
 	sf::Clock moveClock;
-	float x;
-	float y;
+	sf::Clock animationClock;
+	sf::Vector2u source;
 	sf::Vector2i rocket_direction;
 
 	void move(sf::Vector2f enemyPosition);
+	void nextAnimation();
 };

@@ -1,6 +1,8 @@
 #include <SFML\Graphics.hpp>
 #include <SFML\Audio.hpp>
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <string>
 #include "player.h"
 #include "Armor.h"
@@ -9,7 +11,11 @@
 
 void pause(sf::RenderWindow* Window)
 {
-	Window->setKeyRepeatEnabled(false);
+	// Asi netreba, ale jeste to tu pro jistotu necham, kdyby se zjistilo, ze to potreba je.
+	//Window->setKeyRepeatEnabled(false);
+
+	sf::RectangleShape obraz(sf::Vector2f((float)Window->getSize().x, (float)Window->getSize().y));
+	obraz.setFillColor(sf::Color(0,0,0,150));
 
 	// The name of the Font
 	sf::Font pauseFont;
@@ -29,6 +35,7 @@ void pause(sf::RenderWindow* Window)
 	// Positions of menu texts
 	pauza.setPosition(sf::Vector2f((float)Window->getSize().x / 5, (float)Window->getSize().y / 5));
 
+	Window->draw(obraz);
 	Window->draw(pauza);
 	Window->display();
 
@@ -46,6 +53,30 @@ void pause(sf::RenderWindow* Window)
 
 void game(sf::RenderWindow* Window)
 {
+	bool isPause = false;
+
+	// FPS
+
+	// The name of the Font
+	sf::Font fpsFont;
+
+	// Loading Font from file
+	if (!fpsFont.loadFromFile("Fonts/Face Your Fears.ttf"))
+		std::cout << "Cannot load font for Pause" << std::endl;
+
+	// What will appear on the menu window
+	sf::String fpsString;
+
+	int fps = 0;
+	sf::Clock fpsClock;
+
+	// Properties of menu texts
+	sf::Text fpsText;
+	fpsText.setFont(fpsFont);
+
+	// Positions of menu texts
+	fpsText.setPosition(sf::Vector2f((float)Window->getSize().x - 80, 0));
+
 	// Sound
 
 	sf::Music music;
@@ -64,9 +95,6 @@ void game(sf::RenderWindow* Window)
 	enemy nepritel;
 	armor *brneni = 0;
 	rocket_missile *raketa = 0;
-
-	int fps = 0;
-	sf::Clock fpsClock;
 
 	sf::Clock brneniClock;
 	sf::Clock brneniBug;
@@ -99,31 +127,7 @@ void game(sf::RenderWindow* Window)
 			case sf::Event::KeyReleased:
 				if (Event.key.code == sf::Keyboard::P)
 				{
-					music.pause();
-
-					if (raketa)
-					{
-						raketa->draw(Window, nepritel.Image.getPosition());
-					}
-
-					if (brneni && brneni->time_left().asSeconds() > 10)
-					{
-						brneni->~armor();
-						brneni = 0;
-					}
-					else if (brneni) // Else draw armor
-					{
-						brneni->armorImage.setPosition(hrac.playerImage.getPosition().x - 10, hrac.playerImage.getPosition().y - 10);
-
-						Window->draw(brneni->armorImage);
-					}
-
-					hrac.draw(Window);
-					nepritel.draw(Window, hrac.playerImage.getPosition());
-
-					pause(Window);
-
-					music.play();
+					isPause = true;
 				}
 				break;
 			case sf::Event::JoystickConnected:
@@ -178,26 +182,46 @@ void game(sf::RenderWindow* Window)
 			Window->draw(brneni->armorImage1);
 		}
 
-		hrac.draw(Window);
-		nepritel.draw(Window, hrac.playerImage.getPosition());
-		Window->display();
-		Window->clear();
-
 		if (fpsClock.getElapsedTime().asSeconds() > 1)
 		{
 			/* Z nìjakého dùvodu se hra sekne, když zavolám clear do pøíkazové øádky,
 			takže to asi žere moc výkonu a z toho dùvodu to nelze použít. */
 			// system("cls");
 
-			std::cout << "FPS = " << fps;
+			//std::cout << "FPS = " << fps;
 
-			std::cout << ", Sound ends in: " << music.getDuration().asSeconds() - music.getPlayingOffset().asSeconds() << " seconds." << std::endl;
+			std::ostringstream oss;
+			oss << fps;
+			fpsString = oss.str();
+
+			//std::cout << ", Sound ends in: " << music.getDuration().asSeconds() - music.getPlayingOffset().asSeconds() << " seconds." << std::endl;
 
 			fpsClock.restart();
 
 			fps = 0;
 		}
 		else fps++;
+
+		fpsText.setString(fpsString);
+
+		Window->draw(fpsText);
+
+		hrac.draw(Window);
+		nepritel.draw(Window, hrac.playerImage.getPosition());
+
+		Window->display();
+
+		if (isPause)
+		{
+			music.pause();
+
+			pause(Window);
+
+			isPause = false;
+			music.play();
+		}
+
+		Window->clear();
 	}
 
 	delete brneni;
