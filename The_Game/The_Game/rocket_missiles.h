@@ -1,4 +1,5 @@
 #include <SFML\Graphics.hpp>
+#include <SFML\Audio.hpp>
 
 class rocket_missile
 {
@@ -18,4 +19,7 @@ private:
 
 	void move(sf::Vector2f enemyPosition);
 	void nextAnimation();
+
+	sf::SoundBuffer rocketBuffer;
+	sf::Sound rocketSound;
 };

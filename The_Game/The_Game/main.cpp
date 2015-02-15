@@ -55,6 +55,8 @@ void game(sf::RenderWindow* Window)
 {
 	bool isPause = false;
 
+	Window->setFramerateLimit(500);
+
 	// FPS
 
 	// The name of the Font
@@ -241,6 +243,7 @@ void menu()
 	// newGame = 0, konec = 1
 	enum choice { newGame, konec };
 
+	Window->setFramerateLimit(25);
 
 	// newGame is active at the beginning
 	int active = newGame;

@@ -5,16 +5,28 @@
 player::player(double _hp, float _speed)
 : HP(_hp), speed(_speed)
 {
+	// Texture
+
 	if (!pTexture.loadFromFile("Images/player_1.png"))
 		std::cout << "Error could not load player image." << std::endl;
 
 	playerImage.setTexture(pTexture);
+
+	// Walk sound
 
 	if (!walkBuffer.loadFromFile("Sounds/walk.wav"))
 		std::cout << "Error could not load walk sound." << std::endl;
 
 	walk.setBuffer(walkBuffer);
 	walk.setLoop(true);
+
+	// Sprint sound
+
+	if (!sprintBuffer.loadFromFile("Sounds/sprint.wav"))
+		std::cout << "Error could not load sprint sound." << std::endl;
+
+	sprintSound.setBuffer(sprintBuffer);
+	sprintSound.setLoop(true);
 
 	std::cout << "Player created" << std::endl;
 
@@ -73,18 +85,23 @@ void player::move()
 
 	// Increasing movement speed
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
-	{
-		speed *= 2;
-	}
-
 	// Playing the walk sound
 
 	walk.pause();
+	sprintSound.pause();
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+	{
+		speed *= 2;
+		walk.stop();
+		sprintSound.play();
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		sprintSound.stop();
 		walk.play();
-	else walk.stop();
+
+	}
 	
 	// Player movement
 

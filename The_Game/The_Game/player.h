@@ -22,6 +22,10 @@ class player
 		sf::Clock animationClock;
 		void move();
 		void nextAnimation();
+
 		sf::SoundBuffer walkBuffer;
 		sf::Sound walk;
+
+		sf::SoundBuffer sprintBuffer;
+		sf::Sound sprintSound;
 };

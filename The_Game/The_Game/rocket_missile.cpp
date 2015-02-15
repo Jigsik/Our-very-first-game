@@ -4,10 +4,21 @@
 
 rocket_missile::rocket_missile(sf::Vector2f playerPosition, sf::Vector2i rocket_direction)
 {
+	// Texture
+
 	if (!pTexture.loadFromFile("Images/rocket_missile.png"))
 		std::cout << "Error could not load rocket missile image." << std::endl;
 
 	image.setTexture(pTexture);
+
+	// Sound
+
+	if (!rocketBuffer.loadFromFile("Sounds/rocket_missile_sound.wav"))
+		std::cout << "Error could not load rocket_missile sound." << std::endl;
+
+	rocketSound.setBuffer(rocketBuffer);
+	rocketSound.setVolume(40);
+	rocketSound.play();
 
 	speed = 2;
 
@@ -126,4 +137,5 @@ void rocket_missile::move(sf::Vector2f enemyPosition)
 
 rocket_missile::~rocket_missile()
 {
+	rocketSound.stop();
 }
