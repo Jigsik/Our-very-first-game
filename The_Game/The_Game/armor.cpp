@@ -18,6 +18,12 @@ armor::armor(double _armor_hp)
 	std::cout << "Armor created" << std::endl;
 }
 
+/*void armor::draw(sf::RenderWindow* Window)
+{
+	armorImage.setPosition(hrac.playerImage.getPosition().x + 15, hrac.playerImage.getPosition().y + 15);
+	armorImage1.setPosition(hrac.playerImage.getPosition().x + 15, hrac.playerImage.getPosition().y + 15);
+}*/
+
 armor::~armor()
 {
 	std::cout << "Armor destructed" << std::endl;

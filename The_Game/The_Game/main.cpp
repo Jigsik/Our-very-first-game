@@ -14,6 +14,8 @@ void pause(sf::RenderWindow* Window)
 	// Asi netreba, ale jeste to tu pro jistotu necham, kdyby se zjistilo, ze to potreba je.
 	//Window->setKeyRepeatEnabled(false);
 
+	sf::Listener::setGlobalVolume(0);
+
 	sf::RectangleShape obraz(sf::Vector2f((float)Window->getSize().x, (float)Window->getSize().y));
 	obraz.setFillColor(sf::Color(0,0,0,150));
 
@@ -46,7 +48,12 @@ void pause(sf::RenderWindow* Window)
 		switch (Event.type)
 		{
 		case sf::Event::KeyReleased:
-			if (Event.key.code == sf::Keyboard::P) return;
+			if (Event.key.code == sf::Keyboard::P)
+			{
+				sf::Listener::setGlobalVolume(100);
+
+				return;
+			}
 		}
 	}
 }
@@ -76,7 +83,7 @@ void game(sf::RenderWindow* Window)
 	sf::Text fpsText;
 	fpsText.setFont(fpsFont);
 
-	// Positions of menu texts
+	// Positions of FPS text
 	fpsText.setPosition(sf::Vector2f((float)Window->getSize().x - 80, 0));
 
 	// Sound
@@ -99,7 +106,6 @@ void game(sf::RenderWindow* Window)
 	rocket_missile *raketa = 0;
 
 	sf::Clock brneniClock;
-	sf::Clock brneniBug;
 
 	//Window.setFramerateLimit(100);
 
@@ -156,6 +162,20 @@ void game(sf::RenderWindow* Window)
 		{
 			raketa->draw(Window, nepritel.Image.getPosition());
 		}
+
+		/*if (brneni)
+		{
+			if (brneni->time_left().asSeconds() > 10)
+			{
+				brneni->~armor();
+				brneni = 0;
+			}
+			else {
+
+			}
+		}*/
+
+		// PREPSAT - TED NA TO NENI NALADA ANI CAS.
 
 		if (brneni && brneni->time_left().asSeconds() > 10)
 		{
@@ -215,12 +235,9 @@ void game(sf::RenderWindow* Window)
 
 		if (isPause)
 		{
-			music.pause();
-
 			pause(Window);
 
 			isPause = false;
-			music.play();
 		}
 
 		Window->clear();

@@ -7,6 +7,7 @@ public:
 	~armor();
 	sf::Time time_left();
 	double armor_left();
+	void draw(sf::RenderWindow* Window);
 	sf::Sprite armorImage;
 	sf::Sprite armorImage1;
 
