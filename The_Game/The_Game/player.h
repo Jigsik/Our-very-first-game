@@ -23,6 +23,10 @@ class player
 		void move();
 		void nextAnimation();
 
+		sf::Vector2u characterSize;
+
+		// Sounds
+
 		sf::SoundBuffer walkBuffer;
 		sf::Sound walk;
 

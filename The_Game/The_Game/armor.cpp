@@ -9,32 +9,44 @@ armor::armor(double _armor_hp)
 		std::cout << "Error could not load player image 1" << std::endl;
 
 	armorImage.setTexture(pTexture);
-
-	if (!pTexture1.loadFromFile("Images/armor.png"))
-		std::cout << "Error could not load player image 2" << std::endl;
-
-	armorImage1.setTexture(pTexture1);
+	armorImage1.setTexture(pTexture);
 
 	std::cout << "Armor created" << std::endl;
 }
 
-/*void armor::draw(sf::RenderWindow* Window)
+void armor::draw(sf::RenderWindow* Window, sf::Vector2f playerPosition)
 {
-	armorImage.setPosition(hrac.playerImage.getPosition().x + 15, hrac.playerImage.getPosition().y + 15);
-	armorImage1.setPosition(hrac.playerImage.getPosition().x + 15, hrac.playerImage.getPosition().y + 15);
-}*/
+	armorImage.setPosition(playerPosition.x + 16, playerPosition.y + 16);
+	armorImage1.setPosition(playerPosition.x + 16, playerPosition.y + 16);
+
+	armorImage.setOrigin(28.5, 28.5);
+	armorImage1.setOrigin(28.5, 28.5);
+
+	armorImage1.setScale((float)0.8, (float)0.8);
+
+	if (rotateClock.getElapsedTime().asMilliseconds() > 10)
+	{
+		armorImage.rotate(1);
+		armorImage1.rotate(-1);
+
+		rotateClock.restart();
+	}
+
+	Window->draw(armorImage);
+	Window->draw(armorImage1);
+}
 
 armor::~armor()
 {
 	std::cout << "Armor destructed" << std::endl;
 }
 
-sf::Time armor::time_left()
+sf::Time armor::getTime()
 {
 	return time.getElapsedTime();
 }
 
-double armor::armor_left()
+double armor::getHP()
 {
 	return hp;
 }

@@ -12,6 +12,9 @@ player::player(double _hp, float _speed)
 
 	playerImage.setTexture(pTexture);
 
+	characterSize.x = pTexture.getSize().x;
+	characterSize.y = pTexture.getSize().y / 4;
+
 	// Walk sound
 
 	if (!walkBuffer.loadFromFile("Sounds/walk.wav"))
@@ -58,22 +61,22 @@ void player::draw(sf::RenderWindow* Window)
 	if (moveClock.getElapsedTime().asMilliseconds() > 10
 		&& playerImage.getPosition().x >= 0
 		&& playerImage.getPosition().y >= 0
-		&& playerImage.getPosition().x <= Window->getSize().x - playerImage.getLocalBounds().width / 3
-		&& playerImage.getPosition().y <= Window->getSize().y - playerImage.getLocalBounds().height / 4)
+		&& playerImage.getPosition().x <= Window->getSize().x - characterSize.x
+		&& playerImage.getPosition().y <= Window->getSize().y - characterSize.y)
 		player::move();
 
 	if (playerImage.getPosition().x < 0) playerImage.setPosition(playerImage.getPosition().x + 1, playerImage.getPosition().y);
 	else if (playerImage.getPosition().y < 0) playerImage.setPosition(playerImage.getPosition().x, playerImage.getPosition().y + 1);
-	else if (playerImage.getPosition().x > Window->getSize().x - 32) playerImage.setPosition(playerImage.getPosition().x - 1, playerImage.getPosition().y);
-	else if (playerImage.getPosition().y > Window->getSize().y - 32) playerImage.setPosition(playerImage.getPosition().x, playerImage.getPosition().y - 1);
+	else if (playerImage.getPosition().x > Window->getSize().x - characterSize.x) playerImage.setPosition(playerImage.getPosition().x - 1, playerImage.getPosition().y);
+	else if (playerImage.getPosition().y > Window->getSize().y - characterSize.y) playerImage.setPosition(playerImage.getPosition().x, playerImage.getPosition().y - 1);
 
 	if (animationClock.getElapsedTime().asMilliseconds() > (400 / speed))
 		player::nextAnimation();
 
-	if (source.x * 32 >= pTexture.getSize().x)
+	if (source.x * characterSize.x >= pTexture.getSize().x)
 		source.x = 0;
 
-	playerImage.setTextureRect(sf::IntRect(source.x * 32, source.y * 32, 32, 32));
+	playerImage.setTextureRect(sf::IntRect(source.x * characterSize.x, source.y * characterSize.y, characterSize.x, characterSize.y));
 
 	Window->draw(playerImage);
 }

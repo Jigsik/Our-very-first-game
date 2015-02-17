@@ -156,54 +156,27 @@ void game(sf::RenderWindow* Window)
 			}
 		}
 
-		// Konec brneni?
+		// Raketa
 
 		if (raketa)
 		{
 			raketa->draw(Window, nepritel.Image.getPosition());
 		}
 
-		/*if (brneni)
+		// Brneni
+
+		if (brneni)
 		{
-			if (brneni->time_left().asSeconds() > 10)
+			if (brneni->getTime().asSeconds() > 10)
 			{
 				brneni->~armor();
 				brneni = 0;
 			}
 			else {
-
+				brneni->draw(Window, hrac.playerImage.getPosition());
 			}
-		}*/
-
-		// PREPSAT - TED NA TO NENI NALADA ANI CAS.
-
-		if (brneni && brneni->time_left().asSeconds() > 10)
-		{
-			brneni->~armor();
-			brneni = 0;
 		}
-		else if (brneni) // Else draw armor
-		{
-			brneni->armorImage.setPosition(hrac.playerImage.getPosition().x + 15, hrac.playerImage.getPosition().y + 15);
-			brneni->armorImage1.setPosition(hrac.playerImage.getPosition().x + 15, hrac.playerImage.getPosition().y + 15);
-
-			brneni->armorImage.setOrigin(28.5, 28.5);
-			brneni->armorImage1.setOrigin(28.5, 28.5);
-
-			brneni->armorImage1.setScale((float)0.8, (float)0.8);
-
-			if (brneniClock.getElapsedTime().asMilliseconds() > 10)
-			{
-				brneni->armorImage.rotate(1);
-				brneni->armorImage1.rotate(-1);
-
-				brneniClock.restart();
-			}
-
-			Window->draw(brneni->armorImage);
-			Window->draw(brneni->armorImage1);
-		}
-
+		
 		if (fpsClock.getElapsedTime().asSeconds() > 1)
 		{
 			/* Z nìjakého dùvodu se hra sekne, kdy zavolám clear do pøíkazové øádky,

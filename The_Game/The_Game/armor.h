@@ -1,19 +1,23 @@
-#include <SFML/Graphics.hpp>
+#include <SFML\Graphics.hpp>
 
 class armor
 {
 public:
 	armor(double armor_hp = 50);
 	~armor();
-	sf::Time time_left();
-	double armor_left();
-	void draw(sf::RenderWindow* Window);
-	sf::Sprite armorImage;
-	sf::Sprite armorImage1;
+
+	// GET
+	sf::Time getTime();
+	double getHP();
+
+	// Public methods
+	void draw(sf::RenderWindow* Window, sf::Vector2f playerPosition);
 
 private:
 	double hp;
 	sf::Clock time;
+	sf::Clock rotateClock;
 	sf::Texture pTexture;
-	sf::Texture pTexture1;
+	sf::Sprite armorImage;
+	sf::Sprite armorImage1;
 };
