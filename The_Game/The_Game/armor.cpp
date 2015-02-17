@@ -1,4 +1,4 @@
-#include "armor.h"
+#include "Armor.h"
 //#include <SFML\Graphics.hpp>
 #include <iostream>
 
@@ -14,13 +14,13 @@ armor::armor(double _armor_hp)
 	std::cout << "Armor created" << std::endl;
 }
 
-void armor::draw(sf::RenderWindow* Window, sf::Vector2f playerPosition)
+void armor::draw(sf::RenderWindow* Window, sf::Vector2f playerPosition, sf::Vector2u characterSize)
 {
-	armorImage.setPosition(playerPosition.x + 16, playerPosition.y + 16);
-	armorImage1.setPosition(playerPosition.x + 16, playerPosition.y + 16);
+	armorImage.setOrigin((float)pTexture.getSize().x / 2, (float)pTexture.getSize().y / 2);
+	armorImage1.setOrigin((float)pTexture.getSize().x / 2, (float)pTexture.getSize().y / 2);
 
-	armorImage.setOrigin(28.5, 28.5);
-	armorImage1.setOrigin(28.5, 28.5);
+	armorImage.setPosition(playerPosition.x + (characterSize.x / 2), playerPosition.y + (characterSize.y / 2));
+	armorImage1.setPosition(playerPosition.x + (characterSize.x / 2), playerPosition.y + (characterSize.y / 2));
 
 	armorImage1.setScale((float)0.8, (float)0.8);
 

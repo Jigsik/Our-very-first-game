@@ -1,6 +1,4 @@
 #include "player.h"
-#include <SFML\Graphics.hpp>
-#include <iostream>
 
 player::player(double _hp, float _speed)
 : HP(_hp), speed(_speed)
@@ -37,6 +35,20 @@ player::player(double _hp, float _speed)
 	rocket_direction = sf::Vector2i(0,1);
 }
 
+player::~player()
+{
+	if (brneni)
+	{
+		brneni->~armor();
+		delete brneni;
+	}
+}
+
+void player::activateArmor()
+{
+	brneni = new armor;
+}
+
 void player::HP_minus(double damaged)
 {
 	HP -= damaged;
@@ -58,6 +70,18 @@ void player::nextAnimation()
 
 void player::draw(sf::RenderWindow* Window)
 {
+	if (brneni)
+	{
+		if (brneni->getTime().asSeconds() > 10)
+		{
+			brneni->~armor();
+			brneni = 0;
+		}
+		else {
+			brneni->draw(Window, playerImage.getPosition(), characterSize);
+		}
+	}
+
 	if (moveClock.getElapsedTime().asMilliseconds() > 10
 		&& playerImage.getPosition().x >= 0
 		&& playerImage.getPosition().y >= 0

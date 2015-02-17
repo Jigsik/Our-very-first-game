@@ -11,7 +11,7 @@ public:
 	double getHP();
 
 	// Public methods
-	void draw(sf::RenderWindow* Window, sf::Vector2f playerPosition);
+	void draw(sf::RenderWindow* Window, sf::Vector2f playerPosition, sf::Vector2u characterSize);
 
 private:
 	double hp;

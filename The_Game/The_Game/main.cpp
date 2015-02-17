@@ -5,7 +5,6 @@
 #include <string>
 #include <string>
 #include "player.h"
-#include "Armor.h"
 #include "enemy.h"
 #include "rocket_missiles.h"
 
@@ -102,7 +101,6 @@ void game(sf::RenderWindow* Window)
 
 	player hrac;
 	enemy nepritel;
-	armor *brneni = 0;
 	rocket_missile *raketa = 0;
 
 	sf::Clock brneniClock;
@@ -125,7 +123,7 @@ void game(sf::RenderWindow* Window)
 				}
 				else if (Event.key.code == sf::Keyboard::LAlt)
 				{
-					brneni = new armor;
+					hrac.activateArmor();
 				}
 				else if (Event.key.code == sf::Keyboard::LControl)
 				{
@@ -161,20 +159,6 @@ void game(sf::RenderWindow* Window)
 		if (raketa)
 		{
 			raketa->draw(Window, nepritel.Image.getPosition());
-		}
-
-		// Brneni
-
-		if (brneni)
-		{
-			if (brneni->getTime().asSeconds() > 10)
-			{
-				brneni->~armor();
-				brneni = 0;
-			}
-			else {
-				brneni->draw(Window, hrac.playerImage.getPosition());
-			}
 		}
 		
 		if (fpsClock.getElapsedTime().asSeconds() > 1)
@@ -216,7 +200,6 @@ void game(sf::RenderWindow* Window)
 		Window->clear();
 	}
 
-	delete brneni;
 	delete raketa;
 }
 
