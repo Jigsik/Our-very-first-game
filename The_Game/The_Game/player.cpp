@@ -68,6 +68,21 @@ void player::nextAnimation()
 	animationClock.restart();
 }
 
+sf::Vector2i player::getRocket_direction()
+{
+	return rocket_direction;
+}
+
+sf::Vector2f player::getPosition()
+{
+	return playerImage.getPosition();
+}
+
+void player::shoot()
+{
+	// TODO
+}
+
 void player::draw(sf::RenderWindow* Window)
 {
 	if (brneni)

@@ -12,18 +12,24 @@ class player
 		double HP_left();
 		void draw(sf::RenderWindow* Window);
 		void activateArmor();
-		float speed;
-		sf::Sprite playerImage;
-		sf::Vector2i rocket_direction;
+		void shoot();
+
+		// GET
+		sf::Vector2i getRocket_direction();
+		sf::Vector2f getPosition();
 
 	private:
 		// It means - Down = 0, Left = 1, Right = 2, Up = 3
 		enum Direction { Down, Left, Right, Up };
 		double HP;
+		sf::Sprite playerImage;
 		sf::Vector2u source;
 		sf::Texture pTexture;
 		sf::Clock moveClock;
 		sf::Clock animationClock;
+		float speed;
+
+		sf::Vector2i rocket_direction;
 
 		armor *brneni = 0;
 

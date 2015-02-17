@@ -127,7 +127,9 @@ void game(sf::RenderWindow* Window)
 				}
 				else if (Event.key.code == sf::Keyboard::LControl)
 				{
-					raketa = new rocket_missile(hrac.playerImage.getPosition(), hrac.rocket_direction);
+					raketa = new rocket_missile(hrac.getPosition(), hrac.getRocket_direction());
+
+					//hrac.shoot();
 				}
 				break;
 			case sf::Event::KeyReleased:
@@ -186,7 +188,7 @@ void game(sf::RenderWindow* Window)
 		Window->draw(fpsText);
 
 		hrac.draw(Window);
-		nepritel.draw(Window, hrac.playerImage.getPosition());
+		nepritel.draw(Window, hrac.getPosition());
 
 		Window->display();
 

@@ -1,6 +1,4 @@
 #include "Armor.h"
-//#include <SFML\Graphics.hpp>
-#include <iostream>
 
 armor::armor(double _armor_hp)
 : hp(_armor_hp)
