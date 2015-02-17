@@ -4,8 +4,10 @@
 class armor
 {
 public:
-	armor(double armor_hp = 50);
+	armor(sf::Vector2u characterSize, double armor_hp = 50);
 	~armor();
+
+	//sf::CircleShape kruh;
 
 	// GET
 	sf::Time getTime();

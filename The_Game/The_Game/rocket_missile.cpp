@@ -2,7 +2,7 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
 
-rocket_missile::rocket_missile(sf::Vector2f playerPosition, sf::Vector2i rocket_direction)
+rocket_missile::rocket_missile(sf::Vector2f playerPosition, sf::Vector2i direction, sf::Vector2u characterSize)
 {
 	// Texture
 
@@ -22,46 +22,43 @@ rocket_missile::rocket_missile(sf::Vector2f playerPosition, sf::Vector2i rocket_
 
 	speed = 2;
 
-	this->rocket_direction = rocket_direction;
-	
-	std::cout << "rocket_direction.x = " << rocket_direction.x << std::endl;
-	std::cout << "rocket_direction.y = " << rocket_direction.y << std::endl;
+	this->direction = direction;
 
-	image.setOrigin(sf::Vector2f(0, 8));
+	image.setOrigin(sf::Vector2f(0, (float)(pTexture.getSize().y / 2)));
 
-	image.setPosition(playerPosition.x + 16, playerPosition.y + 16);
+	image.setPosition(playerPosition.x + (characterSize.x / 2), playerPosition.y + (characterSize.x / 2));
 
-	image.setOrigin(sf::Vector2f(40, 8));
+	image.setOrigin(sf::Vector2f((float)pTexture.getSize().x / 2, (float)(pTexture.getSize().y / 2)));
 
-	if (rocket_direction.x == 1 && rocket_direction.y == 0)
+	if (direction.x == 1 && direction.y == 0)
 	{
 		image.setRotation(180);
 	}
-	else if (rocket_direction.x == -1 && rocket_direction.y == 0)
+	else if (direction.x == -1 && direction.y == 0)
 	{
 		image.setRotation(0);
 	}
-	else if (rocket_direction.x == 0 && rocket_direction.y == 1)
+	else if (direction.x == 0 && direction.y == 1)
 	{
 		image.setRotation(270);
 	}
-	else if (rocket_direction.x == 0 && rocket_direction.y == -1)
+	else if (direction.x == 0 && direction.y == -1)
 	{
 		image.setRotation(90);
 	}
-	else if (rocket_direction.x == 1 && rocket_direction.y == 1)
+	else if (direction.x == 1 && direction.y == 1)
 	{
 		image.setRotation(225);
 	}
-	else if (rocket_direction.x == 1 && rocket_direction.y == -1)
+	else if (direction.x == 1 && direction.y == -1)
 	{
 		image.setRotation(135);
 	}
-	else if (rocket_direction.x == -1 && rocket_direction.y == 1)
+	else if (direction.x == -1 && direction.y == 1)
 	{
 		image.setRotation(315);
 	}
-	else if (rocket_direction.x == -1 && rocket_direction.y == -1)
+	else if (direction.x == -1 && direction.y == -1)
 	{
 		image.setRotation(45);
 	}
@@ -69,10 +66,10 @@ rocket_missile::rocket_missile(sf::Vector2f playerPosition, sf::Vector2i rocket_
 	std::cout << "Missile launched" << std::endl;
 }
 
-void rocket_missile::draw(sf::RenderWindow* Window, sf::Vector2f enemyPosition)
+void rocket_missile::draw(sf::RenderWindow* Window)
 {
 	if (moveClock.getElapsedTime().asMilliseconds() > 10)
-		rocket_missile::move(enemyPosition);
+		rocket_missile::move();
 
 	if (animationClock.getElapsedTime().asMilliseconds() > 150)
 		rocket_missile::nextAnimation();
@@ -80,7 +77,7 @@ void rocket_missile::draw(sf::RenderWindow* Window, sf::Vector2f enemyPosition)
 	if (source.x * 40 >= pTexture.getSize().x)
 		source.x = 0;
 
-	image.setTextureRect(sf::IntRect(source.x * 40, 0, 40, 15));
+	image.setTextureRect(sf::IntRect(source.x * (pTexture.getSize().x / 2), 0, (pTexture.getSize().x / 2), (pTexture.getSize().y)));
 
 	Window->draw(image);
 }
@@ -94,19 +91,19 @@ void rocket_missile::nextAnimation()
 	animationClock.restart();
 }
 
-void rocket_missile::move(sf::Vector2f enemyPosition)
+void rocket_missile::move()
 {
 	// Enemy movement
 
 	speed *= (float) 1.015;
 
-	if (rocket_direction.x == 0 || rocket_direction.y == 0)
+	if (direction.x == 0 || direction.y == 0)
 	{
-		image.move(rocket_direction.x * speed, rocket_direction.y * speed);
+		image.move(direction.x * speed, direction.y * speed);
 	}
 	else {
 		float pom = sqrt((speed*speed)/2);
-		image.move(rocket_direction.x * pom, rocket_direction.y * pom);
+		image.move(direction.x * pom, direction.y * pom);
 	}
 
 	

@@ -1,43 +1,51 @@
 #include <SFML\Graphics.hpp>
 #include <SFML\Audio.hpp>
-#include "Armor.h"
 #include <iostream>
+
+// ARMOR INCLUDE GUARD
+#ifndef __ARMOR_H_INCLUDED__
+#define __ARMOR_H_INCLUDED__
+#include "Armor.h"
+#endif
 
 class player
 {
 	public:
 		player(double HP = 100, float speed = 1);
 		~player();
-		void HP_minus(double damaged);
-		double HP_left();
+		void recieveDamage(double damaged);
 		void draw(sf::RenderWindow* Window);
-		void activateArmor();
 		void shoot();
 
 		// GET
-		sf::Vector2i getRocket_direction();
+		sf::Vector2i getDirection();
 		sf::Vector2f getPosition();
+		sf::Vector2u getCharacterSize();
+		double getHP();
+
+		// ACTIVATE
+		void activateArmor();
 
 	private:
 		// It means - Down = 0, Left = 1, Right = 2, Up = 3
 		enum Direction { Down, Left, Right, Up };
+
 		double HP;
+		float speed;
+
 		sf::Sprite playerImage;
 		sf::Vector2u source;
+		sf::Vector2i direction;
+		sf::Vector2u characterSize;
 		sf::Texture pTexture;
 		sf::Clock moveClock;
 		sf::Clock animationClock;
-		float speed;
-
-		sf::Vector2i rocket_direction;
 
 		armor *brneni = 0;
 
 		// Private Methods
 		void move();
 		void nextAnimation();
-
-		sf::Vector2u characterSize;
 
 		// Sounds
 		sf::SoundBuffer walkBuffer;

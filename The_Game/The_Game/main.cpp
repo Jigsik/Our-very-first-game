@@ -3,7 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <string>
+#include <vector>
 #include "player.h"
 #include "enemy.h"
 #include "rocket_missiles.h"
@@ -100,8 +100,12 @@ void game(sf::RenderWindow* Window)
 	music.setVolume(50);
 
 	player hrac;
-	enemy nepritel;
-	rocket_missile *raketa = 0;
+	//enemy nepritel;
+	//rocket_missile *raketa = 0;
+
+	std::vector<rocket_missile*> rockets;
+	std::vector<enemy*> enemies;
+	sf::Clock enemiesClock;
 
 	sf::Clock brneniClock;
 
@@ -124,10 +128,12 @@ void game(sf::RenderWindow* Window)
 				else if (Event.key.code == sf::Keyboard::LAlt)
 				{
 					hrac.activateArmor();
+					//nepritel.activateArmor();
 				}
 				else if (Event.key.code == sf::Keyboard::LControl)
 				{
-					raketa = new rocket_missile(hrac.getPosition(), hrac.getRocket_direction());
+					//raketa = new rocket_missile(hrac.getPosition(), hrac.getDirection(), hrac.getCharacterSize());
+					rockets.push_back(new rocket_missile(hrac.getPosition(), hrac.getDirection(), hrac.getCharacterSize()));
 
 					//hrac.shoot();
 				}
@@ -156,11 +162,23 @@ void game(sf::RenderWindow* Window)
 			}
 		}
 
+		if (enemiesClock.getElapsedTime().asSeconds() > 2)
+		{
+			enemies.push_back(new enemy);
+			enemiesClock.restart();
+		}
+
 		// Raketa
 
-		if (raketa)
+		/*if (raketa)
 		{
 			raketa->draw(Window, nepritel.Image.getPosition());
+		}*/
+
+		std::vector<rocket_missile*>::iterator Veciter;
+		for (Veciter = rockets.begin(); Veciter != rockets.end(); Veciter++)
+		{
+			(*Veciter)->draw(Window);
 		}
 		
 		if (fpsClock.getElapsedTime().asSeconds() > 1)
@@ -169,13 +187,9 @@ void game(sf::RenderWindow* Window)
 			takže to asi žere moc výkonu a z toho dùvodu to nelze použít. */
 			// system("cls");
 
-			//std::cout << "FPS = " << fps;
-
 			std::ostringstream oss;
 			oss << fps;
 			fpsString = oss.str();
-
-			//std::cout << ", Sound ends in: " << music.getDuration().asSeconds() - music.getPlayingOffset().asSeconds() << " seconds." << std::endl;
 
 			fpsClock.restart();
 
@@ -188,7 +202,14 @@ void game(sf::RenderWindow* Window)
 		Window->draw(fpsText);
 
 		hrac.draw(Window);
-		nepritel.draw(Window, hrac.getPosition());
+
+		//nepritel.draw(Window, hrac.getPosition());
+
+		std::vector<enemy*>::iterator EneIter;
+		for (EneIter = enemies.begin(); EneIter != enemies.end(); EneIter++)
+		{
+			(*EneIter)->draw(Window, hrac.getPosition());
+		}
 
 		Window->display();
 
@@ -202,7 +223,20 @@ void game(sf::RenderWindow* Window)
 		Window->clear();
 	}
 
-	delete raketa;
+	//delete raketa;
+
+	std::vector<rocket_missile*>::iterator rocketIter;
+	for (rocketIter = rockets.begin(); rocketIter != rockets.end(); rocketIter++)
+	{
+		(*rocketIter)->~rocket_missile();
+		delete *rocketIter;
+	}
+
+	std::vector<enemy*>::iterator dEneIter;
+	for (dEneIter = enemies.begin(); dEneIter != enemies.end(); dEneIter++)
+	{
+		delete *dEneIter;
+	}
 }
 
 void menu()

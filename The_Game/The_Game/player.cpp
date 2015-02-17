@@ -32,7 +32,7 @@ player::player(double _hp, float _speed)
 	std::cout << "Player created" << std::endl;
 
 	source = sf::Vector2u(1, Down);
-	rocket_direction = sf::Vector2i(0,1);
+	direction = sf::Vector2i(0,1);
 }
 
 player::~player()
@@ -46,15 +46,15 @@ player::~player()
 
 void player::activateArmor()
 {
-	brneni = new armor;
+	brneni = new armor(characterSize);
 }
 
-void player::HP_minus(double damaged)
+void player::recieveDamage(double damaged)
 {
 	HP -= damaged;
 }
 
-double player::HP_left()
+double player::getHP()
 {
 	return HP;
 }
@@ -68,14 +68,19 @@ void player::nextAnimation()
 	animationClock.restart();
 }
 
-sf::Vector2i player::getRocket_direction()
+sf::Vector2i player::getDirection()
 {
-	return rocket_direction;
+	return direction;
 }
 
 sf::Vector2f player::getPosition()
 {
 	return playerImage.getPosition();
+}
+
+sf::Vector2u player::getCharacterSize()
+{
+	return characterSize;
 }
 
 void player::shoot()
@@ -93,21 +98,21 @@ void player::draw(sf::RenderWindow* Window)
 			brneni = 0;
 		}
 		else {
-			brneni->draw(Window, playerImage.getPosition(), characterSize);
+			brneni->draw(Window, getPosition(), characterSize);
 		}
 	}
 
 	if (moveClock.getElapsedTime().asMilliseconds() > 10
-		&& playerImage.getPosition().x >= 0
-		&& playerImage.getPosition().y >= 0
-		&& playerImage.getPosition().x <= Window->getSize().x - characterSize.x
-		&& playerImage.getPosition().y <= Window->getSize().y - characterSize.y)
+		&& getPosition().x >= 0
+		&& getPosition().y >= 0
+		&& getPosition().x <= Window->getSize().x - characterSize.x
+		&& getPosition().y <= Window->getSize().y - characterSize.y)
 		player::move();
 
-	if (playerImage.getPosition().x < 0) playerImage.setPosition(playerImage.getPosition().x + 1, playerImage.getPosition().y);
-	else if (playerImage.getPosition().y < 0) playerImage.setPosition(playerImage.getPosition().x, playerImage.getPosition().y + 1);
-	else if (playerImage.getPosition().x > Window->getSize().x - characterSize.x) playerImage.setPosition(playerImage.getPosition().x - 1, playerImage.getPosition().y);
-	else if (playerImage.getPosition().y > Window->getSize().y - characterSize.y) playerImage.setPosition(playerImage.getPosition().x, playerImage.getPosition().y - 1);
+	if (playerImage.getPosition().x < 0) playerImage.setPosition(playerImage.getPosition().x + (float)0.1, playerImage.getPosition().y);
+	else if (getPosition().y < 0) playerImage.setPosition(getPosition().x, getPosition().y + (float)0.1);
+	else if (getPosition().x > Window->getSize().x - characterSize.x) playerImage.setPosition(getPosition().x - (float)0.1, getPosition().y);
+	else if (getPosition().y > Window->getSize().y - characterSize.y) playerImage.setPosition(getPosition().x, getPosition().y - (float)0.1);
 
 	if (animationClock.getElapsedTime().asMilliseconds() > (400 / speed))
 		player::nextAnimation();
@@ -153,49 +158,49 @@ void player::move()
 	{
 		playerImage.move(-diag_speed, -diag_speed);
 		source.y = Up;
-		rocket_direction = sf::Vector2i(-1, -1);
+		direction = sf::Vector2i(-1, -1);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		playerImage.move(diag_speed, -diag_speed);
 		source.y = Up;
-		rocket_direction = sf::Vector2i(1, -1);
+		direction = sf::Vector2i(1, -1);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		playerImage.move(diag_speed, diag_speed);
 		source.y = Down;
-		rocket_direction = sf::Vector2i(1, 1);
+		direction = sf::Vector2i(1, 1);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		playerImage.move(-diag_speed, diag_speed);
 		source.y = Down;
-		rocket_direction = sf::Vector2i(-1, 1);
+		direction = sf::Vector2i(-1, 1);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
 		playerImage.move(0, -speed);
 		source.y = Up;
-		rocket_direction = sf::Vector2i(0, -1);
+		direction = sf::Vector2i(0, -1);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
 		playerImage.move(0, speed);
 		source.y = Down;
-		rocket_direction = sf::Vector2i(0, 1);
+		direction = sf::Vector2i(0, 1);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		playerImage.move(-speed, 0);
 		source.y = Left;
-		rocket_direction = sf::Vector2i(-1, 0);
+		direction = sf::Vector2i(-1, 0);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		playerImage.move(speed, 0);
 		source.y = Right;
-		rocket_direction = sf::Vector2i(1, 0);
+		direction = sf::Vector2i(1, 0);
 	}
 
 	// Reset Clock

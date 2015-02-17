@@ -4,9 +4,9 @@
 class rocket_missile
 {
 public:
-	rocket_missile(sf::Vector2f playerPosition, sf::Vector2i rocket_direction);
+	rocket_missile(sf::Vector2f playerPosition, sf::Vector2i direction, sf::Vector2u characterSize);
 	~rocket_missile();
-	void draw(sf::RenderWindow* Window, sf::Vector2f playerPosition);
+	void draw(sf::RenderWindow* Window);
 
 private:
 	float speed;
@@ -15,9 +15,9 @@ private:
 	sf::Clock moveClock;
 	sf::Clock animationClock;
 	sf::Vector2u source;
-	sf::Vector2i rocket_direction;
+	sf::Vector2i direction;
 
-	void move(sf::Vector2f enemyPosition);
+	void move();
 	void nextAnimation();
 
 	sf::SoundBuffer rocketBuffer;

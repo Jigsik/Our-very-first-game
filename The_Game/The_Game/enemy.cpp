@@ -1,6 +1,4 @@
 #include "enemy.h"
-#include <SFML\Graphics.hpp>
-#include <iostream>
 
 enemy::enemy(double _hp, float _speed)
 : HP(_hp), speed(_speed)
@@ -15,6 +13,18 @@ enemy::enemy(double _hp, float _speed)
 	Image.setPosition(sf::Vector2f(100, 100));
 
 	source = sf::Vector2u(1, Down);
+
+	characterSize.x = pTexture.getSize().x / 3;
+	characterSize.y = pTexture.getSize().y / 4;
+}
+
+enemy::~enemy()
+{
+	if (brneni)
+	{
+		brneni->~armor();
+		delete brneni;
+	}
 }
 
 void enemy::HP_minus(double damaged)
@@ -27,6 +37,11 @@ double enemy::HP_left()
 	return HP;
 }
 
+void enemy::activateArmor()
+{
+	brneni = new armor(characterSize);
+}
+
 void enemy::nextAnimation()
 {
 	source.x++;
@@ -37,6 +52,18 @@ void enemy::nextAnimation()
 
 void enemy::draw(sf::RenderWindow* Window, sf::Vector2f playerPosition)
 {
+	if (brneni)
+	{
+		if (brneni->getTime().asSeconds() > 10)
+		{
+			brneni->~armor();
+			brneni = 0;
+		}
+		else {
+			brneni->draw(Window, Image.getPosition(), characterSize);
+		}
+	}
+
 	if (moveClock.getElapsedTime().asMilliseconds() > 10)
 		enemy::move(playerPosition);
 
