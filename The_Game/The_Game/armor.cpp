@@ -3,9 +3,16 @@
 armor::armor(sf::Vector2u characterSize, double _armor_hp)
 : hp(_armor_hp)
 {
-	/*kruh.setRadius(10);
+	kruh.setRadius(10);
 	kruh.setFillColor(sf::Color::Blue);
-	kruh.setOrigin(5, 5);*/
+	kruh.setOrigin(5, 5);
+	kruh1.setRadius(10);
+	kruh1.setFillColor(sf::Color::Blue);
+	kruh1.setOrigin(5, 5);
+	kruh2.setRadius(10);
+	kruh2.setFillColor(sf::Color::Blue);
+	kruh2.setOrigin(5, 5);
+
 
 	if (!pTexture.loadFromFile("Images/armor.png"))
 		std::cout << "Error could not load armor image" << std::endl;
@@ -37,13 +44,25 @@ void armor::draw(sf::RenderWindow* Window, sf::Vector2f playerPosition, sf::Vect
 		rotateClock.restart();
 	}
 
+	if (kruhClock.getElapsedTime().asMilliseconds() > 50)
+	{
+		float radius = 40;
+
+		kruh.setPosition(playerPosition.x + (float)cos(rotace) * radius + (characterSize.x / 2) - 5, playerPosition.y + (float)sin(rotace) * radius + (characterSize.y / 2) - 5);
+		kruh1.setPosition(playerPosition.x + (float)cos(rotace + 90) * radius + (characterSize.x / 2) - 5, playerPosition.y + (float)sin(rotace + 90) * radius + (characterSize.y / 2) - 5);
+		kruh2.setPosition(playerPosition.x + (float)cos(rotace - 90) * radius + (characterSize.x / 2) - 5, playerPosition.y + (float)sin(rotace - 90) * radius + (characterSize.y / 2) - 5);
+		rotace += (float)0.2;
+		kruhClock.restart();
+	}
+
+
+
 	// Draw
-	Window->draw(armorImage);
-	Window->draw(armorImage1);
-
-	/*kruh.setPosition(playerPosition.x + 20, playerPosition.y - 40);
-
-	Window->draw(kruh);*/
+	/*Window->draw(armorImage);
+	Window->draw(armorImage1);*/
+	Window->draw(kruh);
+	Window->draw(kruh1);
+	Window->draw(kruh2);
 }
 
 armor::~armor()
