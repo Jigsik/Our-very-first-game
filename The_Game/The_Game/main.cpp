@@ -106,6 +106,7 @@ void game(sf::RenderWindow* Window)
 	std::vector<rocket_missile*> rockets;
 	std::vector<enemy*> enemies;
 	sf::Clock enemiesClock;
+	sf::Clock rocketsClock;
 
 	sf::Clock brneniClock;
 
@@ -133,7 +134,6 @@ void game(sf::RenderWindow* Window)
 				else if (Event.key.code == sf::Keyboard::LControl)
 				{
 					//raketa = new rocket_missile(hrac.getPosition(), hrac.getDirection(), hrac.getCharacterSize());
-					rockets.push_back(new rocket_missile(hrac.getPosition(), hrac.getDirection(), hrac.getCharacterSize()));
 
 					//hrac.shoot();
 				}
@@ -160,6 +160,12 @@ void game(sf::RenderWindow* Window)
 				}
 				break;
 			}
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) && rocketsClock.getElapsedTime().asMilliseconds() > 350)
+		{
+			rockets.push_back(new rocket_missile(hrac.getPosition(), hrac.getDirection(), hrac.getCharacterSize()));
+			rocketsClock.restart();
 		}
 
 		if (enemiesClock.getElapsedTime().asSeconds() > 2)
