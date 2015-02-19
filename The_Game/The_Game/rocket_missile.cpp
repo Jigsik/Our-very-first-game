@@ -33,18 +33,22 @@ rocket_missile::rocket_missile(sf::Vector2f playerPosition, sf::Vector2i directi
 	if (direction.x == 1 && direction.y == 0)
 	{
 		image.setRotation(180);
+		image.move(image.getOrigin().x, image.getOrigin().y);
 	}
 	else if (direction.x == -1 && direction.y == 0)
 	{
 		image.setRotation(0);
+		image.move(-image.getOrigin().x, -image.getOrigin().y);
 	}
 	else if (direction.x == 0 && direction.y == 1)
 	{
 		image.setRotation(270);
+		image.move(0, image.getOrigin().y);
 	}
 	else if (direction.x == 0 && direction.y == -1)
 	{
 		image.setRotation(90);
+		image.move(0, image.getOrigin().y);
 	}
 	else if (direction.x == 1 && direction.y == 1)
 	{
@@ -62,6 +66,13 @@ rocket_missile::rocket_missile(sf::Vector2f playerPosition, sf::Vector2i directi
 	{
 		image.setRotation(45);
 	}
+
+	size.x = pTexture.getSize().x / numberOfAnimations.x;
+	size.y = pTexture.getSize().y / numberOfAnimations.y;
+
+	//image.move(0, image.getOrigin().y);
+
+	image.setOrigin(sf::Vector2f(0,0));
 
 	std::cout << "Missile launched" << std::endl;
 }
@@ -89,6 +100,21 @@ void rocket_missile::nextAnimation()
 
 	// Reset Clock
 	animationClock.restart();
+}
+
+sf::Vector2f rocket_missile::getPosition()
+{
+	return image.getPosition();
+}
+
+sf::Vector2u rocket_missile::getSize()
+{
+	return sf::Vector2u(size);
+}
+
+float rocket_missile::getRotation()
+{
+	return image.getRotation();
 }
 
 void rocket_missile::move()

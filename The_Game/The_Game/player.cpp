@@ -109,10 +109,24 @@ void player::draw(sf::RenderWindow* Window)
 		&& getPosition().y <= Window->getSize().y - characterSize.y)
 		player::move();
 
-	if (playerImage.getPosition().x < 0) playerImage.setPosition(playerImage.getPosition().x + (float)0.1, playerImage.getPosition().y);
-	else if (getPosition().y < 0) playerImage.setPosition(getPosition().x, getPosition().y + (float)0.1);
-	else if (getPosition().x > Window->getSize().x - characterSize.x) playerImage.setPosition(getPosition().x - (float)0.1, getPosition().y);
-	else if (getPosition().y > Window->getSize().y - characterSize.y) playerImage.setPosition(getPosition().x, getPosition().y - (float)0.1);
+	// If the player wanna go out of the window, It will stop him at the edge
+
+	if (playerImage.getPosition().x < 0 && getPosition().y < 0)
+		playerImage.setPosition(0, 0);
+	else if (playerImage.getPosition().x < 0 && getPosition().y > Window->getSize().y - characterSize.y)
+		playerImage.setPosition(0, Window->getSize().y - characterSize.y);
+	else if (getPosition().x > Window->getSize().x - characterSize.x && playerImage.getPosition().y < 0)
+		playerImage.setPosition(Window->getSize().x - characterSize.x, 0);
+	else if (getPosition().x > Window->getSize().x - characterSize.x && getPosition().y > Window->getSize().y - characterSize.y)
+		playerImage.setPosition(Window->getSize().x - characterSize.x, Window->getSize().y - characterSize.y);
+	else if (playerImage.getPosition().x < 0)
+		playerImage.setPosition(0, playerImage.getPosition().y);
+	else if (getPosition().y < 0)
+		playerImage.setPosition(getPosition().x, 0);
+	else if (getPosition().x > Window->getSize().x - characterSize.x)
+		playerImage.setPosition(Window->getSize().x - characterSize.x, getPosition().y);
+	else if (getPosition().y > Window->getSize().y - characterSize.y)
+		playerImage.setPosition(getPosition().x, Window->getSize().y - characterSize.y);
 
 	if (animationClock.getElapsedTime().asMilliseconds() > (400 / speed))
 		player::nextAnimation();

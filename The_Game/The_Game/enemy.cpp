@@ -10,7 +10,7 @@ enemy::enemy(double _hp, float _speed)
 
 	std::cout << "Enemy created" << std::endl;
 
-	Image.setPosition(sf::Vector2f(100, 100));
+	Image.setPosition(sf::Vector2f(200, 200));
 
 	source = sf::Vector2u(1, Down);
 
@@ -25,6 +25,16 @@ enemy::~enemy()
 		brneni->~armor();
 		delete brneni;
 	}
+}
+
+sf::Vector2f enemy::getPosition()
+{
+	return Image.getPosition();
+}
+
+sf::Vector2u enemy::getSize()
+{
+	return sf::Vector2u(characterSize);
 }
 
 void enemy::HP_minus(double damaged)

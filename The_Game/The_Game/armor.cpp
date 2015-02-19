@@ -58,11 +58,11 @@ void armor::draw(sf::RenderWindow* Window, sf::Vector2f playerPosition, sf::Vect
 
 
 	// Draw
-	/*Window->draw(armorImage);
-	Window->draw(armorImage1);*/
-	Window->draw(kruh);
-	Window->draw(kruh1);
-	Window->draw(kruh2);
+	Window->draw(armorImage);
+	Window->draw(armorImage1);
+	//Window->draw(kruh);
+	//Window->draw(kruh1);
+	//Window->draw(kruh2);
 }
 
 armor::~armor()

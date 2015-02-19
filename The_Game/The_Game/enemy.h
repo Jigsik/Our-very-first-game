@@ -18,6 +18,8 @@ public:
 	sf::Sprite Image;
 	float speed;
 	void activateArmor();
+	sf::Vector2u getSize();
+	sf::Vector2f getPosition();
 
 private:
 	// It means - Down = 0, Left = 1, Right = 2, Up = 3

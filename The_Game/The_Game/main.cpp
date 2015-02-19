@@ -96,21 +96,13 @@ void game(sf::RenderWindow* Window)
 
 	music.setLoop(true);
 	music.play();
-
 	music.setVolume(50);
 
 	player hrac;
-	//enemy nepritel;
-	//rocket_missile *raketa = 0;
 
 	std::vector<rocket_missile*> rockets;
 	std::vector<enemy*> enemies;
-	sf::Clock enemiesClock;
-	sf::Clock rocketsClock;
-
-	sf::Clock brneniClock;
-
-	//Window.setFramerateLimit(100);
+	sf::Clock enemiesClock, rocketsClock, brneniClock;
 
 	while (Window->isOpen())
 	{
@@ -122,20 +114,11 @@ void game(sf::RenderWindow* Window)
 			case sf::Event::KeyPressed:
 				if (Event.key.code == sf::Keyboard::Escape)
 				{
-					//Window->close();
-
 					return;
 				}
 				else if (Event.key.code == sf::Keyboard::LAlt)
 				{
 					hrac.activateArmor();
-					//nepritel.activateArmor();
-				}
-				else if (Event.key.code == sf::Keyboard::LControl)
-				{
-					//raketa = new rocket_missile(hrac.getPosition(), hrac.getDirection(), hrac.getCharacterSize());
-
-					//hrac.shoot();
 				}
 				break;
 			case sf::Event::KeyReleased:
@@ -168,18 +151,11 @@ void game(sf::RenderWindow* Window)
 			rocketsClock.restart();
 		}
 
-		if (enemiesClock.getElapsedTime().asSeconds() > 2)
+		if (enemiesClock.getElapsedTime().asSeconds() > 1)
 		{
 			enemies.push_back(new enemy);
 			enemiesClock.restart();
 		}
-
-		// Raketa
-
-		/*if (raketa)
-		{
-			raketa->draw(Window, nepritel.Image.getPosition());
-		}*/
 
 		std::vector<rocket_missile*>::iterator Veciter;
 		for (Veciter = rockets.begin(); Veciter != rockets.end(); Veciter++)
@@ -209,13 +185,66 @@ void game(sf::RenderWindow* Window)
 
 		hrac.draw(Window);
 
-		//nepritel.draw(Window, hrac.getPosition());
-
 		std::vector<enemy*>::iterator EneIter;
 		for (EneIter = enemies.begin(); EneIter != enemies.end(); EneIter++)
 		{
 			(*EneIter)->draw(Window, hrac.getPosition());
 		}
+
+		// BEGIN COLLISION
+
+		std::vector<rocket_missile*>::iterator rocketIter5;
+		std::vector<enemy*>::iterator enemyIter5;
+
+		for (rocketIter5 = rockets.begin(); rocketIter5 != rockets.end();)
+		{
+			bool collision = false;
+
+			for (enemyIter5 = enemies.begin(); enemyIter5 != enemies.end(); enemyIter5++)
+			{
+				float rocketLeft = (*rocketIter5)->getPosition().x;
+				float rocketRight = (*rocketIter5)->getPosition().x + (float)(*rocketIter5)->getSize().x;
+				float rocketTop = (*rocketIter5)->getPosition().y;
+				float rocketBottom = (*rocketIter5)->getPosition().y + (float)(*rocketIter5)->getSize().y;
+				float enemyRight = (*enemyIter5)->getPosition().x + (float)(*enemyIter5)->getSize().x;
+				float enemyLeft = (*enemyIter5)->getPosition().x;
+				float enemyBottom = (*enemyIter5)->getPosition().y + (float)(*enemyIter5)->getSize().y;
+				float enemyTop = (*enemyIter5)->getPosition().y;
+
+				float rotation = (*rocketIter5)->getRotation();
+
+				// jeste nejake ladeni. Opravdu tezko rict, jestli by nebylo lepsi delat vic animaci.
+
+				if (rotation == 180 || rotation == 135)
+				{
+					rocketLeft = (*rocketIter5)->getPosition().x - (float)(*rocketIter5)->getSize().x;
+					rocketRight = (*rocketIter5)->getPosition().x;
+				}
+				else if (rotation == 90 || rotation == 225)
+				{
+					rocketLeft = (*rocketIter5)->getPosition().x - (float)(*rocketIter5)->getSize().y;
+					rocketRight = (*rocketIter5)->getPosition().x;
+				}
+
+				if (rocketLeft <= enemyRight && rocketRight >= enemyLeft &&
+					  rocketTop <= enemyBottom && rocketBottom >= enemyTop)
+				{
+					std::cout << "HIT" << std::endl;
+
+					rocketIter5 = rockets.erase(rocketIter5);
+					enemyIter5 = enemies.erase(enemyIter5);
+
+					collision = true;
+
+					break;
+				}
+			}
+
+			if (!collision)
+				++rocketIter5;
+		}
+
+		// END COLLISION
 
 		Window->display();
 
@@ -228,8 +257,6 @@ void game(sf::RenderWindow* Window)
 
 		Window->clear();
 	}
-
-	//delete raketa;
 
 	std::vector<rocket_missile*>::iterator rocketIter;
 	for (rocketIter = rockets.begin(); rocketIter != rockets.end(); rocketIter++)

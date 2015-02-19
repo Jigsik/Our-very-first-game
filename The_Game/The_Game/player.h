@@ -18,12 +18,19 @@ class player
 		void shoot();
 
 		// GET
+
 		sf::Vector2i getDirection();
 		sf::Vector2f getPosition();
 		sf::Vector2u getCharacterSize();
+		/**=====================================
+		 Gets player hitpoints
+		 @return The player hit points
+		 *///===================================
 		double getHP();
 
 		// ACTIVATE
+
+		
 		void activateArmor();
 
 	private:
@@ -34,12 +41,10 @@ class player
 		float speed;
 
 		sf::Sprite playerImage;
-		sf::Vector2u source;
+		sf::Vector2u source, characterSize;
 		sf::Vector2i direction;
-		sf::Vector2u characterSize;
 		sf::Texture pTexture;
-		sf::Clock moveClock;
-		sf::Clock animationClock;
+		sf::Clock moveClock, animationClock;
 
 		armor *brneni = 0;
 
@@ -48,8 +53,6 @@ class player
 		void nextAnimation();
 
 		// Sounds
-		sf::SoundBuffer walkBuffer;
-		sf::Sound walk;
-		sf::SoundBuffer sprintBuffer;
-		sf::Sound sprintSound;
+		sf::SoundBuffer walkBuffer, sprintBuffer;
+		sf::Sound walk, sprintSound;
 };
