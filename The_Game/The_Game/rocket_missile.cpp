@@ -33,22 +33,22 @@ rocket_missile::rocket_missile(sf::Vector2f playerPosition, sf::Vector2i directi
 	if (direction.x == 1 && direction.y == 0)
 	{
 		image.setRotation(180);
-		image.move(image.getOrigin().x, image.getOrigin().y);
+		//image.move(image.getOrigin().x, image.getOrigin().y);
 	}
 	else if (direction.x == -1 && direction.y == 0)
 	{
 		image.setRotation(0);
-		image.move(-image.getOrigin().x, -image.getOrigin().y);
+		//image.move(-image.getOrigin().x, -image.getOrigin().y);
 	}
 	else if (direction.x == 0 && direction.y == 1)
 	{
 		image.setRotation(270);
-		image.move(0, image.getOrigin().y);
+		//image.move(0, image.getOrigin().y);
 	}
 	else if (direction.x == 0 && direction.y == -1)
 	{
 		image.setRotation(90);
-		image.move(0, image.getOrigin().y);
+		//image.move(0, image.getOrigin().y);
 	}
 	else if (direction.x == 1 && direction.y == 1)
 	{
@@ -72,7 +72,7 @@ rocket_missile::rocket_missile(sf::Vector2f playerPosition, sf::Vector2i directi
 
 	//image.move(0, image.getOrigin().y);
 
-	image.setOrigin(sf::Vector2f(0,0));
+	//image.setOrigin(sf::Vector2f(0,0));
 
 	std::cout << "Missile launched" << std::endl;
 }

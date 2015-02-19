@@ -202,20 +202,20 @@ void game(sf::RenderWindow* Window)
 
 			for (enemyIter5 = enemies.begin(); enemyIter5 != enemies.end(); enemyIter5++)
 			{
-				float rocketLeft = (*rocketIter5)->getPosition().x;
-				float rocketRight = (*rocketIter5)->getPosition().x + (float)(*rocketIter5)->getSize().x;
-				float rocketTop = (*rocketIter5)->getPosition().y;
-				float rocketBottom = (*rocketIter5)->getPosition().y + (float)(*rocketIter5)->getSize().y;
+				//float rocketLeft = (*rocketIter5)->getPosition().x;
+				//float rocketRight = (*rocketIter5)->getPosition().x + (float)(*rocketIter5)->getSize().x;
+				//float rocketTop = (*rocketIter5)->getPosition().y;
+				//float rocketBottom = (*rocketIter5)->getPosition().y + (float)(*rocketIter5)->getSize().y;
 				float enemyRight = (*enemyIter5)->getPosition().x + (float)(*enemyIter5)->getSize().x;
 				float enemyLeft = (*enemyIter5)->getPosition().x;
 				float enemyBottom = (*enemyIter5)->getPosition().y + (float)(*enemyIter5)->getSize().y;
 				float enemyTop = (*enemyIter5)->getPosition().y;
 
-				float rotation = (*rocketIter5)->getRotation();
+				//float rotation = (*rocketIter5)->getRotation();
 
 				// jeste nejake ladeni. Opravdu tezko rict, jestli by nebylo lepsi delat vic animaci.
 
-				if (rotation == 180 || rotation == 135)
+				/*if (rotation == 180 || rotation == 135)
 				{
 					rocketLeft = (*rocketIter5)->getPosition().x - (float)(*rocketIter5)->getSize().x;
 					rocketRight = (*rocketIter5)->getPosition().x;
@@ -224,10 +224,12 @@ void game(sf::RenderWindow* Window)
 				{
 					rocketLeft = (*rocketIter5)->getPosition().x - (float)(*rocketIter5)->getSize().y;
 					rocketRight = (*rocketIter5)->getPosition().x;
-				}
+				}*/
 
-				if (rocketLeft <= enemyRight && rocketRight >= enemyLeft &&
-					  rocketTop <= enemyBottom && rocketBottom >= enemyTop)
+				if ((*rocketIter5)->getPosition().x >= enemyLeft &&
+					(*rocketIter5)->getPosition().x <= enemyRight &&
+					(*rocketIter5)->getPosition().y >= enemyTop &&
+					(*rocketIter5)->getPosition().y <= enemyBottom)
 				{
 					std::cout << "HIT" << std::endl;
 
@@ -238,6 +240,19 @@ void game(sf::RenderWindow* Window)
 
 					break;
 				}
+
+				/*if (rocketLeft <= enemyRight && rocketRight >= enemyLeft &&
+					  rocketTop <= enemyBottom && rocketBottom >= enemyTop)
+				{
+					std::cout << "HIT" << std::endl;
+
+					rocketIter5 = rockets.erase(rocketIter5);
+					enemyIter5 = enemies.erase(enemyIter5);
+
+					collision = true;
+
+					break;
+				}*/
 			}
 
 			if (!collision)
