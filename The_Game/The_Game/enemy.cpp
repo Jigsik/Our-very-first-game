@@ -10,7 +10,7 @@ enemy::enemy(double _hp, float _speed)
 
 	std::cout << "Enemy created" << std::endl;
 
-	Image.setPosition(sf::Vector2f(200, 200));
+	Image.setPosition(sf::Vector2f(20, 20));
 
 	source = sf::Vector2u(1, Down);
 

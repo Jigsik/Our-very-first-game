@@ -3,6 +3,14 @@
 player::player(double _hp, float _speed)
 : HP(_hp), speed(_speed)
 {
+	// HP TEXT
+
+	if (!HPFont.loadFromFile("Fonts/Face Your Fears.ttf"))
+		std::cout << "Cannot load font for player HP" << std::endl;
+	
+	HPText.setFont(HPFont);
+	HPText.setPosition(200, 0);
+
 	// Texture
 
 	if (!pTexture.loadFromFile("Images/player_1.png"))
@@ -49,7 +57,7 @@ void player::activateArmor()
 	brneni = new armor(characterSize);
 }
 
-void player::recieveDamage(double damaged)
+void player::recieveDamage(int damaged)
 {
 	HP -= damaged;
 }
@@ -90,6 +98,12 @@ void player::shoot()
 
 void player::draw(sf::RenderWindow* Window)
 {
+	// Displaying players HP
+	HPText.setString(std::to_string(HP));
+	Window->draw(HPText);
+
+	// If player has armor no longer than 10s, draw it
+	// otherwise destroy it.
 	if (brneni)
 	{
 		if (brneni->getTime().asSeconds() > 10)
@@ -110,7 +124,6 @@ void player::draw(sf::RenderWindow* Window)
 		player::move();
 
 	// If the player wanna go out of the window, It will stop him at the edge
-
 	if (playerImage.getPosition().x < 0 && getPosition().y < 0)
 		playerImage.setPosition(0, 0);
 	else if (playerImage.getPosition().x < 0 && getPosition().y > Window->getSize().y - characterSize.y)

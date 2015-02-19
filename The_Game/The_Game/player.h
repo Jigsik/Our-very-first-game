@@ -13,7 +13,7 @@ class player
 	public:
 		player(double HP = 100, float speed = 1);
 		~player();
-		void recieveDamage(double damaged);
+		void recieveDamage(int damaged = 20);
 		void draw(sf::RenderWindow* Window);
 		void shoot();
 
@@ -22,10 +22,10 @@ class player
 		sf::Vector2i getDirection();
 		sf::Vector2f getPosition();
 		sf::Vector2u getCharacterSize();
-		/**=====================================
+		/**
 		 Gets player hitpoints
-		 @return The player hit points
-		 *///===================================
+		 <returns>The player hit points</returns>
+		 */
 		double getHP();
 
 		// ACTIVATE
@@ -37,7 +37,7 @@ class player
 		// It means - Down = 0, Left = 1, Right = 2, Up = 3
 		enum Direction { Down, Left, Right, Up };
 
-		double HP;
+		int HP;
 		float speed;
 
 		sf::Sprite playerImage;
@@ -45,6 +45,9 @@ class player
 		sf::Vector2i direction;
 		sf::Texture pTexture;
 		sf::Clock moveClock, animationClock;
+
+		sf::Font HPFont;
+		sf::Text HPText;
 
 		armor *brneni = 0;
 

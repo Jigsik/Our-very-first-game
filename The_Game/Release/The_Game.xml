@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        "The_Game"
+    </assembly>
+    <members>
+        <member name="M:player.getHP">
+Gets player hitpoints
+<returns>The player hit points</returns></member>
+    </members>
+</doc>

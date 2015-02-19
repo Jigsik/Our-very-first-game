@@ -81,6 +81,7 @@ void game(sf::RenderWindow* Window)
 	// Properties of menu texts
 	sf::Text fpsText;
 	fpsText.setFont(fpsFont);
+	
 
 	// Positions of FPS text
 	fpsText.setPosition(sf::Vector2f((float)Window->getSize().x - 80, 0));
@@ -165,13 +166,7 @@ void game(sf::RenderWindow* Window)
 		
 		if (fpsClock.getElapsedTime().asSeconds() > 1)
 		{
-			/* Z nìjakého dùvodu se hra sekne, když zavolám clear do pøíkazové øádky,
-			takže to asi žere moc výkonu a z toho dùvodu to nelze použít. */
-			// system("cls");
-
-			std::ostringstream oss;
-			oss << fps;
-			fpsString = oss.str();
+			fpsString = std::to_string(fps);
 
 			fpsClock.restart();
 
@@ -186,9 +181,29 @@ void game(sf::RenderWindow* Window)
 		hrac.draw(Window);
 
 		std::vector<enemy*>::iterator EneIter;
-		for (EneIter = enemies.begin(); EneIter != enemies.end(); EneIter++)
+		for (EneIter = enemies.begin(); EneIter != enemies.end();)
 		{
 			(*EneIter)->draw(Window, hrac.getPosition());
+
+			float enemyRight = (*EneIter)->getPosition().x + (float)(*EneIter)->getSize().x;
+			float enemyLeft = (*EneIter)->getPosition().x;
+			float enemyBottom = (*EneIter)->getPosition().y + (float)(*EneIter)->getSize().y;
+			float enemyTop = (*EneIter)->getPosition().y;
+			float playerRight = hrac.getPosition().x + (float)hrac.getCharacterSize().x;
+			float playerLeft = hrac.getPosition().x;
+			float playerTop = hrac.getPosition().y;
+			float playerBottom = hrac.getPosition().y + hrac.getCharacterSize().y;
+
+			if (playerLeft <= enemyRight &&
+				playerRight >= enemyLeft &&
+				playerTop <= enemyBottom &&
+				playerBottom >= enemyTop)
+			{
+				EneIter = enemies.erase(EneIter);
+
+				hrac.recieveDamage(20);
+			}
+			else ++EneIter;
 		}
 
 		// BEGIN COLLISION
