@@ -285,7 +285,7 @@ void game(sf::RenderWindow* Window)
 			isPause = false;
 		}
 
-		Window->clear();
+		Window->clear(sf::Color(0, 120, 120));
 	}
 
 	std::vector<rocket_missile*>::iterator rocketIter;
