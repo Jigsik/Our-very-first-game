@@ -3,30 +3,35 @@
 class Character : public WorldObject
 {
 public:
-	Character();
-	~Character();
+	/*Character();
+	~Character();*/
 	void receiveDamage(float damage);
 	void activateArmor();
 
 	// GET
 
 	int getHP();
+	sf::Vector2i getDirection();
+	int HP;
+	float speed;
 
 private:
 	enum Direction { Down, Left, Right, Up};
 	sf::Clock moveClock, animationClock;
-	float speed;
+	
 	sf::Vector2u source;
-	int HP;
+	
+	sf::Vector2i direction;
 	// Armor *brneni = 0;
 
 protected:
+	
 };
 
-Character::Character()
+/*Character::Character()
 {
 }
 
 Character::~Character()
 {
-}
+}*/

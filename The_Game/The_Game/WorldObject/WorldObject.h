@@ -4,8 +4,8 @@
 class WorldObject
 {
 public:
-	WorldObject();
-	~WorldObject();
+	/*WorldObject();
+	~WorldObject();*/
 	void draw(sf::RenderWindow* Window);
 
 	// GET
@@ -19,14 +19,12 @@ private:
 	sf::Vector2u size;
 
 protected:
-	virtual void move();
-	virtual void nextAnimation();
 };
 
-WorldObject::WorldObject()
+/*WorldObject::WorldObject()
 {
 }
 
 WorldObject::~WorldObject()
 {
-}
+}*/

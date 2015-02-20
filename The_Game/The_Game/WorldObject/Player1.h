@@ -3,25 +3,13 @@
 class Player : Character
 {
 public:
-	Player();
+	Player(int HP = 100, float speed = 1);
 	~Player();
 
 	// GET
 
-	sf::Vector2i getDirection();
-
 private:
-	sf::Vector2i direction;
-
 	// Sounds
 	sf::SoundBuffer walkBuffer, sprintBuffer;
 	sf::Sound walkSound, sprintSound;
 };
-
-Player::Player()
-{
-}
-
-Player::~Player()
-{
-}

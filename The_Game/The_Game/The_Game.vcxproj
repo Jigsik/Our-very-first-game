@@ -91,6 +91,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="rocket_missile.cpp" />
+    <ClCompile Include="WorldObject\Player1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="player_1.png" />
