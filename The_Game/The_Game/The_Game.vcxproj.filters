@@ -73,5 +73,14 @@
     <ClInclude Include="rocket_missiles.h">
       <Filter>Header Files\Missiles</Filter>
     </ClInclude>
+    <ClInclude Include="WorldObject\WorldObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject\Character.h">
+      <Filter>Header Files\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject\Player1.h">
+      <Filter>Header Files\Characters</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

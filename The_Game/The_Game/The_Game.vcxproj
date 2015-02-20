@@ -72,7 +72,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Martin\Documents\GitHub\Our-very-first-game\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Martin\Documents\GitHub\Our-very-first-game\JigsEngine\include;C:\Users\Martin\Documents\GitHub\Our-very-first-game\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
     </ClCompile>
     <Link>
@@ -100,7 +100,10 @@
     <ClInclude Include="Armor.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="WorldObject\Character.h" />
     <ClInclude Include="rocket_missiles.h" />
+    <ClInclude Include="WorldObject\Player1.h" />
+    <ClInclude Include="WorldObject\WorldObject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
