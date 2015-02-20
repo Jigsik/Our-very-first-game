@@ -54,6 +54,9 @@
     <ClCompile Include="WorldObject\Player1.cpp">
       <Filter>Source Files\Characters</Filter>
     </ClCompile>
+    <ClCompile Include="WorldObject\Character.cpp">
+      <Filter>Source Files\Characters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="player_1.png">

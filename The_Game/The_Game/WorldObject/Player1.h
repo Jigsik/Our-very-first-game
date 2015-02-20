@@ -1,6 +1,6 @@
 #include "Character.h"
 
-class Player : Character
+class Player : public Character
 {
 public:
 	Player(int HP = 100, float speed = 1);
