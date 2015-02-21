@@ -18,6 +18,7 @@ void Character::receiveDamage(int damage)
 
 void Character::activateArmor()
 {
+	std::cout << "ARMOR ACTIVATED" << std::endl;
 }
 
 int Character::getHP()

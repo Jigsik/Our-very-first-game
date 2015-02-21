@@ -4,7 +4,7 @@ Rune::Rune()
 {
 	//std::cout << "Rune Created" << std::endl;
 
-	int type = rand() % 2;
+	type = rand() % 2;
 
 	// Texture
 
@@ -28,9 +28,22 @@ Rune::Rune()
 	int a1 = rand() % (600 - getSize().x);
 	int a2 = rand() % (400 - getSize().y);
 
-	std::cout << a1 << std::endl << a2 << std::endl;
-
 	image.setPosition(sf::Vector2f((float)a1, (float)a2));
+}
+
+int Rune::getType()
+{
+	return type;
+}
+
+int Rune::getSpawnTime()
+{
+	return spawnTime;
+}
+
+int Rune::getDuration()
+{
+	return duration;
 }
 
 Rune::~Rune()

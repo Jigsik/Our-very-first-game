@@ -16,10 +16,13 @@ private:
 	void setUpSound();
 	void countFPS();
 	void handlingRunes();
+	void collisions();
 
 	bool isPause = false;
 
 protected:
+	enum Types { armorRune, speedRune };
+
 	// Texts
 	sf::Font gameFont; // OK
 	sf::String fpsString; // OK

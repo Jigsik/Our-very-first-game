@@ -10,11 +10,8 @@ Game::Game()
 
 Game::~Game()
 {
-	if (rune)
-	{
-		rune->~Rune();
+	if(rune)
 		delete rune;
-	}
 }
 
 void Game::setUpFont()
@@ -55,22 +52,64 @@ void Game::countFPS()
 
 void Game::handlingRunes()
 {
-	if (!rune && runeClock.getElapsedTime().asSeconds() > 5)
+	if (!rune && runeClock.getElapsedTime().asSeconds() > rune->getSpawnTime())
 	{
 		rune = new Rune;
 	}
 
 	if (rune)
 	{
-		if (rune->runeClock.getElapsedTime().asSeconds() > 10)
+		if (rune->runeClock.getElapsedTime().asSeconds() > rune->getDuration())
 		{
-			rune->~Rune();
+			delete rune;
 			rune = 0;
 			runeClock.restart();
 		}
 		else
 		{
 			Window.draw(rune->image);
+		}
+	}
+}
+
+void Game::collisions()
+{
+	// Player and the rune
+
+	float playerLeft = player.getPosition().x;
+	float playerRight = player.getPosition().x + player.getSize().x;
+	float playerTop = player.getPosition().y;
+	float playerBottom = player.getPosition().y + player.getSize().y;
+
+	if (rune)
+	{
+		float runeLeft = rune->getPosition().x;
+		float runeRight = rune->getPosition().x + rune->getSize().x;
+		float runeTop = rune->getPosition().y;
+		float runeBottom = rune->getPosition().y + rune->getSize().y;
+
+		if (playerLeft <= runeRight &&
+			playerRight >= runeLeft &&
+			playerTop <= runeBottom &&
+			playerBottom >= runeTop)
+		{
+			// Get the rune type
+			int runeType = rune->getType();
+
+			// Which rune have you taken?
+			if (runeType == armorRune)
+			{
+				player.activateArmor();
+			}
+			else if (runeType == speedRune)
+			{
+				std::cout << "SPEED RUNE TAKEN" << std::endl;
+			}
+
+			// Clean memory, set rune to zero and restart the clock
+			delete rune;
+			rune = 0;
+			runeClock.restart();
 		}
 	}
 }
@@ -99,6 +138,8 @@ void Game::play()
 				break;
 			}
 		}
+
+		collisions();
 
 		handlingRunes();
 
