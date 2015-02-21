@@ -87,12 +87,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="armor.cpp" />
+    <ClCompile Include="WorldObject\ArmorRune.cpp" />
     <ClCompile Include="WorldObject\Character.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="rocket_missile.cpp" />
+    <ClCompile Include="WorldObject\Game.cpp" />
     <ClCompile Include="WorldObject\Player1.cpp" />
+    <ClCompile Include="WorldObject\Rune.cpp" />
+    <ClCompile Include="WorldObject\WorldObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="player_1.png" />
@@ -100,11 +104,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Armor.h" />
+    <ClInclude Include="WorldObject\ArmorRune.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="WorldObject\Character.h" />
     <ClInclude Include="rocket_missiles.h" />
+    <ClInclude Include="WorldObject\Game.h" />
     <ClInclude Include="WorldObject\Player1.h" />
+    <ClInclude Include="WorldObject\Rune.h" />
     <ClInclude Include="WorldObject\WorldObject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

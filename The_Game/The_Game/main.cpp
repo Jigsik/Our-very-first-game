@@ -7,6 +7,8 @@
 #include "player.h"
 #include "enemy.h"
 #include "rocket_missiles.h"
+#include "WorldObject\Game.h"
+
 
 void pause(sf::RenderWindow* Window)
 {
@@ -360,7 +362,13 @@ void menu()
 				{
 					if (active == newGame)
 					{
-						game(Window);
+						//game(Window);
+
+						//Game hra(Window);
+
+						//hra.play();
+
+						//hra.~Game();
 					}
 					else if (active == konec)
 						Window->close();
@@ -382,6 +390,7 @@ void menu()
 		if (active == 0)
 		{
 			nova_hra.setColor(sf::Color::Yellow);
+
 			nova_hra.setStyle(sf::Text::Bold | sf::Text::Underlined);
 			nova_hra.setCharacterSize(50);
 
@@ -404,12 +413,21 @@ void menu()
 		Window->clear();
 	}
 
-	Window->~RenderWindow();
+	// This is bad - this caused a leak
+	//Window->~RenderWindow();
 
 	delete Window;
 }
 
 int main()
 {
-	menu();
+	//menu();
+
+	srand((unsigned)time(0));
+
+	Game hra;
+
+	hra.play();
+
+	return 0;
 }

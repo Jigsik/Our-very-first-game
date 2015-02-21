@@ -3,10 +3,12 @@
 Character::Character(int _hp, float _speed)
 : HP(_hp), speed(_speed)
 {
+	std::cout << "Characted Created" << std::endl;
 }
 
 Character::~Character()
 {
+	std::cout << "Characted Destroyed" << std::endl;
 }
 
 void Character::receiveDamage(int damage)

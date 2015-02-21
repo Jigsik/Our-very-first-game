@@ -34,6 +34,15 @@
     <Filter Include="Source Files\Missiles">
       <UniqueIdentifier>{43f0a7f2-9173-43db-baca-6fc3bb088bba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Buffs">
+      <UniqueIdentifier>{eb3657c1-0d20-475a-8713-be7960fc93df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameModes">
+      <UniqueIdentifier>{da43e1ae-0667-492f-ad85-af3113101a13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameModes">
+      <UniqueIdentifier>{16eccbd6-5379-43bb-8935-ab7e6c12b861}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -57,6 +66,18 @@
     <ClCompile Include="WorldObject\Character.cpp">
       <Filter>Source Files\Characters</Filter>
     </ClCompile>
+    <ClCompile Include="WorldObject\Rune.cpp">
+      <Filter>Source Files\Runes</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldObject\Game.cpp">
+      <Filter>Source Files\GameModes</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldObject\ArmorRune.cpp">
+      <Filter>Source Files\Runes</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldObject\WorldObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="player_1.png">
@@ -67,9 +88,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Armor.h">
-      <Filter>Header Files\Runes</Filter>
-    </ClInclude>
     <ClInclude Include="player.h">
       <Filter>Header Files\Characters</Filter>
     </ClInclude>
@@ -87,6 +105,18 @@
     </ClInclude>
     <ClInclude Include="WorldObject\Player1.h">
       <Filter>Header Files\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject\Rune.h">
+      <Filter>Header Files\Runes</Filter>
+    </ClInclude>
+    <ClInclude Include="Armor.h">
+      <Filter>Header Files\Buffs</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject\Game.h">
+      <Filter>Header Files\GameModes</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject\ArmorRune.h">
+      <Filter>Header Files\Runes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@
 class Character : public WorldObject
 {
 public:
-	Character(int _hp, float _speed);
+	Character(int _hp, float _moveSpeed);
 	~Character();
 	void receiveDamage(int damage);
 	void activateArmor();
@@ -14,15 +14,15 @@ public:
 	sf::Vector2i getDirection();
 
 private:
-	enum Direction { Down, Left, Right, Up};
+	
+protected:
 	sf::Clock moveClock, animationClock;
+	float moveSpeed, speed;
+	enum Direction { Down, Left, Right, Up };
 	int HP;
-	float speed;
-	sf::Vector2u source;
-	sf::Vector2i direction;
+	sf::Vector2u source = sf::Vector2u(0, Down);
+	sf::Vector2i direction = sf::Vector2i(0, 1);
 	// Armor *brneni = 0;
 	void nextAnimation();
 
-protected:
-	
 };
