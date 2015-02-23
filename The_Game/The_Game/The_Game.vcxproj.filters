@@ -43,13 +43,13 @@
     <Filter Include="Source Files\GameModes">
       <UniqueIdentifier>{16eccbd6-5379-43bb-8935-ab7e6c12b861}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Buffs">
+      <UniqueIdentifier>{d07f987f-24bf-4f5b-8bbf-8913bb8cdf1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="armor.cpp">
-      <Filter>Source Files\Runes</Filter>
     </ClCompile>
     <ClCompile Include="player.cpp">
       <Filter>Source Files\Characters</Filter>
@@ -77,6 +77,18 @@
     </ClCompile>
     <ClCompile Include="WorldObject\WorldObject.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldObject\Armor.cpp">
+      <Filter>Source Files\Buffs</Filter>
+    </ClCompile>
+    <ClCompile Include="armor25.cpp">
+      <Filter>Source Files\Runes</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldObject\Buff.cpp">
+      <Filter>Source Files\Buffs</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldObject\Speed.cpp">
+      <Filter>Source Files\Buffs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +129,15 @@
     </ClInclude>
     <ClInclude Include="WorldObject\ArmorRune.h">
       <Filter>Header Files\Runes</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject\Buff.h">
+      <Filter>Header Files\Buffs</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject\Armor1.h">
+      <Filter>Header Files\Buffs</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject\Speed.h">
+      <Filter>Header Files\Buffs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

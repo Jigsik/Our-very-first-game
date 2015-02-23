@@ -4,7 +4,7 @@ Rune::Rune()
 {
 	//std::cout << "Rune Created" << std::endl;
 
-	type = rand() % 2;
+	type = rand() % numberOfRunes;
 
 	// Texture
 
@@ -34,11 +34,6 @@ Rune::Rune()
 int Rune::getType()
 {
 	return type;
-}
-
-int Rune::getSpawnTime()
-{
-	return spawnTime;
 }
 
 int Rune::getDuration()

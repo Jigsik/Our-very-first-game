@@ -16,9 +16,9 @@ public:
 
 	// GET
 
+	sf::Sprite image;
 	sf::Vector2u getSize();
 	sf::Vector2f getPosition();
-	sf::Sprite image;
 
 private:
 

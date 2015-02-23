@@ -5,7 +5,7 @@ class Player : public Character
 public:
 	Player(int HP = 100, float moveSpeed = 1);
 	~Player();
-	void changeState();
+	void draw(sf::RenderWindow *Window);
 	// GET
 
 private:
@@ -23,4 +23,10 @@ private:
 	sf::Keyboard::Key leftKey = sf::Keyboard::Left;
 	sf::Keyboard::Key rightKey = sf::Keyboard::Right;
 	sf::Keyboard::Key fireKey = sf::Keyboard::LControl;
+
+	// Text
+
+	sf::Font gameFont;
+	sf::String string;
+	sf::Text text;
 };

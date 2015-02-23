@@ -17,6 +17,7 @@ private:
 	void countFPS();
 	void handlingRunes();
 	void collisions();
+	void handlingBuffs();
 
 	bool isPause = false;
 
@@ -31,7 +32,7 @@ protected:
 	int fps = 0; // OK
 
 	// Window
-	sf::RenderWindow Window; // OK
+	sf::RenderWindow *Window = 0; // OK
 
 	// Clocks
 	sf::Clock fpsClock, enemiesClock, rocketsClock, armorClock, runeClock; // OK

@@ -11,9 +11,10 @@ Player::Player(int _hp, float _speed)
 		std::cout << "Error could not load player image." << std::endl;
 
 	image.setTexture(pTexture);
-
 	size.x = pTexture.getSize().x / numberOfAnimations.x;
 	size.y = pTexture.getSize().y / numberOfAnimations.y;
+
+	image.setPosition(150, 150);
 
 	// Sounds
 
@@ -33,6 +34,15 @@ Player::Player(int _hp, float _speed)
 
 	moveSpeed = 1;
 
+	// Texts
+
+	if (!gameFont.loadFromFile("Fonts/STENCIL.ttf"))
+		std::cout << "Cannot load game Font" << std::endl;
+	else std::cout << "Success loading game Font" << std::endl;
+
+	text.setFont(gameFont);
+	text.setCharacterSize(20);
+
 	// Player has been succesfully created
 
 	std::cout << "Player created" << std::endl;
@@ -42,7 +52,7 @@ Player::~Player()
 {
 }
 
-void Player::changeState()
+void Player::draw(sf::RenderWindow *Window)
 {
 	if (moveClock.getElapsedTime().asMilliseconds() > 10)
 		move();
@@ -54,6 +64,23 @@ void Player::changeState()
 		source.x = 0;
 
 	image.setTextureRect(sf::IntRect(source.x * size.x, source.y * size.y, size.x, size.y));
+
+	// Texts
+
+	text.setPosition(sf::Vector2f(0, 0));
+	string = std::to_string(HP);
+	text.setString("HP = " + string);
+	Window->draw(text);
+
+	if (armor)
+	{
+		text.setPosition(sf::Vector2f(100, 0));
+		string = std::to_string(armor->getHP());
+		text.setString("Armor = " + string);
+		Window->draw(text);
+	}
+
+	Window->draw(image);
 }
 
 void Player::move()

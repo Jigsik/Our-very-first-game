@@ -2,7 +2,9 @@
 
 Game::Game()
 {
-	Window.create(sf::VideoMode(600, 400), "Hovnocuc"); // OK
+	Window = new sf::RenderWindow;
+
+	Window->create(sf::VideoMode(600, 400), "Hovnocuc"); // OK
 
 	setUpFont();
 	setUpSound();
@@ -12,16 +14,21 @@ Game::~Game()
 {
 	if(rune)
 		delete rune;
+
+	if (Window)
+		delete Window;
 }
 
 void Game::setUpFont()
 {
-	if (!gameFont.loadFromFile("Fonts/Face Your Fears.ttf"))
+	if (!gameFont.loadFromFile("Fonts/STENCIL.ttf"))
 		std::cout << "Cannot load game Font" << std::endl;
 	else std::cout << "Success loading game Font" << std::endl;
 
 	fpsText.setFont(gameFont);
-	fpsText.setPosition(sf::Vector2f((float)Window.getSize().x - 80, 0));
+	fpsText.setPosition(sf::Vector2f((float)Window->getSize().x - 50, 0));
+
+	fpsText.setCharacterSize(20);
 }
 
 void Game::setUpSound()
@@ -47,12 +54,12 @@ void Game::countFPS()
 
 	fpsText.setString(fpsString);
 
-	Window.draw(fpsText);
+	Window->draw(fpsText);
 }
 
 void Game::handlingRunes()
 {
-	if (!rune && runeClock.getElapsedTime().asSeconds() > rune->getSpawnTime())
+	if (!rune && runeClock.getElapsedTime().asSeconds() > 3)
 	{
 		rune = new Rune;
 	}
@@ -67,9 +74,14 @@ void Game::handlingRunes()
 		}
 		else
 		{
-			Window.draw(rune->image);
+			Window->draw(rune->image);
 		}
 	}
+}
+
+void Game::handlingBuffs()
+{
+	player.drawBuffs(Window);
 }
 
 void Game::collisions()
@@ -103,7 +115,7 @@ void Game::collisions()
 			}
 			else if (runeType == speedRune)
 			{
-				std::cout << "SPEED RUNE TAKEN" << std::endl;
+				player.activateSpeed();
 			}
 
 			// Clean memory, set rune to zero and restart the clock
@@ -116,13 +128,13 @@ void Game::collisions()
 
 void Game::play()
 {
-	Window.setFramerateLimit(0); // OK
+	Window->setFramerateLimit(0); // OK
 
-	while (Window.isOpen()) // OK
+	while (Window->isOpen()) // OK
 	{
-		Window.clear(sf::Color(30, 40, 200));
+		Window->clear(sf::Color(30, 40, 200));
 
-		while (Window.pollEvent(gameEvent))
+		while (Window->pollEvent(gameEvent))
 		{
 			switch (gameEvent.type)
 			{
@@ -143,16 +155,16 @@ void Game::play()
 
 		handlingRunes();
 
+		handlingBuffs();
+
 		countFPS();
 
-		player.changeState();
+		player.draw(Window);
 
-		Window.draw(player.image);
-
-		Window.display();
+		Window->display();
 	}
 
 	gameMusic.stop();
 
-	Window.close(); // OK
+	Window->close(); // OK
 }

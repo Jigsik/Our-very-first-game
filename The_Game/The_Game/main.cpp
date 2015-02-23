@@ -4,9 +4,9 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "player.h"
-#include "enemy.h"
-#include "rocket_missiles.h"
+//#include "player.h"
+//#include "enemy.h"
+//#include "rocket_missiles.h"
 #include "WorldObject\Game.h"
 
 
@@ -59,7 +59,7 @@ void pause(sf::RenderWindow* Window)
 	}
 }
 
-void game(sf::RenderWindow* Window)
+/*void game(sf::RenderWindow* Window)
 {
 	bool isPause = false;
 
@@ -243,7 +243,7 @@ void game(sf::RenderWindow* Window)
 					rocketRight = (*rocketIter5)->getPosition().x;
 				}*/
 
-				if ((*rocketIter5)->getPosition().x >= enemyLeft &&
+				/*if ((*rocketIter5)->getPosition().x >= enemyLeft &&
 					(*rocketIter5)->getPosition().x <= enemyRight &&
 					(*rocketIter5)->getPosition().y >= enemyTop &&
 					(*rocketIter5)->getPosition().y <= enemyBottom)
@@ -256,7 +256,7 @@ void game(sf::RenderWindow* Window)
 					collision = true;
 
 					break;
-				}
+				}*/
 
 				/*if (rocketLeft <= enemyRight && rocketRight >= enemyLeft &&
 					  rocketTop <= enemyBottom && rocketBottom >= enemyTop)
@@ -270,7 +270,7 @@ void game(sf::RenderWindow* Window)
 
 					break;
 				}*/
-			}
+			/*}
 
 			if (!collision)
 				++rocketIter5;
@@ -302,7 +302,7 @@ void game(sf::RenderWindow* Window)
 	{
 		delete *dEneIter;
 	}
-}
+}*/
 
 void menu()
 {

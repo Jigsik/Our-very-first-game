@@ -1,4 +1,9 @@
 #include "WorldObject.h"
+#include "Armor1.h"
+#include "Speed.h"
+
+#ifndef __CHARACTER_H_INCLUDED__
+#define __CHARACTER_H_INCLUDED__
 
 class Character : public WorldObject
 {
@@ -7,6 +12,8 @@ public:
 	~Character();
 	void receiveDamage(int damage);
 	void activateArmor();
+	void activateSpeed();
+	void drawBuffs(sf::RenderWindow *Window);
 
 	// GET
 
@@ -16,7 +23,7 @@ public:
 private:
 	
 protected:
-	sf::Clock moveClock, animationClock;
+	sf::Clock moveClock, animationClock, buffClock;
 	float moveSpeed, speed;
 	enum Direction { Down, Left, Right, Up };
 	int HP;
@@ -24,5 +31,9 @@ protected:
 	sf::Vector2i direction = sf::Vector2i(0, 1);
 	// Armor *brneni = 0;
 	void nextAnimation();
+	Armor *armor = 0;
+	Speed *speedBuff = 0;
 
 };
+
+#endif // !__CHARACTER_H_INCLUDED__
