@@ -1,6 +1,9 @@
-#include <SFML\Graphics.hpp>
-#include <SFML\Audio.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
+#include <fstream>
+#include <cctype>
+#include <string>
 #include "Player1.h"
 #include "Rune.h"
 #include "Bullet.h"
@@ -21,6 +24,7 @@ private:
 	void handlingBuffs();
 	void handlingMissiles();
 	void hanglingCharacters();
+	void loadMap();
 
 	bool isPause = false;
 
@@ -56,4 +60,10 @@ protected:
 
 	// Views
 	sf::View view1;
+
+	// Map
+	sf::Texture tileTexture;
+	sf::Sprite tiles;
+	int map[100][100];
+	sf::Vector2i mapSize;
 };

@@ -8,6 +8,7 @@ Game::Game()
 
 	setUpFont();
 	setUpSound();
+	loadMap();
 }
 
 Game::~Game()
@@ -49,6 +50,58 @@ void Game::setUpSound()
 	gameMusic.setLoop(true);
 	gameMusic.play();
 	gameMusic.setVolume(50);
+}
+
+void Game::loadMap()
+{
+	std::ifstream openfile("Maps/mapa.txt");
+	sf::Vector2i loadCounter = sf::Vector2i(0, 0);
+
+	if (openfile.is_open())
+	{
+		std::string tileLocation;
+		openfile >> tileLocation;
+		tileTexture.loadFromFile(tileLocation);
+		tiles.setTexture(tileTexture);
+
+		while (!openfile.eof())
+		{
+			int size;
+			std::string str;
+			openfile >> str;
+
+			size = str.length();
+
+			for (int i = 0; i < size; i++)
+			{
+				if (!isdigit(str[i]))
+				{
+					continue;
+				}
+				else if (str[i] == '0')
+				{
+					map[loadCounter.x][loadCounter.y] = -1;
+					loadCounter.x++;
+				}
+				else
+				{
+					map[loadCounter.x][loadCounter.y] = str[i] - '1';
+					loadCounter.x++;
+				}
+			}
+
+			if (openfile.peek() == '\n')
+			{
+				loadCounter.x = 0;
+				loadCounter.y++;
+			}
+		}
+
+		loadCounter.y++;
+	}
+	else std::cout << "Cannot open file" << std::endl;
+
+	mapSize = loadCounter;
 }
 
 void Game::countFPS()
@@ -168,6 +221,19 @@ void Game::play()
 	while (Window->isOpen()) // OK
 	{
 		Window->clear(sf::Color(30, 40, 200));
+
+		for (int i = 0; i < mapSize.x; i++)
+		{
+			for (int j = 0; j < mapSize.y; j++)
+			{
+				if (map[j][i] != -1)
+				{
+					tiles.setPosition(j * 32, i * 32);
+					tiles.setTextureRect(sf::IntRect((map[j][i] % 2) * 32, (map[j][i] / 2) * 32, 32, 32));
+					Window->draw(tiles);
+				}
+			}
+		}
 
 		Window->setView(view1);
 

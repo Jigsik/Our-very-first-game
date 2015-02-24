@@ -1,1 +1,1 @@
-﻿<?xml version="1.0" encoding="utf-8"?><DEFECTS />
+﻿<?xml version="1.0" encoding="utf-8"?><DEFECTS><DEFECT><SFA><FILEPATH>c:\users\martin\documents\github\our-very-first-game\the_game\the_game\</FILEPATH><FILENAME>main.cpp</FILENAME><LINE>422</LINE><COLUMN>4</COLUMN></SFA><DEFECTCODE>6262</DEFECTCODE><DESCRIPTION>Function uses '4001848' bytes of stack:  exceeds /analyze:stacksize '16384'.  Consider moving some data to heap.</DESCRIPTION><FUNCTION>main</FUNCTION><DECORATED>main</DECORATED><FUNCLINE>422</FUNCLINE><PATH /></DEFECT></DEFECTS>
