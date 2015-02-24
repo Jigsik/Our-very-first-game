@@ -4,7 +4,7 @@ Game::Game()
 {
 	Window = new sf::RenderWindow;
 
-	Window->create(sf::VideoMode(600, 400), "Hovnocuc"); // OK
+	Window->create(sf::VideoMode(1000, 1000), "Hovnocuc"); // OK
 
 	setUpFont();
 	setUpSound();
@@ -12,11 +12,20 @@ Game::Game()
 
 Game::~Game()
 {
+	// Delete rune if exists
 	if(rune)
 		delete rune;
 
+	// Delete Window
 	if (Window)
 		delete Window;
+
+	// Delete all existing bullets
+	for (bulletsIt = bullets.begin(); bulletsIt != bullets.end();)
+	{
+		delete *bulletsIt;
+		bulletsIt = bullets.erase(bulletsIt);
+	}
 }
 
 void Game::setUpFont()
@@ -54,6 +63,8 @@ void Game::countFPS()
 
 	fpsText.setString(fpsString);
 
+	Window->setView(Window->getDefaultView());
+
 	Window->draw(fpsText);
 }
 
@@ -82,6 +93,27 @@ void Game::handlingRunes()
 void Game::handlingBuffs()
 {
 	player.drawBuffs(Window);
+}
+
+void Game::handlingMissiles()
+{
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) && bulletsClock.getElapsedTime().asMilliseconds() > 350)
+	{
+		bullets.push_back(new Bullet(player.getPosition(), player.getDirection(), player.getSize()));
+		bulletsClock.restart();
+	}
+
+	for (bulletsIt = bullets.begin(); bulletsIt != bullets.end(); bulletsIt++)
+	{
+		(*bulletsIt)->draw(Window);
+	}
+}
+
+void Game::hanglingCharacters()
+{
+	player.draw(Window);
+
+	Window->setView(view1);
 }
 
 void Game::collisions()
@@ -128,11 +160,16 @@ void Game::collisions()
 
 void Game::play()
 {
+	view1.setCenter(350, 300);
+	view1.setSize(500, 500);
+
 	Window->setFramerateLimit(0); // OK
 
 	while (Window->isOpen()) // OK
 	{
 		Window->clear(sf::Color(30, 40, 200));
+
+		Window->setView(view1);
 
 		while (Window->pollEvent(gameEvent))
 		{
@@ -157,9 +194,15 @@ void Game::play()
 
 		handlingBuffs();
 
+		Window->setView(view1);
+
+		handlingMissiles();
+
+		hanglingCharacters();
+
 		countFPS();
 
-		player.draw(Window);
+		Window->setView(view1);
 
 		Window->display();
 	}

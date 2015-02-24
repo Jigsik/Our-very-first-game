@@ -20,5 +20,7 @@ void Speed::draw(sf::RenderWindow *Window)
 
 	// KOnec TEXT
 
+	Window->setView(Window->getDefaultView());
+
 	Window->draw(text);
 }

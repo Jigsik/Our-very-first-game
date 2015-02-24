@@ -49,9 +49,11 @@ void Armor::draw(sf::RenderWindow *Window, sf::Vector2f playerPosition, sf::Vect
 
 	text.setString("Armor: " + string + "s");
 
-	// KOnec TEXT
-
-	Window->draw(text);
 	Window->draw(image);
 	Window->draw(image1);
+
+	// KOnec TEXT
+	Window->setView(Window->getDefaultView());
+
+	Window->draw(text);
 }

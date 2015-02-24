@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Player1.h"
 #include "Rune.h"
+#include "Bullet.h"
 
 class Game
 {
@@ -18,6 +19,8 @@ private:
 	void handlingRunes();
 	void collisions();
 	void handlingBuffs();
+	void handlingMissiles();
+	void hanglingCharacters();
 
 	bool isPause = false;
 
@@ -35,7 +38,8 @@ protected:
 	sf::RenderWindow *Window = 0; // OK
 
 	// Clocks
-	sf::Clock fpsClock, enemiesClock, rocketsClock, armorClock, runeClock; // OK
+	sf::Clock fpsClock, enemiesClock, rocketsClock, armorClock,
+			  runeClock, bulletsClock; // OK
 
 	// Sound
 	sf::Music gameMusic;
@@ -43,4 +47,13 @@ protected:
 	// Objects
 	Player player;
 	Rune *rune = 0;
+
+	// Missiles
+	std::vector<Bullet*> bullets;
+
+	// Iterators
+	std::vector<Bullet*>::iterator bulletsIt;
+
+	// Views
+	sf::View view1;
 };

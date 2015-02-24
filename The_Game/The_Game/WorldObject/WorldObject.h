@@ -23,6 +23,7 @@ public:
 private:
 
 protected:
+	enum Direction { Down, Left, Right, Up };
 	sf::Texture pTexture;
 	sf::Vector2u size, numberOfAnimations = sf::Vector2u(1, 1);
 };

@@ -90,6 +90,12 @@
     <ClCompile Include="WorldObject\Speed.cpp">
       <Filter>Source Files\Buffs</Filter>
     </ClCompile>
+    <ClCompile Include="WorldObject\Bullet.cpp">
+      <Filter>Source Files\Missiles</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldObject\Missile.cpp">
+      <Filter>Source Files\Missiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="player_1.png">
@@ -138,6 +144,12 @@
     </ClInclude>
     <ClInclude Include="WorldObject\Speed.h">
       <Filter>Header Files\Buffs</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject\Missile.h">
+      <Filter>Header Files\Missiles</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject\Bullet.h">
+      <Filter>Header Files\Missiles</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

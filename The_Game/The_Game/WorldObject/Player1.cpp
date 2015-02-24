@@ -65,11 +65,16 @@ void Player::draw(sf::RenderWindow *Window)
 
 	image.setTextureRect(sf::IntRect(source.x * size.x, source.y * size.y, size.x, size.y));
 
+	Window->draw(image);
+
 	// Texts
 
 	text.setPosition(sf::Vector2f(0, 0));
 	string = std::to_string(HP);
 	text.setString("HP = " + string);
+
+	Window->setView(Window->getDefaultView());
+
 	Window->draw(text);
 
 	if (armor)
@@ -79,8 +84,6 @@ void Player::draw(sf::RenderWindow *Window)
 		text.setString("Armor = " + string);
 		Window->draw(text);
 	}
-
-	Window->draw(image);
 }
 
 void Player::move()
