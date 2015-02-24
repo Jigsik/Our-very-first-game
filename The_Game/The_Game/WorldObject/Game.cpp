@@ -55,7 +55,7 @@ void Game::setUpSound()
 void Game::loadMap()
 {
 	std::ifstream openfile("Maps/mapa.txt");
-	sf::Vector2i loadCounter = sf::Vector2i(0, 0);
+	//sf::Vector2i loadCounter = sf::Vector2i(0, 0);
 
 	if (openfile.is_open())
 	{
@@ -80,28 +80,30 @@ void Game::loadMap()
 				}
 				else if (str[i] == '0')
 				{
-					map[loadCounter.x][loadCounter.y] = -1;
-					loadCounter.x++;
+					tempMap.push_back(-1);
+					//map[loadCounter.x][loadCounter.y] = -1;
+					//loadCounter.x++;
 				}
 				else
 				{
-					map[loadCounter.x][loadCounter.y] = str[i] - '1';
-					loadCounter.x++;
+					tempMap.push_back(str[i] - '1');
+					//map[loadCounter.x][loadCounter.y] = str[i] - '1';
+					//loadCounter.x++;
 				}
 			}
 
 			if (openfile.peek() == '\n')
 			{
-				loadCounter.x = 0;
-				loadCounter.y++;
+				map.push_back(tempMap);
+				tempMap.clear();
 			}
 		}
-
-		loadCounter.y++;
+		map.push_back(tempMap);
+		tempMap.clear();
 	}
 	else std::cout << "Cannot open file" << std::endl;
 
-	mapSize = loadCounter;
+	//mapSize = loadCounter;
 }
 
 void Game::countFPS()
@@ -213,8 +215,8 @@ void Game::collisions()
 
 void Game::play()
 {
-	view1.setCenter(350, 300);
-	view1.setSize(500, 500);
+	view1.setCenter(300, 300);
+	view1.setSize(600, 600);
 
 	Window->setFramerateLimit(0); // OK
 
@@ -222,14 +224,14 @@ void Game::play()
 	{
 		Window->clear(sf::Color(30, 40, 200));
 
-		for (int i = 0; i < mapSize.x; i++)
+		for (unsigned i = 0; i < map.size(); i++)
 		{
-			for (int j = 0; j < mapSize.y; j++)
+			for (unsigned j = 0; j < map[i].size(); j++)
 			{
-				if (map[j][i] != -1)
+				if (map[i][j] != -1)
 				{
-					tiles.setPosition(j * 32, i * 32);
-					tiles.setTextureRect(sf::IntRect((map[j][i] % 2) * 32, (map[j][i] / 2) * 32, 32, 32));
+					tiles.setPosition((float)(j * 30), (float)(i * 30));
+					tiles.setTextureRect(sf::IntRect((map[i][j] % 2) * 30, (map[i][j] / 2) * 30, 30, 30));
 					Window->draw(tiles);
 				}
 			}

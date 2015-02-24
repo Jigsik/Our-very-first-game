@@ -4,6 +4,7 @@
 #include <fstream>
 #include <cctype>
 #include <string>
+#include <vector>
 #include "Player1.h"
 #include "Rune.h"
 #include "Bullet.h"
@@ -64,6 +65,8 @@ protected:
 	// Map
 	sf::Texture tileTexture;
 	sf::Sprite tiles;
-	int map[100][100];
+	//int map[100][100];
+	std::vector<std::vector<int>> map;
+	std::vector<int> tempMap;
 	sf::Vector2i mapSize;
 };
