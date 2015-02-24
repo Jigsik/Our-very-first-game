@@ -55,55 +55,32 @@ void Game::setUpSound()
 void Game::loadMap()
 {
 	std::ifstream openfile("Maps/mapa.txt");
-	//sf::Vector2i loadCounter = sf::Vector2i(0, 0);
 
 	if (openfile.is_open())
 	{
 		std::string tileLocation;
-		openfile >> tileLocation;
+		std::getline(openfile, tileLocation);
 		tileTexture.loadFromFile(tileLocation);
 		tiles.setTexture(tileTexture);
 
 		while (!openfile.eof())
 		{
-			int size;
-			std::string str;
-			openfile >> str;
+			std::string str, value;
+			std::getline(openfile, str);
+			std::stringstream stream(str);
 
-			size = str.length();
-
-			for (int i = 0; i < size; i++)
+			while (std::getline(stream, value, ','))
 			{
-				if (!isdigit(str[i]))
-				{
-					continue;
-				}
-				else if (str[i] == '0')
-				{
-					tempMap.push_back(-1);
-					//map[loadCounter.x][loadCounter.y] = -1;
-					//loadCounter.x++;
-				}
-				else
-				{
-					tempMap.push_back(str[i] - '1');
-					//map[loadCounter.x][loadCounter.y] = str[i] - '1';
-					//loadCounter.x++;
-				}
+				if (value.length() > 0)
+					tempMap.push_back((atoi(value.c_str())) - 1);
 			}
 
-			if (openfile.peek() == '\n')
-			{
-				map.push_back(tempMap);
-				tempMap.clear();
-			}
+			map.push_back(tempMap);
+			tempMap.clear();
 		}
-		map.push_back(tempMap);
 		tempMap.clear();
 	}
 	else std::cout << "Cannot open file" << std::endl;
-
-	//mapSize = loadCounter;
 }
 
 void Game::countFPS()

@@ -2,6 +2,7 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <cctype>
 #include <string>
 #include <vector>
