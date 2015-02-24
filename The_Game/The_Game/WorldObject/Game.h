@@ -42,6 +42,8 @@ protected:
 
 	// Window
 	sf::RenderWindow *Window = 0; // OK
+	sf::Vector2u screenDimensions = sf::Vector2u(500, 500);
+	sf::Vector2f position;
 
 	// Clocks
 	sf::Clock fpsClock, enemiesClock, rocketsClock, armorClock,
@@ -69,5 +71,5 @@ protected:
 	//int map[100][100];
 	std::vector<std::vector<int>> map;
 	std::vector<int> tempMap;
-	sf::Vector2i mapSize;
+	//sf::Vector2i mapSize;
 };

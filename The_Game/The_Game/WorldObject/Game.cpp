@@ -4,7 +4,7 @@ Game::Game()
 {
 	Window = new sf::RenderWindow;
 
-	Window->create(sf::VideoMode(1000, 1000), "Hovnocuc"); // OK
+	Window->create(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Hovnocuc"); // OK
 
 	setUpFont();
 	setUpSound();
@@ -192,14 +192,19 @@ void Game::collisions()
 
 void Game::play()
 {
-	view1.setCenter(300, 300);
-	view1.setSize(600, 600);
+	view1.reset(sf::FloatRect(0, 0, (float)screenDimensions.x / 2, (float)screenDimensions.y));
+	view1.setViewport(sf::FloatRect(0, 0, 0.5f, 1.0f));
+
+	//view1.setCenter(300, 300);
+	//view1.setSize(600, 600);
 
 	Window->setFramerateLimit(0); // OK
 
 	while (Window->isOpen()) // OK
 	{
 		Window->clear(sf::Color(30, 40, 200));
+
+		Window->setView(view1);
 
 		for (unsigned i = 0; i < map.size(); i++)
 		{
@@ -213,8 +218,6 @@ void Game::play()
 				}
 			}
 		}
-
-		Window->setView(view1);
 
 		while (Window->pollEvent(gameEvent))
 		{
@@ -240,6 +243,23 @@ void Game::play()
 		handlingBuffs();
 
 		Window->setView(view1);
+
+		position.x = player.getPosition().x + player.getSize().x - (screenDimensions.x / 4);
+		position.y = player.getPosition().y + player.getSize().y - (screenDimensions.y / 2);
+
+		//position.x = player.getPosition().x + player.getSize().x - (mapSize.x / 2);
+		//position.y = player.getPosition().y + player.getSize().y - (mapSize.y / 2);
+
+		if (position.x < 0)
+			position.x = 0;
+		else if (position.x > (float)map[0].size() * 30 - (float)screenDimensions.x / 2)
+			position.x = (float)map[0].size() * 30 - (float)screenDimensions.x / 2;
+		if (position.y < 0)
+			position.y = 0;
+		else if (position.y > (float)map.size() * 30 - (float)screenDimensions.y)
+			position.y = (float)map.size() * 30 - (float)screenDimensions.y;
+
+		view1.reset(sf::FloatRect(position.x, position.y, (float)screenDimensions.x / 2, (float)screenDimensions.y));
 
 		handlingMissiles();
 
