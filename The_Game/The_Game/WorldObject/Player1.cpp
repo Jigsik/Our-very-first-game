@@ -32,7 +32,7 @@ Player::Player(int _hp, float _speed)
 
 	// Speed
 
-	moveSpeed = 1;
+	moveSpeed = 0.1f;
 
 	// Texts
 
@@ -52,9 +52,9 @@ Player::~Player()
 {
 }
 
-void Player::draw(sf::RenderWindow *Window)
+void Player::changeState(sf::RenderWindow *Window)
 {
-	if (moveClock.getElapsedTime().asMilliseconds() > 10)
+	//if (moveClock.getElapsedTime().asMilliseconds() > 10)
 		move();
 
 	if (animationClock.getElapsedTime().asMilliseconds() > (400 / speed))
@@ -64,8 +64,6 @@ void Player::draw(sf::RenderWindow *Window)
 		source.x = 0;
 
 	image.setTextureRect(sf::IntRect(source.x * size.x, source.y * size.y, size.x, size.y));
-
-	Window->draw(image);
 
 	// Texts
 
@@ -90,11 +88,13 @@ void Player::move()
 {
 	if (sf::Keyboard::isKeyPressed(sprintKey))
 	{
-		speed = moveSpeed * 2;
+		speed = moveSpeed * 2 * moveClock.getElapsedTime().asMilliseconds();
 	}
-	else speed = moveSpeed;
+	else speed = moveSpeed * moveClock.getElapsedTime().asMilliseconds();
 
 	float diagonalSpeed = sqrt((speed*speed) / 2);
+
+	moveClock.restart();
 
 	if (sf::Keyboard::isKeyPressed(upKey) && sf::Keyboard::isKeyPressed(leftKey))
 	{
@@ -145,5 +145,5 @@ void Player::move()
 		direction = sf::Vector2i(1, 0);
 	}
 
-	moveClock.restart();
+	//moveClock.restart();
 }

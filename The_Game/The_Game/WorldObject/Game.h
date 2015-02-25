@@ -26,7 +26,10 @@ private:
 	void handlingBuffs();
 	void handlingMissiles();
 	void hanglingCharacters();
+	void handlingViews();
 	void loadMap();
+	void draw();
+	void refreshMap();
 
 	bool isPause = false;
 
@@ -42,7 +45,7 @@ protected:
 
 	// Window
 	sf::RenderWindow *Window = 0; // OK
-	sf::Vector2u screenDimensions = sf::Vector2u(500, 500);
+	sf::Vector2u screenDimensions = sf::Vector2u(800, 500);
 	sf::Vector2f position;
 
 	// Clocks
@@ -64,12 +67,11 @@ protected:
 
 	// Views
 	sf::View view1;
+	sf::View view2;
 
 	// Map
 	sf::Texture tileTexture;
 	sf::Sprite tiles;
-	//int map[100][100];
 	std::vector<std::vector<int>> map;
 	std::vector<int> tempMap;
-	//sf::Vector2i mapSize;
 };

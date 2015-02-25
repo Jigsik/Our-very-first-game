@@ -41,7 +41,7 @@ void Character::activateArmor()
 	}
 }
 
-void Character::drawBuffs(sf::RenderWindow *Window)
+void Character::drawBuffs(sf::RenderWindow *Window, sf::View view1, sf::View view2)
 {
 	if (armor)
 	{
@@ -52,7 +52,15 @@ void Character::drawBuffs(sf::RenderWindow *Window)
 		}
 		else
 		{
-			armor->draw(Window, getPosition(), getSize());
+			armor->changeState(Window, getPosition(), getSize());
+
+			Window->setView(view1);
+			Window->draw(armor->image);
+			Window->draw(armor->image1);
+
+			Window->setView(view2);
+			Window->draw(armor->image);
+			Window->draw(armor->image1);
 		}
 	}
 	else if (speedBuff)

@@ -142,14 +142,14 @@
     <ClInclude Include="WorldObject\Armor1.h">
       <Filter>Header Files\Buffs</Filter>
     </ClInclude>
-    <ClInclude Include="WorldObject\Speed.h">
-      <Filter>Header Files\Buffs</Filter>
-    </ClInclude>
     <ClInclude Include="WorldObject\Missile.h">
       <Filter>Header Files\Missiles</Filter>
     </ClInclude>
     <ClInclude Include="WorldObject\Bullet.h">
       <Filter>Header Files\Missiles</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject\Speed.h">
+      <Filter>Header Files\GameModes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

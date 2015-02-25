@@ -59,7 +59,7 @@ Bullet::Bullet(sf::Vector2f characterPosition, sf::Vector2i direction, sf::Vecto
 	std::cout << "Bullet Launched" << std::endl;
 }
 
-void Bullet::draw(sf::RenderWindow *Window)
+void Bullet::changeState(sf::RenderWindow *Window)
 {
 	if (moveClock.getElapsedTime().asMilliseconds() > 10)
 		move();
@@ -71,8 +71,6 @@ void Bullet::draw(sf::RenderWindow *Window)
 		source.x = 0;
 
 	image.setTextureRect(sf::IntRect(source.x * getSize().x, 0, getSize().x / 2, getSize().y));
-
-	Window->draw(image);
 }
 
 void Bullet::move()

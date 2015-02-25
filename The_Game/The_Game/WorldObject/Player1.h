@@ -5,7 +5,7 @@ class Player : public Character
 public:
 	Player(int HP = 100, float moveSpeed = 1);
 	~Player();
-	void draw(sf::RenderWindow *Window);
+	void changeState(sf::RenderWindow *Window);
 	// GET
 
 private:

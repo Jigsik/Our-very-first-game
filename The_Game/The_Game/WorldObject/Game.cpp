@@ -48,7 +48,7 @@ void Game::setUpSound()
 	else std::cout << "Success loading game Music" << std::endl;
 
 	gameMusic.setLoop(true);
-	gameMusic.play();
+	//gameMusic.play();
 	gameMusic.setVolume(50);
 }
 
@@ -115,16 +115,12 @@ void Game::handlingRunes()
 			rune = 0;
 			runeClock.restart();
 		}
-		else
-		{
-			Window->draw(rune->image);
-		}
 	}
 }
 
 void Game::handlingBuffs()
 {
-	player.drawBuffs(Window);
+	player.drawBuffs(Window, view1, view2);
 }
 
 void Game::handlingMissiles()
@@ -137,15 +133,13 @@ void Game::handlingMissiles()
 
 	for (bulletsIt = bullets.begin(); bulletsIt != bullets.end(); bulletsIt++)
 	{
-		(*bulletsIt)->draw(Window);
+		(*bulletsIt)->changeState(Window);
 	}
 }
 
 void Game::hanglingCharacters()
 {
-	player.draw(Window);
-
-	Window->setView(view1);
+	player.changeState(Window);
 }
 
 void Game::collisions()
@@ -190,10 +184,76 @@ void Game::collisions()
 	}
 }
 
+void Game::refreshMap()
+{
+	for (unsigned i = 0; i < map.size(); i++)
+	{
+		for (unsigned j = 0; j < map[i].size(); j++)
+		{
+			if (map[i][j] != -1)
+			{
+				tiles.setPosition((float)(j * 30), (float)(i * 30));
+				tiles.setTextureRect(sf::IntRect((map[i][j] % 2) * 30, (map[i][j] / 2) * 30, 30, 30));
+				Window->setView(view1);
+				Window->draw(tiles);
+				Window->setView(view2);
+				Window->draw(tiles);
+			}
+		}
+	}
+
+	view2.reset(sf::FloatRect(0, 0, (float)screenDimensions.x / 2, (float)screenDimensions.y));
+}
+
+void Game::handlingViews()
+{
+	position.x = player.getPosition().x + player.getSize().x - (screenDimensions.x / 4);
+	position.y = player.getPosition().y + player.getSize().y - (screenDimensions.y / 2);
+
+	if (position.x < 0)
+		position.x = 0;
+	else if (position.x >(float)map[0].size() * 30 - (float)screenDimensions.x / 2)
+		position.x = (float)map[0].size() * 30 - (float)screenDimensions.x / 2;
+	if (position.y < 0)
+		position.y = 0;
+	else if (position.y >(float)map.size() * 30 - (float)screenDimensions.y)
+		position.y = (float)map.size() * 30 - (float)screenDimensions.y;
+
+	view1.reset(sf::FloatRect(position.x, position.y, (float)screenDimensions.x / 2, (float)screenDimensions.y));
+}
+
+void Game::draw()
+{
+	if (rune)
+	{
+		Window->setView(view1);
+		Window->draw(rune->image);
+
+		Window->setView(view2);
+		Window->draw(rune->image);
+	}
+
+	for (bulletsIt = bullets.begin(); bulletsIt != bullets.end(); bulletsIt++)
+	{
+		Window->setView(view1);
+		Window->draw((*bulletsIt)->image);
+
+		Window->setView(view2);
+		Window->draw((*bulletsIt)->image);
+	}
+
+	Window->setView(view1);
+	Window->draw(player.image);
+
+	Window->setView(view2);
+	Window->draw(player.image);
+}
+
 void Game::play()
 {
-	view1.reset(sf::FloatRect(0, 0, (float)screenDimensions.x / 2, (float)screenDimensions.y));
+	//view1.reset(sf::FloatRect(0, 0, (float)screenDimensions.x / 2, (float)screenDimensions.y));
 	view1.setViewport(sf::FloatRect(0, 0, 0.5f, 1.0f));
+	view2.setViewport(sf::FloatRect(0.5f, 0, 0.5f, 1.0f));
 
 	//view1.setCenter(300, 300);
 	//view1.setSize(600, 600);
@@ -204,20 +264,9 @@ void Game::play()
 	{
 		Window->clear(sf::Color(30, 40, 200));
 
-		Window->setView(view1);
+		refreshMap();
 
-		for (unsigned i = 0; i < map.size(); i++)
-		{
-			for (unsigned j = 0; j < map[i].size(); j++)
-			{
-				if (map[i][j] != -1)
-				{
-					tiles.setPosition((float)(j * 30), (float)(i * 30));
-					tiles.setTextureRect(sf::IntRect((map[i][j] % 2) * 30, (map[i][j] / 2) * 30, 30, 30));
-					Window->draw(tiles);
-				}
-			}
-		}
+		Window->setView(view1);
 
 		while (Window->pollEvent(gameEvent))
 		{
@@ -237,38 +286,17 @@ void Game::play()
 		}
 
 		collisions();
-
 		handlingRunes();
-
 		handlingBuffs();
-
 		Window->setView(view1);
-
-		position.x = player.getPosition().x + player.getSize().x - (screenDimensions.x / 4);
-		position.y = player.getPosition().y + player.getSize().y - (screenDimensions.y / 2);
-
-		//position.x = player.getPosition().x + player.getSize().x - (mapSize.x / 2);
-		//position.y = player.getPosition().y + player.getSize().y - (mapSize.y / 2);
-
-		if (position.x < 0)
-			position.x = 0;
-		else if (position.x > (float)map[0].size() * 30 - (float)screenDimensions.x / 2)
-			position.x = (float)map[0].size() * 30 - (float)screenDimensions.x / 2;
-		if (position.y < 0)
-			position.y = 0;
-		else if (position.y > (float)map.size() * 30 - (float)screenDimensions.y)
-			position.y = (float)map.size() * 30 - (float)screenDimensions.y;
-
-		view1.reset(sf::FloatRect(position.x, position.y, (float)screenDimensions.x / 2, (float)screenDimensions.y));
-
+		handlingViews();
 		handlingMissiles();
-
 		hanglingCharacters();
-
 		countFPS();
 
-		Window->setView(view1);
+		draw();
 
+		Window->setView(view1);
 		Window->display();
 	}
 

@@ -6,7 +6,7 @@ public:
 	Speed();
 	~Speed();
 	void draw(sf::RenderWindow *Window);
-	int speed = 3;
+	float speed = 1.5f;
 
 private:
 

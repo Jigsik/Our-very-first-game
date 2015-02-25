@@ -26,7 +26,7 @@ int Armor::getHP()
 	return HP;
 }
 
-void Armor::draw(sf::RenderWindow *Window, sf::Vector2f playerPosition, sf::Vector2u characterSize)
+void Armor::changeState(sf::RenderWindow *Window, sf::Vector2f playerPosition, sf::Vector2u characterSize)
 {
 	// Set position
 	image.setPosition(playerPosition.x + (characterSize.x / 2), playerPosition.y + (characterSize.y / 2));
@@ -48,9 +48,6 @@ void Armor::draw(sf::RenderWindow *Window, sf::Vector2f playerPosition, sf::Vect
 	string = std::to_string(10 - (int)clock.getElapsedTime().asSeconds());
 
 	text.setString("Armor: " + string + "s");
-
-	Window->draw(image);
-	Window->draw(image1);
 
 	// KOnec TEXT
 	Window->setView(Window->getDefaultView());

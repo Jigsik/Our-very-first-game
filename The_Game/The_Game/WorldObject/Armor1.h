@@ -8,11 +8,11 @@ class Armor : public Buff
 public:
 	Armor();
 	~Armor();
-	void draw(sf::RenderWindow *Window, sf::Vector2f playerPosition, sf::Vector2u characterSize);
+	void changeState(sf::RenderWindow *Window, sf::Vector2f playerPosition, sf::Vector2u characterSize);
 	int getHP();
+	sf::Sprite image1;
 
 private:
-	sf::Sprite image1;
 	sf::Clock rotateClock;
 	int HP = 100;
 };
