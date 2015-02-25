@@ -202,7 +202,7 @@ void Game::refreshMap()
 		}
 	}
 
-	view2.reset(sf::FloatRect(0, 0, (float)screenDimensions.x / 2, (float)screenDimensions.y));
+	//view2.reset(sf::FloatRect(0, 0, (float)screenDimensions.x / 2, (float)screenDimensions.y));
 }
 
 void Game::handlingViews()
@@ -220,6 +220,8 @@ void Game::handlingViews()
 		position.y = (float)map.size() * 30 - (float)screenDimensions.y;
 
 	view1.reset(sf::FloatRect(position.x, position.y, (float)screenDimensions.x / 2, (float)screenDimensions.y));
+	view2.reset(sf::FloatRect(position.x, position.y, (float)screenDimensions.x / 2, (float)screenDimensions.y));
+	// previous line is just copied and set to view 2 so we can see tha same screen;
 }
 
 void Game::draw()
