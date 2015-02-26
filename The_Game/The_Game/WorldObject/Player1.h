@@ -27,6 +27,6 @@ private:
 	// Text
 
 	sf::Font gameFont;
-	sf::String string;
+	sf::String string, string2;
 	sf::Text text;
 };

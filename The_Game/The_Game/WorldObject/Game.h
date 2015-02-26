@@ -65,8 +65,10 @@ protected:
 	std::vector<Bullet*>::iterator bulletsIt;
 
 	// Views
-	sf::View view1;
-	sf::View view2;
+	sf::View player1_view;
+	sf::View player2_view;
+	sf::View barView1;
+	sf::View barView2;
 
 	// Map
 	Map mapa;

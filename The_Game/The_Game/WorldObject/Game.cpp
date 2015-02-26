@@ -94,7 +94,7 @@ void Game::handlingRunes()
 
 void Game::handlingBuffs()
 {
-	player.drawBuffs(Window, view1, view2);
+	player.drawBuffs(Window, player1_view, player2_view, barView1, barView2);
 }
 
 void Game::handlingMissiles()
@@ -113,6 +113,10 @@ void Game::handlingMissiles()
 
 void Game::hanglingCharacters()
 {
+	Window->setView(barView1);
+	player.changeState(Window);
+
+	Window->setView(barView2);
 	player.changeState(Window);
 }
 
@@ -172,8 +176,8 @@ void Game::handlingViews()
 	else if (position.y >(float)mapa.getSize().y - (float)screenDimensions.y)
 		position.y = (float)mapa.getSize().y - (float)screenDimensions.y;
 
-	view1.reset(sf::FloatRect(position.x, position.y, (float)screenDimensions.x / 2, (float)screenDimensions.y));
-	view2.reset(sf::FloatRect(position.x, position.y, (float)screenDimensions.x / 2, (float)screenDimensions.y));
+	player1_view.reset(sf::FloatRect(position.x, position.y, (float)screenDimensions.x / 2, (float)screenDimensions.y));
+	player2_view.reset(sf::FloatRect(position.x, position.y, (float)screenDimensions.x / 2, (float)screenDimensions.y));
 	// previous line is just copied and set to view 2 so we can see tha same screen;
 }
 
@@ -181,39 +185,44 @@ void Game::draw()
 {
 	if (rune)
 	{
-		Window->setView(view1);
+		Window->setView(player1_view);
 		Window->draw(rune->image);
 
-		Window->setView(view2);
+		Window->setView(player2_view);
 		Window->draw(rune->image);
 	}
 
 	for (bulletsIt = bullets.begin(); bulletsIt != bullets.end(); bulletsIt++)
 	{
-		Window->setView(view1);
+		Window->setView(player1_view);
 		Window->draw((*bulletsIt)->image);
 
-		Window->setView(view2);
+		Window->setView(player2_view);
 		Window->draw((*bulletsIt)->image);
 	}
 
-	Window->setView(view1);
+	Window->setView(player1_view);
 	Window->draw(player.image);
 
-	Window->setView(view2);
+	Window->setView(player2_view);
 	Window->draw(player.image);
 }
 
 void Game::play()
 {
-	//view1.reset(sf::FloatRect(0, 0, (float)screenDimensions.x / 2, (float)screenDimensions.y));
-	view1.setViewport(sf::FloatRect(0, 0, 0.5f, 1.0f));
-	view2.setViewport(sf::FloatRect(0.5f, 0, 0.5f, 1.0f));
+	//player1_view.reset(sf::FloatRect(0, 0, (float)screenDimensions.x / 2, (float)screenDimensions.y));
+	player1_view.setViewport(sf::FloatRect(0, 0, 0.5f, 0.95f));
+	player2_view.setViewport(sf::FloatRect(0.5f, 0, 0.5f, 0.95f));
+	barView1.setViewport(sf::FloatRect(0, 0.95f, 0.5f, 0.05f));
+	barView2.setViewport(sf::FloatRect(0.5f, 0.95f, 0.5f, 0.05f));
 
-	//view1.setCenter(300, 300);
-	//view1.setSize(600, 600);
+	barView1.reset(sf::FloatRect(0, 0, (float)Window->getSize().x / 2, (float)Window->getSize().y / 20));
+	barView2.reset(sf::FloatRect(0, 0, (float)Window->getSize().x / 2, (float)Window->getSize().y / 20));
 
-	Window->setFramerateLimit(0); // OK
+	//player1_view.setCenter(300, 300);
+	//player1_view.setSize(600, 600);
+
+	Window->setFramerateLimit(500); // OK
 
 	//mapa.setScale(Window->getSize().x / screenDimensions.x, Window->getSize().y / screenDimensions.y);
 
@@ -221,13 +230,13 @@ void Game::play()
 	{
 		Window->clear(sf::Color(30, 40, 200));
 
-		Window->setView(view1);
+		Window->setView(player1_view);
 		Window->draw(mapa);
 
-		Window->setView(view2);
+		Window->setView(player2_view);
 		Window->draw(mapa);
 
-		Window->setView(view1);
+		Window->setView(player1_view);
 
 		while (Window->pollEvent(gameEvent))
 		{
@@ -253,7 +262,7 @@ void Game::play()
 		collisions();
 		handlingRunes();
 		handlingBuffs();
-		Window->setView(view1);
+		Window->setView(player1_view);
 		handlingViews();
 		handlingMissiles();
 		hanglingCharacters();
@@ -262,7 +271,7 @@ void Game::play()
 
 		countFPS();
 
-		Window->setView(view1);
+		Window->setView(player1_view);
 		Window->display();
 	}
 

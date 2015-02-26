@@ -41,7 +41,7 @@ Player::Player(int _hp, float _speed)
 	else std::cout << "Success loading game Font" << std::endl;
 
 	text.setFont(gameFont);
-	text.setCharacterSize(20);
+	text.setCharacterSize(30);
 
 	// Player has been succesfully created
 
@@ -67,19 +67,18 @@ void Player::changeState(sf::RenderWindow *Window)
 
 	// Texts
 
-	text.setPosition(sf::Vector2f(0, 0));
+	text.setPosition(sf::Vector2f(20, 0));
 	string = std::to_string(HP);
 	text.setString("HP = " + string);
-
-	Window->setView(Window->getDefaultView());
 
 	Window->draw(text);
 
 	if (armor)
 	{
-		text.setPosition(sf::Vector2f(100, 0));
+		text.setPosition(sf::Vector2f(110, 0));
 		string = std::to_string(armor->getHP());
-		text.setString("Armor = " + string);
+		string2 = std::to_string(10 - (int)armor->clock.getElapsedTime().asSeconds());
+		text.setString("Armor = " + string + " (" + string2 + ")");
 		Window->draw(text);
 	}
 }

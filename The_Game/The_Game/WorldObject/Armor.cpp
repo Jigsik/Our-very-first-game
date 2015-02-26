@@ -43,14 +43,14 @@ void Armor::changeState(sf::RenderWindow *Window, sf::Vector2f playerPosition, s
 
 	// text
 
-	text.setPosition(sf::Vector2f((float)Window->getSize().x - 200, 0));
+	//text.setPosition(sf::Vector2f(100, 25));
 
-	string = std::to_string(10 - (int)clock.getElapsedTime().asSeconds());
+	//string = std::to_string(10 - (int)clock.getElapsedTime().asSeconds());
 
-	text.setString("Armor: " + string + "s");
+	//text.setString("Armor: " + string + "s");
 
 	// KOnec TEXT
-	Window->setView(Window->getDefaultView());
+	//Window->setView(Window->getDefaultView());
 
-	Window->draw(text);
+	//Window->draw(text);
 }

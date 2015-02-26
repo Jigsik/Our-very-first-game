@@ -13,7 +13,7 @@ public:
 	void receiveDamage(int damage);
 	void activateArmor();
 	void activateSpeed();
-	void drawBuffs(sf::RenderWindow *Window, sf::View view1, sf::View view2);
+	void drawBuffs(sf::RenderWindow *Window, sf::View view1, sf::View view2, sf::View barView1, sf::View barView2);
 
 	// GET
 
