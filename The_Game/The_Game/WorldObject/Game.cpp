@@ -4,9 +4,9 @@ Game::Game()
 {
 	Window = new sf::RenderWindow;
 
-	Window->create(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Hovnocuc"); // OK
+	Window->create(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Hovnocuc", sf::Style::Fullscreen); // OK
 
-	screenDimensions = Window->getSize();
+	//screenDimensions = Window->getSize();
 
 	setUpFont();
 	setUpSound();
@@ -40,9 +40,8 @@ void Game::setUpFont()
 	else std::cout << "Success loading game Font" << std::endl;
 
 	fpsText.setFont(gameFont);
-	fpsText.setPosition(sf::Vector2f((float)Window->getSize().x - 50, 0));
-
-	fpsText.setCharacterSize(20);
+	fpsText.setCharacterSize((Window->getSize().x / screenDimensions.x) * 20);
+	fpsText.setPosition(sf::Vector2f((float)Window->getSize().x - (Window->getSize().x / screenDimensions.x) * 50, 0));
 }
 
 void Game::setUpSound()
@@ -71,6 +70,8 @@ void Game::countFPS()
 	Window->setView(Window->getDefaultView());
 
 	Window->draw(fpsText);
+
+	//fpsText.setScale(Window->getSize().x / screenDimensions.x, Window->getSize().y / screenDimensions.y);
 }
 
 void Game::handlingRunes()
@@ -213,6 +214,8 @@ void Game::play()
 	//view1.setSize(600, 600);
 
 	Window->setFramerateLimit(0); // OK
+
+	//mapa.setScale(Window->getSize().x / screenDimensions.x, Window->getSize().y / screenDimensions.y);
 
 	while (Window->isOpen()) // OK
 	{
