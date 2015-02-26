@@ -6,9 +6,13 @@ Game::Game()
 
 	Window->create(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Hovnocuc"); // OK
 
+	screenDimensions = Window->getSize();
+
 	setUpFont();
 	setUpSound();
-	loadMap();
+
+	if (!mapa.load("Maps/mapa.txt"))
+		std::cout << "Failed to load map" << std::endl;
 }
 
 Game::~Game()
@@ -50,37 +54,6 @@ void Game::setUpSound()
 	gameMusic.setLoop(true);
 	//gameMusic.play();
 	gameMusic.setVolume(50);
-}
-
-void Game::loadMap()
-{
-	std::ifstream openfile("Maps/mapa.txt");
-
-	if (openfile.is_open())
-	{
-		std::string tileLocation;
-		std::getline(openfile, tileLocation);
-		tileTexture.loadFromFile(tileLocation);
-		tiles.setTexture(tileTexture);
-
-		while (!openfile.eof())
-		{
-			std::string str, value;
-			std::getline(openfile, str);
-			std::stringstream stream(str);
-
-			while (std::getline(stream, value, ','))
-			{
-				if (value.length() > 0)
-					tempMap.push_back((atoi(value.c_str())) - 1);
-			}
-
-			map.push_back(tempMap);
-			tempMap.clear();
-		}
-		tempMap.clear();
-	}
-	else std::cout << "Cannot open file" << std::endl;
 }
 
 void Game::countFPS()
@@ -184,27 +157,6 @@ void Game::collisions()
 	}
 }
 
-void Game::refreshMap()
-{
-	for (unsigned i = 0; i < map.size(); i++)
-	{
-		for (unsigned j = 0; j < map[i].size(); j++)
-		{
-			if (map[i][j] != -1)
-			{
-				tiles.setPosition((float)(j * 30), (float)(i * 30));
-				tiles.setTextureRect(sf::IntRect((map[i][j] % 2) * 30, (map[i][j] / 2) * 30, 30, 30));
-				Window->setView(view1);
-				Window->draw(tiles);
-				Window->setView(view2);
-				Window->draw(tiles);
-			}
-		}
-	}
-
-	//view2.reset(sf::FloatRect(0, 0, (float)screenDimensions.x / 2, (float)screenDimensions.y));
-}
-
 void Game::handlingViews()
 {
 	position.x = player.getPosition().x + player.getSize().x - (screenDimensions.x / 4);
@@ -212,12 +164,12 @@ void Game::handlingViews()
 
 	if (position.x < 0)
 		position.x = 0;
-	else if (position.x >(float)map[0].size() * 30 - (float)screenDimensions.x / 2)
-		position.x = (float)map[0].size() * 30 - (float)screenDimensions.x / 2;
+	else if (position.x >(float)mapa.getSize().x - (float)screenDimensions.x / 2)
+		position.x = (float)mapa.getSize().x - (float)screenDimensions.x / 2;
 	if (position.y < 0)
 		position.y = 0;
-	else if (position.y >(float)map.size() * 30 - (float)screenDimensions.y)
-		position.y = (float)map.size() * 30 - (float)screenDimensions.y;
+	else if (position.y >(float)mapa.getSize().y - (float)screenDimensions.y)
+		position.y = (float)mapa.getSize().y - (float)screenDimensions.y;
 
 	view1.reset(sf::FloatRect(position.x, position.y, (float)screenDimensions.x / 2, (float)screenDimensions.y));
 	view2.reset(sf::FloatRect(position.x, position.y, (float)screenDimensions.x / 2, (float)screenDimensions.y));
@@ -266,7 +218,11 @@ void Game::play()
 	{
 		Window->clear(sf::Color(30, 40, 200));
 
-		refreshMap();
+		Window->setView(view1);
+		Window->draw(mapa);
+
+		Window->setView(view2);
+		Window->draw(mapa);
 
 		Window->setView(view1);
 
@@ -284,6 +240,10 @@ void Game::play()
 					isPause = true;
 				}
 				break;
+			case sf::Event::Resized:
+				screenDimensions.x = gameEvent.size.width;
+				screenDimensions.y = gameEvent.size.height;
+				break;
 			}
 		}
 
@@ -294,9 +254,10 @@ void Game::play()
 		handlingViews();
 		handlingMissiles();
 		hanglingCharacters();
-		countFPS();
-
+	
 		draw();
+
+		countFPS();
 
 		Window->setView(view1);
 		Window->display();

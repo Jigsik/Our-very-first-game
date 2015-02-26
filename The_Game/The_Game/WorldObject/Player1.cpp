@@ -32,7 +32,7 @@ Player::Player(int _hp, float _speed)
 
 	// Speed
 
-	moveSpeed = 0.1f;
+	moveSpeed = 0.0001f;
 
 	// Texts
 
@@ -88,13 +88,11 @@ void Player::move()
 {
 	if (sf::Keyboard::isKeyPressed(sprintKey))
 	{
-		speed = moveSpeed * 2 * moveClock.getElapsedTime().asMilliseconds();
+		speed = moveSpeed * 2 * moveClock.restart().asMicroseconds();
 	}
-	else speed = moveSpeed * moveClock.getElapsedTime().asMilliseconds();
+	else speed = moveSpeed * moveClock.restart().asMicroseconds();
 
 	float diagonalSpeed = sqrt((speed*speed) / 2);
-
-	moveClock.restart();
 
 	if (sf::Keyboard::isKeyPressed(upKey) && sf::Keyboard::isKeyPressed(leftKey))
 	{

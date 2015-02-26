@@ -9,6 +9,7 @@
 #include "Player1.h"
 #include "Rune.h"
 #include "Bullet.h"
+#include "Map.h"
 
 class Game
 {
@@ -27,9 +28,7 @@ private:
 	void handlingMissiles();
 	void hanglingCharacters();
 	void handlingViews();
-	void loadMap();
 	void draw();
-	void refreshMap();
 
 	bool isPause = false;
 
@@ -70,8 +69,5 @@ protected:
 	sf::View view2;
 
 	// Map
-	sf::Texture tileTexture;
-	sf::Sprite tiles;
-	std::vector<std::vector<int>> map;
-	std::vector<int> tempMap;
+	Map mapa;
 };

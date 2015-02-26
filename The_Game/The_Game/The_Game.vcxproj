@@ -97,6 +97,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="rocket_missile.cpp" />
     <ClCompile Include="WorldObject\Game.cpp" />
+    <ClCompile Include="WorldObject\Map.cpp" />
     <ClCompile Include="WorldObject\Missile.cpp" />
     <ClCompile Include="WorldObject\Player1.cpp" />
     <ClCompile Include="WorldObject\Rune.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="WorldObject\Character.h" />
     <ClInclude Include="rocket_missiles.h" />
     <ClInclude Include="WorldObject\Game.h" />
+    <ClInclude Include="WorldObject\Map.h" />
     <ClInclude Include="WorldObject\Missile.h" />
     <ClInclude Include="WorldObject\Player1.h" />
     <ClInclude Include="WorldObject\Rune.h" />

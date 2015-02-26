@@ -96,6 +96,9 @@
     <ClCompile Include="WorldObject\Missile.cpp">
       <Filter>Source Files\Missiles</Filter>
     </ClCompile>
+    <ClCompile Include="WorldObject\Map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="player_1.png">
@@ -150,6 +153,9 @@
     </ClInclude>
     <ClInclude Include="WorldObject\Speed.h">
       <Filter>Header Files\GameModes</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject\Map.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
