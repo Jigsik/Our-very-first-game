@@ -20,9 +20,46 @@ bool Map::load(const std::string& tileMapFile)
 	if (tileFile.is_open())
 	{
 		std::string tileLocation;
+		std::string tmpString, value;
 		std::getline(tileFile, tileLocation);
 		if (!m_tileset.loadFromFile(tileLocation))
 			return false;
+
+		// GET MAP WIDTH
+		std::getline(tileFile, tmpString);
+		std::stringstream stream(tmpString);
+		std::getline(stream, value, '=');
+		std::getline(stream, value);
+
+		if (value.length() > 0)
+			width = atoi(value.c_str());
+
+		// GET MAP HEIGHT
+		std::getline(tileFile, tmpString);
+		std::stringstream stream1(tmpString);
+		std::getline(stream1, value, '=');
+		std::getline(stream1, value);
+
+		if (value.length() > 0)
+			height = atoi(value.c_str());
+
+		// GET TILE WIDTH
+		std::getline(tileFile, tmpString);
+		std::stringstream stream2(tmpString);
+		std::getline(stream2, value, '=');
+		std::getline(stream2, value);
+
+		if (value.length() > 0)
+			tileSize.x = atoi(value.c_str());
+
+		// GET TILE HEIGHT
+		std::getline(tileFile, tmpString);
+		std::stringstream stream3(tmpString);
+		std::getline(stream3, value, '=');
+		std::getline(stream3, value);
+
+		if (value.length() > 0)
+			tileSize.y = atoi(value.c_str());
 
 		// resize the vertex array to fit the level size
 		m_vertices.setPrimitiveType(sf::Quads);

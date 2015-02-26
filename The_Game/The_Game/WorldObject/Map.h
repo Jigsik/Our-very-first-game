@@ -2,6 +2,7 @@
 #include <SFML\Graphics.hpp>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 class Map : public sf::Drawable, public sf::Transformable
 {
@@ -17,9 +18,9 @@ private:
 	sf::Texture m_tileset;
 	std::vector<int> tempMap;
 
-	sf::Vector2u tileSize = sf::Vector2u(30, 30);
+	sf::Vector2u tileSize;
 
-	unsigned width = 20, height = 20;
+	unsigned width, height;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
