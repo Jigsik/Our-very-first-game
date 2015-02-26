@@ -1,0 +1,8 @@
+V obilném poli (žlutá dlaždice) by byla možnost schovat se. Byla by vidìt pouze èást hlavy (napø). 
+
+Pøes paøez není možné projít.
+
+Na hlínì (hnìdá dlažice) by náhodnì v urèitém èasovém intervalu mohli vyskakovat nìjaké vìci (pøíšera, ostré kameny ...), které by postavièku zabily.
+
+Pokud postavièka spadne do vody (modrá dlaždice) utopí se a umøe NEBO ztratí èást HP (díky piraním napø?)
+
