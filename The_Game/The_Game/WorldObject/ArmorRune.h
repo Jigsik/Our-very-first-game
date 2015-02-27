@@ -1,6 +1,6 @@
 #include "Rune.h"
 
-class ArmorRune : public Rune 
+class ArmorRune// : public Rune 
 {
 public:
 	ArmorRune();

@@ -3,7 +3,7 @@
 class Rune : public WorldObject
 {
 public:
-	Rune();
+	Rune(sf::Vector2u mapSize);
 	~Rune();
 	sf::Clock runeClock;
 	int getType();

@@ -1,6 +1,6 @@
 #include "Rune.h"
 
-Rune::Rune()
+Rune::Rune(sf::Vector2u mapSize)
 {
 	//std::cout << "Rune Created" << std::endl;
 
@@ -25,8 +25,8 @@ Rune::Rune()
 
 	image.setTexture(pTexture);
 
-	int a1 = rand() % (600 - getSize().x);
-	int a2 = rand() % (400 - getSize().y);
+	int a1 = rand() % (mapSize.x - getSize().x);
+	int a2 = rand() % (mapSize.y - getSize().y);
 
 	image.setPosition(sf::Vector2f((float)a1, (float)a2));
 }

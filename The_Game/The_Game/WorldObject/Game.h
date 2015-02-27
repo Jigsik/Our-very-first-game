@@ -44,7 +44,7 @@ protected:
 
 	// Window
 	sf::RenderWindow *Window = 0; // OK
-	sf::Vector2u screenDimensions = sf::Vector2u(960, 600);
+	sf::Vector2u screenDimensions = sf::Vector2u(800, 100);
 	sf::Vector2f position;
 
 	// Clocks
@@ -56,12 +56,14 @@ protected:
 
 	// Objects
 	Player player;
-	Rune *rune = 0;
+	//Rune *rune = 0;
+
+	// Runes
+	std::vector<Rune*> runes;
+	std::vector<Rune*>::iterator runesIt;
 
 	// Missiles
 	std::vector<Bullet*> bullets;
-
-	// Iterators
 	std::vector<Bullet*>::iterator bulletsIt;
 
 	// Views

@@ -8,6 +8,10 @@ Game::Game()
 
 	//screenDimensions = Window->getSize();
 
+	Window->setMouseCursorVisible(false);
+
+	screenDimensions.y = (screenDimensions.x * Window->getSize().y) / Window->getSize().x;
+
 	setUpFont();
 	setUpSound();
 
@@ -18,8 +22,14 @@ Game::Game()
 Game::~Game()
 {
 	// Delete rune if exists
-	if(rune)
-		delete rune;
+	//if(rune)
+		//delete rune;
+
+	for (runesIt = runes.begin(); runesIt != runes.end();)
+	{
+		delete *runesIt;
+		runesIt = runes.erase(runesIt);
+	}
 
 	// Delete Window
 	if (Window)
@@ -76,9 +86,9 @@ void Game::countFPS()
 
 void Game::handlingRunes()
 {
-	if (!rune && runeClock.getElapsedTime().asSeconds() > 3)
+	/*if (!rune && runeClock.getElapsedTime().asSeconds() > 3)
 	{
-		rune = new Rune;
+		rune = new Rune(mapa.getSize());
 	}
 
 	if (rune)
@@ -89,6 +99,22 @@ void Game::handlingRunes()
 			rune = 0;
 			runeClock.restart();
 		}
+	}*/
+
+	if (runeClock.getElapsedTime().asMilliseconds() > 500)
+	{
+		runes.push_back(new Rune(mapa.getSize()));
+		runeClock.restart();
+	}
+
+	for (runesIt = runes.begin(); runesIt != runes.end();)
+	{
+		if ((*runesIt)->runeClock.getElapsedTime().asSeconds() > (*runesIt)->getDuration())
+		{
+			delete *runesIt;
+			runesIt = runes.erase(runesIt);
+		}
+		else runesIt++;
 	}
 }
 
@@ -129,7 +155,41 @@ void Game::collisions()
 	float playerTop = player.getPosition().y;
 	float playerBottom = player.getPosition().y + player.getSize().y;
 
-	if (rune)
+	for (runesIt = runes.begin(); runesIt != runes.end(); runesIt++)
+	{
+		float runeLeft = (*runesIt)->getPosition().x;
+		float runeRight = (*runesIt)->getPosition().x + (*runesIt)->getSize().x;
+		float runeTop = (*runesIt)->getPosition().y;
+		float runeBottom = (*runesIt)->getPosition().y + (*runesIt)->getSize().y;
+		
+		if (playerLeft <= runeRight &&
+			playerRight >= runeLeft &&
+			playerTop <= runeBottom &&
+			playerBottom >= runeTop)
+		{
+			// Get the rune type
+			int runeType = (*runesIt)->getType();
+
+			// Which rune have you taken?
+			if (runeType == armorRune)
+			{
+				player.activateArmor();
+			}
+			else if (runeType == speedRune)
+			{
+				player.activateSpeed();
+			}
+
+			delete *runesIt;
+			runesIt = runes.erase(runesIt);
+
+			// If player get the rune, there is a big change that he is not getting any other
+			// rune. So we can break here and control it later.
+			break;
+		}
+	}
+	
+	/*if (rune)
 	{
 		float runeLeft = rune->getPosition().x;
 		float runeRight = rune->getPosition().x + rune->getSize().x;
@@ -159,7 +219,7 @@ void Game::collisions()
 			rune = 0;
 			runeClock.restart();
 		}
-	}
+	}*/
 }
 
 void Game::handlingViews()
@@ -183,14 +243,23 @@ void Game::handlingViews()
 
 void Game::draw()
 {
-	if (rune)
+	for (runesIt = runes.begin(); runesIt != runes.end(); runesIt++)
+	{
+		Window->setView(player1_view);
+		Window->draw((*runesIt)->image);
+
+		Window->setView(player2_view);
+		Window->draw((*runesIt)->image);
+	}
+
+	/*if (rune)
 	{
 		Window->setView(player1_view);
 		Window->draw(rune->image);
 
 		Window->setView(player2_view);
 		Window->draw(rune->image);
-	}
+	}*/
 
 	for (bulletsIt = bullets.begin(); bulletsIt != bullets.end(); bulletsIt++)
 	{
@@ -228,7 +297,7 @@ void Game::play()
 
 	while (Window->isOpen()) // OK
 	{
-		Window->clear(sf::Color(30, 40, 200));
+		Window->clear();
 
 		Window->setView(player1_view);
 		Window->draw(mapa);
