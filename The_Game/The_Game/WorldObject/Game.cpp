@@ -211,8 +211,8 @@ void Game::draw()
 void Game::play()
 {
 	//player1_view.reset(sf::FloatRect(0, 0, (float)screenDimensions.x / 2, (float)screenDimensions.y));
-	player1_view.setViewport(sf::FloatRect(0, 0, 0.5f, 0.95f));
-	player2_view.setViewport(sf::FloatRect(0.5f, 0, 0.5f, 0.95f));
+	player1_view.setViewport(sf::FloatRect(0, 0, 0.495f, 0.95f));
+	player2_view.setViewport(sf::FloatRect(0.505f, 0, 0.495f, 0.95f));
 	barView1.setViewport(sf::FloatRect(0, 0.95f, 0.5f, 0.05f));
 	barView2.setViewport(sf::FloatRect(0.5f, 0.95f, 0.5f, 0.05f));
 

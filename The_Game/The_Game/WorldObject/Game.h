@@ -44,7 +44,7 @@ protected:
 
 	// Window
 	sf::RenderWindow *Window = 0; // OK
-	sf::Vector2u screenDimensions = sf::Vector2u(800, 500);
+	sf::Vector2u screenDimensions = sf::Vector2u(960, 600);
 	sf::Vector2f position;
 
 	// Clocks

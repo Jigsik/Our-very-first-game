@@ -1,8 +1,9 @@
-﻿Build started 26. 2. 2015 19:54:23.
+﻿Build started 27. 2. 2015 8:43:24.
      1>Project "C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game\The_Game\The_Game.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Martin\Documents\GitHub\Our-very-first-game\JigsEngine\include" /I"C:\Users\Martin\Documents\GitHub\Our-very-first-game\SFML\include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /doc"Release\\" /Gd /TP /analyze- /errorReport:prompt WorldObject\Game.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Martin\Documents\GitHub\Our-very-first-game\JigsEngine\include" /I"C:\Users\Martin\Documents\GitHub\Our-very-first-game\SFML\include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /doc"Release\\" /Gd /TP /analyze- /errorReport:prompt WorldObject\Game.cpp main.cpp
          Game.cpp
+         main.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game\Release\The_Game.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\SFML\lib" "sfml-graphics.lib" "sfml-system.lib" "sfml-window.lib" "sfml-audio.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game\Release\The_Game.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game\Release\The_Game.lib" /MACHINE:X86 /SAFESEH Release\armor25.obj
          Release\Armor.obj
@@ -30,4 +31,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.91
+Time Elapsed 00:00:03.29
