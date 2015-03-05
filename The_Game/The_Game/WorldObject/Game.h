@@ -44,12 +44,12 @@ protected:
 
 	// Window
 	sf::RenderWindow *Window = 0; // OK
-	sf::Vector2u screenDimensions = sf::Vector2u(800, 100);
+	sf::Vector2u screenDimensions = sf::Vector2u(700, 600);
 	sf::Vector2f position;
 
 	// Clocks
 	sf::Clock fpsClock, enemiesClock, rocketsClock, armorClock,
-			  runeClock, bulletsClock; // OK
+			  runeClock, bulletsClock, resetClock; // OK
 
 	// Sound
 	sf::Music gameMusic;

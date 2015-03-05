@@ -85,6 +85,8 @@ void Player::changeState(sf::RenderWindow *Window)
 
 void Player::move()
 {
+	//std::cout << moveClock.getElapsedTime().asSeconds() << std::endl;
+
 	if (sf::Keyboard::isKeyPressed(sprintKey))
 	{
 		speed = moveSpeed * 2 * moveClock.restart().asMicroseconds();

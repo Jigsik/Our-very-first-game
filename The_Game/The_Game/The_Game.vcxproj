@@ -87,13 +87,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="armor25.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="WorldObject\Armor.cpp" />
     <ClCompile Include="WorldObject\ArmorRune.cpp" />
     <ClCompile Include="WorldObject\Buff.cpp" />
     <ClCompile Include="WorldObject\Bullet.cpp" />
     <ClCompile Include="WorldObject\Character.cpp" />
     <ClCompile Include="enemy.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="rocket_missile.cpp" />
     <ClCompile Include="WorldObject\Game.cpp" />

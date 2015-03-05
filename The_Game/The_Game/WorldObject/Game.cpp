@@ -103,6 +103,7 @@ void Game::handlingRunes()
 
 	if (runeClock.getElapsedTime().asMilliseconds() > 500)
 	{
+		// emplace_back()
 		runes.push_back(new Rune(mapa.getSize()));
 		runeClock.restart();
 	}
@@ -224,21 +225,43 @@ void Game::collisions()
 
 void Game::handlingViews()
 {
-	position.x = player.getPosition().x + player.getSize().x - (screenDimensions.x / 4);
-	position.y = player.getPosition().y + player.getSize().y - (screenDimensions.y / 2);
+	position.x = player.getPosition().x + player.getSize().x - (screenDimensions.x * 0.5f * 0.495f);
+	position.y = player.getPosition().y + player.getSize().y - (screenDimensions.y * 0.5f * 0.95f);
 
-	if (position.x < 0)
+	if (position.x <= 0)
 		position.x = 0;
-	else if (position.x >(float)mapa.getSize().x - (float)screenDimensions.x / 2)
-		position.x = (float)mapa.getSize().x - (float)screenDimensions.x / 2;
-	if (position.y < 0)
-		position.y = 0;
-	else if (position.y >(float)mapa.getSize().y - (float)screenDimensions.y)
-		position.y = (float)mapa.getSize().y - (float)screenDimensions.y;
+	else if (position.x > mapa.getSize().x - (screenDimensions.x * 0.495f))
+		position.x = mapa.getSize().x - (screenDimensions.x * 0.495f);
 
-	player1_view.reset(sf::FloatRect(position.x, position.y, (float)screenDimensions.x / 2, (float)screenDimensions.y));
-	player2_view.reset(sf::FloatRect(position.x, position.y, (float)screenDimensions.x / 2, (float)screenDimensions.y));
+	if (position.y <= 0)
+		position.y = 0;
+	else if (position.y > mapa.getSize().y - screenDimensions.y * 0.95f)
+		position.y = mapa.getSize().y - screenDimensions.y * 0.95f;
+
+	//player1_view.rotate(0.01f);
+
+	/* VELIKA POZNAMKA
+	   
+	   player1_view.reset(sf::FloatRect(position.x, position.y, (float)(screenDimensions.x / 2), (float)screenDimensions.y));
+
+	   Tento kod je spatne, protoze to view nema rozsah screenDimension.x / 2 a screenDimension.y...
+
+	   Takhle to je spravne:
+
+	   player2_view.reset(sf::FloatRect(position.x, position.y, screenDimensions.x * 0.495f, screenDimensions.y * 0.95f));
+
+	*/
+
+	player1_view.reset(sf::FloatRect(position.x, position.y, screenDimensions.x * 0.495f, screenDimensions.y * 0.95f));
+	player2_view.reset(sf::FloatRect(position.x, position.y, screenDimensions.x * 0.495f, screenDimensions.y * 0.95f));
+
+	player1_view.zoom(0.5f);
+
+	//std::cout << player1_view.getCenter().x << " " << player1_view.getCenter().y << std::endl;
+
 	// previous line is just copied and set to view 2 so we can see tha same screen;
+
+	//player1_view.move(0.01, 0.01)
 }
 
 void Game::draw()
@@ -291,13 +314,14 @@ void Game::play()
 	//player1_view.setCenter(300, 300);
 	//player1_view.setSize(600, 600);
 
-	Window->setFramerateLimit(500); // OK
+	//Window->setFramerateLimit(500); // OK
 
 	//mapa.setScale(Window->getSize().x / screenDimensions.x, Window->getSize().y / screenDimensions.y);
 
 	while (Window->isOpen()) // OK
 	{
 		Window->clear();
+
 
 		Window->setView(player1_view);
 		Window->draw(mapa);
@@ -332,7 +356,6 @@ void Game::play()
 		handlingRunes();
 		handlingBuffs();
 		Window->setView(player1_view);
-		handlingViews();
 		handlingMissiles();
 		hanglingCharacters();
 	
@@ -341,6 +364,8 @@ void Game::play()
 		countFPS();
 
 		Window->setView(player1_view);
+
+		handlingViews();
 		Window->display();
 	}
 
