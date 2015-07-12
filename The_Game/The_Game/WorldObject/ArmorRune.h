@@ -1,9 +1,9 @@
 #include "Rune.h"
 
-class ArmorRune// : public Rune 
+class ArmorRune : public Rune 
 {
 public:
-	ArmorRune();
+	ArmorRune(sf::Vector2u mapSize);
 	~ArmorRune();
 
 private:

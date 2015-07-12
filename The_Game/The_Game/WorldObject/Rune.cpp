@@ -1,27 +1,18 @@
 #include "Rune.h"
 
-Rune::Rune(sf::Vector2u mapSize)
+Rune::Rune()
 {
-	//std::cout << "Rune Created" << std::endl;
+}
 
-	type = rand() % numberOfRunes;
+int Rune::getType()
+{
+	return type;
+}
 
-	// Texture
-
-	if (type == armorRune)
-	{
-		if (!pTexture.loadFromFile("Images/armor_rune.png"))
-			std::cout << "Error could not load ArmorRune image." << std::endl;
-
-		std::cout << "ArmorRune created" << std::endl;
-	}
-	else if (type == speedRune)
-	{
-		if (!pTexture.loadFromFile("Images/speed_rune.png"))
-			std::cout << "Error could not load ArmorRune image." << std::endl;
-
-		std::cout << "SpeedRune created" << std::endl;
-	}
+void Rune::setRune(std::string location, sf::Vector2u mapSize)
+{
+	if (!pTexture.loadFromFile(location))
+		std::cout << "Error could not load rune image." << std::endl;
 
 	image.setTexture(pTexture);
 
@@ -29,11 +20,6 @@ Rune::Rune(sf::Vector2u mapSize)
 	int a2 = rand() % (mapSize.y - getSize().y);
 
 	image.setPosition(sf::Vector2f((float)a1, (float)a2));
-}
-
-int Rune::getType()
-{
-	return type;
 }
 
 int Rune::getDuration()

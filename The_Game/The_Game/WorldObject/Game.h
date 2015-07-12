@@ -7,9 +7,10 @@
 #include <string>
 #include <vector>
 #include "Player1.h"
-#include "Rune.h"
+//#include "Rune.h"
 #include "Bullet.h"
 #include "Map.h"
+#include "../RuneFactory.h"
 
 class Game
 {

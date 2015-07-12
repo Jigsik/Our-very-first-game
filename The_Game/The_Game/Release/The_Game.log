@@ -1,14 +1,25 @@
-﻿Build started 5. 3. 2015 12:07:42.
+﻿Build started 13. 7. 2015 0:39:11.
      1>Project "C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game\The_Game\The_Game.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Martin\Documents\GitHub\Our-very-first-game\JigsEngine\include" /I"C:\Users\Martin\Documents\GitHub\Our-very-first-game\SFML\include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /doc"Release\\" /Gd /TP /analyze- /errorReport:prompt WorldObject\Game.cpp main.cpp
-         Game.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Martin\Documents\GitHub\Our-very-first-game\JigsEngine\include" /I"C:\Users\Martin\Documents\GitHub\Our-very-first-game\SFML\include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /doc"Release\\" /Gd /TP /analyze- /errorReport:prompt Settings.cpp main.cpp player.cpp
+         Settings.cpp
          main.cpp
+     1>c:\users\martin\documents\github\our-very-first-game\the_game\the_game\GameScreen.h(140): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+         player.cpp
+     1>player.cpp(5): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>player.cpp(130): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+     1>player.cpp(132): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+     1>player.cpp(134): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+     1>player.cpp(140): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+     1>player.cpp(142): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game\Release\The_Game.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\SFML\lib" "sfml-graphics.lib" "sfml-system.lib" "sfml-window.lib" "sfml-audio.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game\Release\The_Game.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game\Release\The_Game.lib" /MACHINE:X86 /SAFESEH Release\armor25.obj
          Release\main.obj
-         Release\Armor.obj
+         Release\RuneFactory.obj
+         Release\RuneFactory.obj
          Release\ArmorRune.obj
+         Release\Settings.obj
+         Release\Armor.obj
          Release\Buff.obj
          Release\Bullet.obj
          Release\Character.obj
@@ -21,14 +32,17 @@
          Release\Player1.obj
          Release\Rune.obj
          Release\Speed.obj
+         Release\SpeedRune.obj
          Release\WorldObject.obj
+     1>Release\RuneFactory.obj : warning LNK4042: object specified more than once; extras ignored
          Generating code
+     1>c:\users\martin\documents\github\our-very-first-game\the_game\the_game\runefactory.cpp(16): warning C4715: 'RuneFactory::createRune' : not all control paths return a value
          Finished generating code
          The_Game.vcxproj -> C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game\Release\The_Game.exe
        XdcMake:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\xdcmake.exe /old "The_Game" /nologo /Fo"C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game\Release\The_Game.xml" /FsRelease\armor25.xdc /FsRelease\main.xdc /FsRelease\Armor.xdc /FsRelease\ArmorRune.xdc /FsRelease\Buff.xdc /FsRelease\Bullet.xdc /FsRelease\Character.xdc /FsRelease\enemy.xdc /FsRelease\player.xdc /FsRelease\rocket_missile.xdc /FsRelease\Game.xdc /FsRelease\Map.xdc /FsRelease\Missile.xdc /FsRelease\Player1.xdc /FsRelease\Rune.xdc /FsRelease\Speed.xdc /FsRelease\WorldObject.xdc
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\xdcmake.exe /old "The_Game" /nologo /Fo"C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game\Release\The_Game.xml" /FsRelease\armor25.xdc /FsRelease\main.xdc /FsRelease\RuneFactory.xdc /FsRelease\RuneFactory.xdc /FsRelease\ArmorRune.xdc /FsRelease\Settings.xdc /FsRelease\Armor.xdc /FsRelease\Buff.xdc /FsRelease\Bullet.xdc /FsRelease\Character.xdc /FsRelease\enemy.xdc /FsRelease\player.xdc /FsRelease\rocket_missile.xdc /FsRelease\Game.xdc /FsRelease\Map.xdc /FsRelease\Missile.xdc /FsRelease\Player1.xdc /FsRelease\Rune.xdc /FsRelease\Speed.xdc /FsRelease\SpeedRune.xdc /FsRelease\WorldObject.xdc
      1>Done Building Project "C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game\The_Game\The_Game.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:02.06
+Time Elapsed 00:00:02.61

@@ -46,6 +46,9 @@
     <Filter Include="Source Files\Buffs">
       <UniqueIdentifier>{d07f987f-24bf-4f5b-8bbf-8913bb8cdf1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Screens">
+      <UniqueIdentifier>{4ca82d90-cebd-4c68-b1f3-c75db74df3a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="player.cpp">
@@ -68,9 +71,6 @@
     </ClCompile>
     <ClCompile Include="WorldObject\Game.cpp">
       <Filter>Source Files\GameModes</Filter>
-    </ClCompile>
-    <ClCompile Include="WorldObject\ArmorRune.cpp">
-      <Filter>Source Files\Runes</Filter>
     </ClCompile>
     <ClCompile Include="WorldObject\WorldObject.cpp">
       <Filter>Source Files</Filter>
@@ -97,6 +97,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RuneFactory.cpp">
+      <Filter>Source Files\Runes</Filter>
+    </ClCompile>
+    <ClCompile Include="RuneFactory.h">
+      <Filter>Header Files\Runes</Filter>
+    </ClCompile>
+    <ClCompile Include="ArmorRune.cpp">
+      <Filter>Source Files\Runes</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldObject\SpeedRune.cpp">
+      <Filter>Source Files\Runes</Filter>
+    </ClCompile>
+    <ClCompile Include="Settings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -155,6 +170,24 @@
       <Filter>Header Files\GameModes</Filter>
     </ClInclude>
     <ClInclude Include="WorldObject\Map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject\SpeedRune.h">
+      <Filter>Header Files\Runes</Filter>
+    </ClInclude>
+    <ClInclude Include="Screens.h">
+      <Filter>Header Files\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="cScreen.h">
+      <Filter>Header Files\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuScreen.h">
+      <Filter>Header Files\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScreen.h">
+      <Filter>Header Files\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

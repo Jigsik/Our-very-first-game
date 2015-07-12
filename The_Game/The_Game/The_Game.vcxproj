@@ -88,8 +88,11 @@
   <ItemGroup>
     <ClCompile Include="armor25.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RuneFactory.cpp" />
+    <ClCompile Include="RuneFactory.h" />
+    <ClCompile Include="ArmorRune.cpp" />
+    <ClCompile Include="Settings.cpp" />
     <ClCompile Include="WorldObject\Armor.cpp" />
-    <ClCompile Include="WorldObject\ArmorRune.cpp" />
     <ClCompile Include="WorldObject\Buff.cpp" />
     <ClCompile Include="WorldObject\Bullet.cpp" />
     <ClCompile Include="WorldObject\Character.cpp" />
@@ -102,6 +105,7 @@
     <ClCompile Include="WorldObject\Player1.cpp" />
     <ClCompile Include="WorldObject\Rune.cpp" />
     <ClCompile Include="WorldObject\Speed.cpp" />
+    <ClCompile Include="WorldObject\SpeedRune.cpp" />
     <ClCompile Include="WorldObject\WorldObject.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +114,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Armor.h" />
+    <ClInclude Include="cScreen.h" />
+    <ClInclude Include="GameScreen.h" />
+    <ClInclude Include="MenuScreen.h" />
+    <ClInclude Include="Screens.h" />
+    <ClInclude Include="Settings.h" />
     <ClInclude Include="WorldObject\Armor1.h" />
     <ClInclude Include="WorldObject\ArmorRune.h" />
     <ClInclude Include="enemy.h" />
@@ -124,6 +133,7 @@
     <ClInclude Include="WorldObject\Player1.h" />
     <ClInclude Include="WorldObject\Rune.h" />
     <ClInclude Include="WorldObject\Speed.h" />
+    <ClInclude Include="WorldObject\SpeedRune.h" />
     <ClInclude Include="WorldObject\WorldObject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -104,7 +104,13 @@ void Game::handlingRunes()
 	if (runeClock.getElapsedTime().asMilliseconds() > 500)
 	{
 		// emplace_back()
-		runes.push_back(new Rune(mapa.getSize()));
+
+		int numberOfRunes = 2;
+
+		// old version
+		//runes.push_back(new Rune(mapa.getSize()));
+		// new version
+		runes.push_back(RuneFactory::createRune(rand() % numberOfRunes, mapa.getSize()));
 		runeClock.restart();
 	}
 
