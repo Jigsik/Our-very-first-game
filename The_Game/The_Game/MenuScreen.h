@@ -16,8 +16,8 @@ public:
 
 MenuScreen::MenuScreen(void)
 {
-	alpha_max = 3 * 255;
-	alpha_div = 3;
+	alpha_max = 10 * 255;
+	alpha_div = 10;
 	playing = false;
 }
 
