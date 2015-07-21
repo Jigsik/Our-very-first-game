@@ -82,20 +82,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="LanClient.cpp" />
     <ClCompile Include="LanCreate.cpp" />
     <ClCompile Include="LanJoin.cpp" />
     <ClCompile Include="LanMenuScreen.cpp" />
+    <ClCompile Include="LanServer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="MenuManager.cpp" />
     <ClCompile Include="MenuScreen.cpp" />
     <ClCompile Include="MultiplayerScreen.cpp" />
     <ClCompile Include="SettingsScreen.cpp" />
     <ClCompile Include="VideoSettings.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="Client.h" />
     <ClInclude Include="cScreen.h" />
+    <ClInclude Include="LanClient.h" />
     <ClInclude Include="LanCreate.h" />
     <ClInclude Include="LanJoin.h" />
     <ClInclude Include="LanMenuScreen.h" />
+    <ClInclude Include="LanServer.h" />
+    <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="MenuManager.h" />
     <ClInclude Include="MenuScreen.h" />
     <ClInclude Include="MultiplayerScreen.h" />
     <ClInclude Include="Screens.h" />

@@ -4,27 +4,24 @@
 #include <iostream>
 #include "cScreen.h"
 #include "VideoSettings.h"
+#include "MenuManager.h"
+#include "MenuScreen.h"
 
-class MultiplayerScreen : public cScreen
+class MultiplayerScreen : public cScreen, public MenuScreen
 {
 private:
-	// Settings
-	VideoSettings *videoSettings;
-
 	// Buttons
-	sf::Text splitScreenButton;
-	sf::Text lanButton;
-	sf::Text backButton;
+	Button splitScreenButton;
+	Button lanButton;
+	Button backButton;
+
+	// Functions
+	void setButtonsSelected(int selectedButton);
+	void draw(sf::RenderWindow &App);
 
 	enum multiplayerButton { SPLITSCREEN, LAN, BACK };
 
-	// Background
-	sf::Texture Texture;
-	sf::Sprite Sprite;
-
-	sf::Event Event;
-	sf::Font Font;
-	int numberOfButtons = 3;
+	const int numberOfButtons = 3;
 	int selectedButton = SPLITSCREEN;
 public:
 	MultiplayerScreen(VideoSettings *videoSettings);

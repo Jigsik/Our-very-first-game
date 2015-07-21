@@ -1,54 +1,32 @@
 #include "LanMenuScreen.h"
 
-
 LanMenuScreen::LanMenuScreen(VideoSettings *videoSettings)
 {
 	this->videoSettings = videoSettings;
 
-	if (!Texture.loadFromFile("Images/menuPic.jpg"))
-	{
-		std::cerr << "Error loading menuPic" << std::endl;
-		// Throw an exception
-	}
-	Sprite.setTexture(Texture);
-	Sprite.setScale(
-		videoSettings->getScreenDimensions().x / Sprite.getLocalBounds().width,
-		videoSettings->getScreenDimensions().y / Sprite.getLocalBounds().height);
+	if (!setBackground())
+		; // TODO : Throw exception
 
-	if (!Font.loadFromFile("Fonts/STENCIL.ttf"))
-	{
-		std::cerr << "Error loading STENCIL.ttf" << std::endl;
-		// Throw an exception
-	}
-
-	int fontSize = videoSettings->getScreenDimensions().y / 10;
 	float horizontalCenter = (float)videoSettings->getScreenDimensions().x / 2;
 	float verticalPos = (float)videoSettings->getScreenDimensions().y / 5;
 	float verticalRatio = (float)videoSettings->getScreenDimensions().y / 5;
 
-	createButton.setFont(Font);
-	createButton.setCharacterSize(fontSize);
-	createButton.setString("Create a game");
-	createButton.setOrigin(createButton.getLocalBounds().width / 2, createButton.getLocalBounds().height / 2);
-	createButton.setPosition(horizontalCenter, verticalPos);
+	createButton.initializeButton("Create a game", videoSettings);
+	createButton.setOrigin("CENTER", "CENTER");
+	createButton.setPosition(createButton.HORIZONTALCENTER, verticalPos);
 
 	verticalPos += verticalRatio;
 
-	joinButton.setFont(Font);
-	joinButton.setCharacterSize(fontSize);
-	joinButton.setString("Join a game");
-	joinButton.setOrigin(joinButton.getLocalBounds().width / 2, joinButton.getLocalBounds().height / 2);
-	joinButton.setPosition(horizontalCenter, verticalPos);
+	joinButton.initializeButton("Join a game", videoSettings);
+	joinButton.setOrigin("CENTER", "CENTER");
+	joinButton.setPosition(joinButton.HORIZONTALCENTER, verticalPos);
 
 	verticalPos += verticalRatio;
 
-	backButton.setFont(Font);
-	backButton.setCharacterSize(fontSize);
-	backButton.setString("Back");
-	backButton.setOrigin(backButton.getLocalBounds().width / 2, backButton.getLocalBounds().height / 2);
-	backButton.setPosition(horizontalCenter, verticalPos);
+	backButton.initializeButton("Back", videoSettings);
+	backButton.setOrigin("CENTER", "CENTER");
+	backButton.setPosition(backButton.HORIZONTALCENTER, verticalPos);
 }
-
 
 LanMenuScreen::~LanMenuScreen()
 {
@@ -78,21 +56,25 @@ int LanMenuScreen::Run(sf::RenderWindow &App)
 					if (selectedButton < numberOfButtons - 1) selectedButton++;
 					break;
 				case sf::Keyboard::Return:
-					if (selectedButton < 3 && selectedButton >= 0)
+					if (selectedButton < numberOfButtons && selectedButton >= 0)
 					{
-						if (selectedButton == BACK) return 1;
-						else if (selectedButton == CREATE) return 5;
-						else if (selectedButton == JOIN)
+						if (selectedButton == BACK) return X_MULTIPLAYER;
+						else if (selectedButton == CREATE)
 						{
-							sf::TcpSocket socket;
-							sf::Socket::Status status = socket.connect("192.168.0.128", 53000);
-							if (status != sf::Socket::Done)
+							/*LanCreate screen(videoSettings);
+							int code = screen.Run(App);
+
+							if (code == 1)
 							{
-								// error...
-							}
+								for (clientsIt = screen.udpClients.begin(); clientsIt != screen.udpClients.end(); clientsIt++)
+								{
+									connectedPlayers.push_back(*clientsIt);
+								}
+							}*/
 
-
+							return X_LANCREATE;
 						}
+						else if (selectedButton == JOIN) return X_LANJOIN;
 						else std::cout << "CHYBA" << std::endl;
 					}
 					else
@@ -107,37 +89,39 @@ int LanMenuScreen::Run(sf::RenderWindow &App)
 			}
 		}
 
-		if (selectedButton == CREATE)
-		{
-			createButton.setColor(sf::Color(255, 0, 0, 255));
-			joinButton.setColor(sf::Color(255, 255, 255, 255));
-			backButton.setColor(sf::Color(255, 255, 255, 255));
-		}
-		else if (selectedButton == JOIN)
-		{
-			createButton.setColor(sf::Color(255, 255, 255, 255));
-			joinButton.setColor(sf::Color(255, 0, 0, 255));
-			backButton.setColor(sf::Color(255, 255, 255, 255));
-		}
-		else if (selectedButton == BACK)
-		{
-			createButton.setColor(sf::Color(255, 255, 255, 255));
-			joinButton.setColor(sf::Color(255, 255, 255, 255));
-			backButton.setColor(sf::Color(255, 0, 0, 255));
-		}
-		else std::cout << "SOMETHING IS WRONG WITH RED LABEL" << std::endl;
+		setButtonsSelected(selectedButton);
 
-		//Clearing screen
-		App.clear();
-
-		//Drawing
-		App.draw(Sprite);
-		App.draw(createButton);
-		App.draw(joinButton);
-		App.draw(backButton);
-		App.display();
+		draw(App);
 	}
 
 	//Never reaching this point normally, but just in case, exit the application
 	return (-1);
+}
+
+void LanMenuScreen::setButtonsSelected(int selected)
+{
+	createButton.setSelected(false);
+	joinButton.setSelected(false);
+	backButton.setSelected(false);
+
+	if (selectedButton == CREATE)
+		createButton.setSelected(true);
+	else if (selectedButton == JOIN)
+		joinButton.setSelected(true);
+	else if (selectedButton == BACK)
+		backButton.setSelected(true);
+	else std::cout << "SOMETHING IS WRONG WITH RED LABEL" << std::endl;
+}
+
+void LanMenuScreen::draw(sf::RenderWindow &App)
+{
+	//Clearing screen
+	App.clear();
+
+	//Drawing
+	App.draw(backgroundImage);
+	App.draw(createButton);
+	App.draw(joinButton);
+	App.draw(backButton);
+	App.display();
 }

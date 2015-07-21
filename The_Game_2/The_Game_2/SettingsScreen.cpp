@@ -4,23 +4,12 @@ SettingsScreen::SettingsScreen(VideoSettings *videoSettings)
 {
 	this->videoSettings = videoSettings;
 
-	if (!Texture.loadFromFile("Images/menuPic.jpg"))
-	{
-		std::cerr << "Error loading menuPic" << std::endl;
-		// Throw an exception
-	}
-	Sprite.setTexture(Texture);
-	Sprite.setScale(
-		videoSettings->getScreenDimensions().x / Sprite.getLocalBounds().width,
-		videoSettings->getScreenDimensions().y / Sprite.getLocalBounds().height);
+	if (!setBackground())
+		; // TODO : Throw exception
 
-	if (!Font.loadFromFile("Fonts/STENCIL.ttf"))
-	{
-		std::cerr << "Error loading STENCIL.ttf" << std::endl;
-		// Throw an exception
-	}
+	if (!setFont())
+		; // TODO : Throw exception
 
-	int fontSize = videoSettings->getScreenDimensions().y / 10;
 	float horizontalCenter = (float)videoSettings->getScreenDimensions().x / 2;
 	float verticalPos = (float)videoSettings->getScreenDimensions().y / 10;
 	float verticalRatio = (float)videoSettings->getScreenDimensions().y / 10;
@@ -71,13 +60,12 @@ SettingsScreen::SettingsScreen(VideoSettings *videoSettings)
 	applyLabel.setString("Apply");
 	applyLabel.setOrigin(applyLabel.getLocalBounds().width, 0);
 	applyLabel.setPosition(horizontalCenter - (float)videoSettings->getScreenDimensions().x / 10, verticalPos);
-	
+
 	cancelLabel.setFont(Font);
 	cancelLabel.setCharacterSize(fontSize);
 	cancelLabel.setString("Cancel");
 	cancelLabel.setPosition(horizontalCenter + (float)videoSettings->getScreenDimensions().x / 10, verticalPos);
 }
-
 
 SettingsScreen::~SettingsScreen()
 {
@@ -101,7 +89,7 @@ int SettingsScreen::Run(sf::RenderWindow &App)
 				switch (Event.key.code)
 				{
 				case sf::Keyboard::Return:
-					return 0;
+					return X_MAIN;
 					break;
 				default:
 					break;
@@ -109,19 +97,23 @@ int SettingsScreen::Run(sf::RenderWindow &App)
 			}
 		}
 
-		
-		//Clearing screen
-		App.clear();
-
-		//Drawing
-		App.draw(Sprite);
-		App.draw(resolutionLabel);
-		App.draw(res1);
-		App.draw(res2);
-		App.draw(ratioLabel);
-		App.draw(ratio1);
-		App.draw(applyLabel);
-		App.draw(cancelLabel);
-		App.display();
+		draw(App);
 	}
+}
+
+void SettingsScreen::draw(sf::RenderWindow &App)
+{
+	//Clearing screen
+	App.clear();
+
+	//Drawing
+	App.draw(backgroundImage);
+	App.draw(resolutionLabel);
+	App.draw(res1);
+	App.draw(res2);
+	App.draw(ratioLabel);
+	App.draw(ratio1);
+	App.draw(applyLabel);
+	App.draw(cancelLabel);
+	App.display();
 }

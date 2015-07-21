@@ -4,31 +4,28 @@
 #include <iostream>
 #include "cScreen.h"
 #include "VideoSettings.h"
+#include "MenuManager.h"
+#include "MenuScreen.h"
 #include <SFML\Network.hpp>
+#include "Client.h"
+#include "LanServer.h"
 
-class LanCreate : public cScreen
+class LanCreate : public cScreen, public MenuScreen
 {
 private:
-	// Settings
-	VideoSettings *videoSettings;
-
 	// Texts
 	sf::Text IPAddressLabel;
 	sf::Text connectedPlayersLabel;
 
 	// Buttons
-	sf::Text startButton;
-	sf::Text backButton;
+	Button startButton;
+	Button backButton;
+
+	void setButtonsSelected(int selectedButton);
+	void draw(sf::RenderWindow &App);
 
 	enum lanButton { START, BACK };
 
-	// Background
-
-	sf::Texture Texture;
-	sf::Sprite Sprite;
-
-	sf::Event Event;
-	sf::Font Font;
 	int numberOfButtons = 2;
 	int connectedPlayers = 0;
 	int selectedButton = START;
@@ -45,6 +42,9 @@ public:
 	LanCreate(VideoSettings *videoSettings);
 	~LanCreate();
 	virtual int Run(sf::RenderWindow &App);
+
+	std::vector<Client*> udpClients;
+	std::vector<Client*>::iterator udpClientsIt;
 };
 
 #endif // !__LANCREATE_H_INCLUDED__

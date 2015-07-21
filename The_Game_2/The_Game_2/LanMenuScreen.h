@@ -4,27 +4,24 @@
 #include <iostream>
 #include "cScreen.h"
 #include "VideoSettings.h"
+#include "MenuManager.h"
+#include "MenuScreen.h"
+#include "Screens.h"
 #include <SFML\Network.hpp>
 
-class LanMenuScreen : public cScreen
+class LanMenuScreen : public cScreen, public MenuScreen
 {
 private:
-	// Settings
-	VideoSettings *videoSettings;
-
 	// Buttons
-	sf::Text createButton;
-	sf::Text joinButton;
-	sf::Text backButton;
+	Button createButton;
+	Button joinButton;
+	Button backButton;
+
+	void setButtonsSelected(int selectedButton);
+	void draw(sf::RenderWindow &App);
 
 	enum lanButton { CREATE, JOIN, BACK };
 
-	// Background
-	sf::Texture Texture;
-	sf::Sprite Sprite;
-
-	sf::Event Event;
-	sf::Font Font;
 	int numberOfButtons = 3;
 	int selectedButton = CREATE;
 public:

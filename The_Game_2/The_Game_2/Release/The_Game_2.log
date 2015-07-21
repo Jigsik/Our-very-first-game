@@ -1,22 +1,37 @@
-﻿Build started 16. 7. 2015 13:01:44.
+﻿Build started 21. 7. 2015 17:55:08.
      1>Project "C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game_2\The_Game_2\The_Game_2.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Martin\Documents\GitHub\Our-very-first-game\SFML\include" /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt LanMenuScreen.cpp
-         LanMenuScreen.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Martin\Documents\GitHub\Our-very-first-game\SFML\include" /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt LanClient.cpp LanCreate.cpp
+         LanClient.cpp
+         LanCreate.cpp
+     1>LanCreate.cpp(10): warning C4390: ';' : empty controlled statement found; is this the intent?
+     1>LanCreate.cpp(13): warning C4390: ';' : empty controlled statement found; is this the intent?
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game_2\Release\The_Game_2.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\SFML\lib" "sfml-graphics.lib" "sfml-window.lib" "sfml-audio.lib" "sfml-system.lib" "sfml-network.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game_2\Release\The_Game_2.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game_2\Release\The_Game_2.lib" /MACHINE:X86 /SAFESEH Release\LanCreate.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game_2\Release\The_Game_2.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\SFML\lib" "sfml-graphics.lib" "sfml-window.lib" "sfml-audio.lib" "sfml-system.lib" "sfml-network.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game_2\Release\The_Game_2.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game_2\Release\The_Game_2.lib" /MACHINE:X86 /SAFESEH Release\Button.obj
+         Release\Client.obj
+         Release\LanClient.obj
+         Release\LanCreate.obj
          Release\LanJoin.obj
          Release\LanMenuScreen.obj
+         Release\LanServer.obj
          Release\main.obj
+         Release\MainMenu.obj
+         Release\MenuManager.obj
          Release\MenuScreen.obj
          Release\MultiplayerScreen.obj
          Release\SettingsScreen.obj
          Release\VideoSettings.obj
          Generating code
          Finished generating code
+     1>Button.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Button.obj' or at 'C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game_2\Release\vc120.pdb'; linking object as if no debug info
+     1>MenuManager.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'MenuManager.obj' or at 'C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game_2\Release\vc120.pdb'; linking object as if no debug info
+     1>MenuScreen.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'MenuScreen.obj' or at 'C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game_2\Release\vc120.pdb'; linking object as if no debug info
+     1>MultiplayerScreen.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'MultiplayerScreen.obj' or at 'C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game_2\Release\vc120.pdb'; linking object as if no debug info
+     1>SettingsScreen.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'SettingsScreen.obj' or at 'C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game_2\Release\vc120.pdb'; linking object as if no debug info
+     1>VideoSettings.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'VideoSettings.obj' or at 'C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game_2\Release\vc120.pdb'; linking object as if no debug info
          The_Game_2.vcxproj -> C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game_2\Release\The_Game_2.exe
      1>Done Building Project "C:\Users\Martin\Documents\GitHub\Our-very-first-game\The_Game_2\The_Game_2\The_Game_2.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:02.33
+Time Elapsed 00:00:03.63

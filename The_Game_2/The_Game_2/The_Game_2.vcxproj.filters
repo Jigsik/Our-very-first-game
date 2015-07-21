@@ -19,6 +19,12 @@
     <Filter Include="Source Files\Screen">
       <UniqueIdentifier>{9a2dea13-d7fa-4d99-91bf-50164877738a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Managers">
+      <UniqueIdentifier>{1020965d-2d72-4fd5-a409-e06b35fae444}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Managers">
+      <UniqueIdentifier>{f42ece59-411b-40df-93fb-3faecca44101}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -30,19 +36,37 @@
     <ClCompile Include="VideoSettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LanMenuScreen.cpp">
+      <Filter>Source Files\Screen</Filter>
+    </ClCompile>
     <ClCompile Include="SettingsScreen.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Screen</Filter>
     </ClCompile>
     <ClCompile Include="MultiplayerScreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LanMenuScreen.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Screen</Filter>
     </ClCompile>
     <ClCompile Include="LanCreate.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Screen</Filter>
     </ClCompile>
     <ClCompile Include="LanJoin.cpp">
+      <Filter>Source Files\Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Source Files\Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LanServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LanClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,7 +95,25 @@
     <ClInclude Include="LanCreate.h">
       <Filter>Header Files\Screen</Filter>
     </ClInclude>
+    <ClInclude Include="MenuManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
     <ClInclude Include="LanJoin.h">
+      <Filter>Header Files\Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Header Files\Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LanServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LanClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

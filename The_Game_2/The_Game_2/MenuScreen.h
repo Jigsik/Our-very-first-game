@@ -3,35 +3,27 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "cScreen.h"
 #include "VideoSettings.h"
+#include "MenuManager.h"
+#include "Button.h"
 
-class MenuScreen : public cScreen
+class MenuScreen
 {
-private:
+protected:
 	// Settings
 	VideoSettings *videoSettings;
-
-	// Buttons
-	sf::Text storyButton;
-	sf::Text multiplayerButton;
-	sf::Text settingsButton;
-	sf::Text exitButton;
-
-	enum menuButton { STORY, MULTIPLAYER, SETTINGS, EXIT };
 	
 	// Background
-	sf::Texture Texture;
-	sf::Sprite Sprite;
+	sf::Texture backgroundTexture;
+	sf::Sprite backgroundImage;
 
 	sf::Event Event;
-	bool Running = true;
 	sf::Font Font;
-	int numberOfButtons = 4;
-	int menu = STORY;
+	unsigned fontSize;
 public:
-	MenuScreen(VideoSettings *videoSettings);
-	virtual int Run(sf::RenderWindow &App);
+	void resolutionChanged();
+	bool setFont();
+	bool setBackground();
 };
 
 #endif // !__MENUSCREEN_H_INCLUDED__

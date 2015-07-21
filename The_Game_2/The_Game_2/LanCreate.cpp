@@ -1,27 +1,15 @@
 #include "LanCreate.h"
 
-
 LanCreate::LanCreate(VideoSettings *videoSettings)
 {
 	this->videoSettings = videoSettings;
 
-	if (!Texture.loadFromFile("Images/menuPic.jpg"))
-	{
-		std::cerr << "Error loading menuPic" << std::endl;
-		// Throw an exception
-	}
-	Sprite.setTexture(Texture);
-	Sprite.setScale(
-		videoSettings->getScreenDimensions().x / Sprite.getLocalBounds().width,
-		videoSettings->getScreenDimensions().y / Sprite.getLocalBounds().height);
+	if (!setBackground())
+		; // TODO : Throw exception
 
-	if (!Font.loadFromFile("Fonts/STENCIL.ttf"))
-	{
-		std::cerr << "Error loading STENCIL.ttf" << std::endl;
-		// Throw an exception
-	}
-
-	int fontSize = videoSettings->getScreenDimensions().y / 10;
+	if (!setFont())
+		; // TODO : Throw exception
+	
 	float horizontalCenter = (float)videoSettings->getScreenDimensions().x / 2;
 	float verticalPos = (float)videoSettings->getScreenDimensions().y / 5;
 	float verticalRatio = (float)videoSettings->getScreenDimensions().y / 5;
@@ -38,21 +26,16 @@ LanCreate::LanCreate(VideoSettings *videoSettings)
 
 	verticalPos += verticalRatio;
 
-	startButton.setFont(Font);
-	startButton.setCharacterSize(fontSize);
-	startButton.setString("Start");
-	startButton.setOrigin(startButton.getLocalBounds().width / 2, startButton.getLocalBounds().height / 2);
-	startButton.setPosition(horizontalCenter, verticalPos);
+	startButton.initializeButton("Start", videoSettings);
+	startButton.setOrigin("CENTER", "CENTER");
+	startButton.setPosition(startButton.HORIZONTALCENTER, verticalPos);
 
 	verticalPos += verticalRatio;
 
-	backButton.setFont(Font);
-	backButton.setCharacterSize(fontSize);
-	backButton.setString("Back");
-	backButton.setOrigin(backButton.getLocalBounds().width / 2, backButton.getLocalBounds().height / 2);
-	backButton.setPosition(horizontalCenter, verticalPos);
+	backButton.initializeButton("Back", videoSettings);
+	backButton.setOrigin("CENTER", "CENTER");
+	backButton.setPosition(backButton.HORIZONTALCENTER, verticalPos);
 }
-
 
 LanCreate::~LanCreate()
 {
@@ -61,6 +44,8 @@ LanCreate::~LanCreate()
 		delete *clientsIt;
 		clientsIt = clients.erase(clientsIt);
 	}
+
+	//tcp_listener.close();
 }
 
 int LanCreate::Run(sf::RenderWindow &App)
@@ -105,6 +90,26 @@ int LanCreate::Run(sf::RenderWindow &App)
 			connectedPlayersLabel.setOrigin(connectedPlayersLabel.getLocalBounds().width / 2, connectedPlayersLabel.getLocalBounds().height / 2);
 		}
 
+		for (clientsIt = clients.begin(); clientsIt != clients.end();)
+		{
+			//std::cout << "checking connected clients" << std::endl;
+
+			char check = 0;
+
+			if ((*clientsIt)->send(&check, 1) == sf::TcpSocket::Status::Disconnected)
+			{
+				delete *clientsIt;
+				clientsIt = clients.erase(clientsIt);
+				connectedPlayers--;
+
+				std::cout << "PLAYER LEFT" << std::endl;
+
+				connectedPlayersLabel.setString(std::to_string(connectedPlayers));
+				connectedPlayersLabel.setOrigin(connectedPlayersLabel.getLocalBounds().width / 2, connectedPlayersLabel.getLocalBounds().height / 2);
+			}
+			else clientsIt++;
+		}
+
 		//Verifying events
 		while (App.pollEvent(Event))
 		{
@@ -127,8 +132,67 @@ int LanCreate::Run(sf::RenderWindow &App)
 				case sf::Keyboard::Return:
 					if (selectedButton < numberOfButtons && selectedButton >= 0)
 					{
-						if (selectedButton == BACK) return 0;
-						else if (selectedButton == START) return 3;
+						if (selectedButton == BACK)
+						{
+							tcp_listener.close();
+							return X_LAN;
+						}
+						else if (selectedButton == START)
+						{
+							// Is anyone connected?
+							if (clients.size() == 0)
+							{
+								std::cout << "No one is connected.." << std::endl;
+								break;
+							}
+
+							std::cout << "HEEEH" << std::endl;
+
+							// set UDP clients
+							// it is going to move to another class
+
+							char start = 1;
+
+							for (clientsIt = clients.begin(); clientsIt != clients.end(); clientsIt++)
+							{
+								if ((*clientsIt)->send(&start, 1) != sf::TcpSocket::Status::Done)
+								{
+									std::cout << "Error starting game" << std::endl;
+								}
+							}
+
+							for (clientsIt = clients.begin(); clientsIt != clients.end(); clientsIt++)
+							{
+								bool clientMessage;
+								std::size_t received;
+
+								if ((*clientsIt)->receive(&clientMessage, 1, received) == sf::Socket::Done)
+								{
+									if (clientMessage)
+										std::cout << "PLAYER IS READY" << std::endl;
+									else if (!clientMessage)
+									{
+										std::cout << "PLAYER IS NOT READY" << std::endl;
+									}
+								}
+							}
+
+							LanServer game;
+
+							for (clientsIt = clients.begin(); clientsIt != clients.end(); clientsIt++)
+							{
+
+								// NEED LANCLIENT
+								//game.addPlayer((*clientsIt)->getRemoteAddress(), );
+
+								/*Client* udpClient = new Client();
+
+								udpClient->setIPAddress((*clientsIt)->getRemoteAddress());
+								//udpClient->setPort = (*clientsIt)->getRemotePort();
+
+								udpClients.push_back(udpClient);*/
+							}
+						}
 						else std::cout << "CHYBA" << std::endl;
 					}
 					else
@@ -143,30 +207,37 @@ int LanCreate::Run(sf::RenderWindow &App)
 			}
 		}
 
-		if (selectedButton == START)
-		{
-			startButton.setColor(sf::Color(255, 0, 0, 255));
-			backButton.setColor(sf::Color(255, 255, 255, 255));
-		}
-		else if (selectedButton == BACK)
-		{
-			startButton.setColor(sf::Color(255, 255, 255, 255));
-			backButton.setColor(sf::Color(255, 0, 0, 255));
-		}
-		else std::cout << "SOMETHING IS WRONG WITH RED LABEL" << std::endl;
+		setButtonsSelected(selectedButton);
 
-		//Clearing screen
-		App.clear();
-
-		//Drawing
-		App.draw(Sprite);
-		App.draw(startButton);
-		App.draw(IPAddressLabel);
-		App.draw(connectedPlayersLabel);
-		App.draw(backButton);
-		App.display();
+		draw(App);
 	}
 
 	// use "client" to communicate with the connected client,
 	// and continue to accept new connections with the listener
+}
+
+void LanCreate::setButtonsSelected(int selectedButton)
+{
+	startButton.setSelected(false);
+	backButton.setSelected(false);
+
+	if (selectedButton == START)
+		startButton.setSelected(true);
+	else if (selectedButton == BACK)
+		backButton.setSelected(true);
+	else std::cout << "SOMETHING IS WRONG WITH RED LABEL" << std::endl;
+}
+
+void LanCreate::draw(sf::RenderWindow &App)
+{
+	//Clearing screen
+	App.clear();
+
+	//Drawing
+	App.draw(backgroundImage);
+	App.draw(startButton);
+	App.draw(IPAddressLabel);
+	App.draw(connectedPlayersLabel);
+	App.draw(backButton);
+	App.display();
 }
