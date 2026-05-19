@@ -1,5 +1,5 @@
 type Vec = { x: number; y: number };
-type RuneType = "armor" | "speed";
+type RuneType = "armor" | "speed" | "scatter";
 type RoundState = "countdown" | "playing" | "finished";
 
 const canvasElement = document.querySelector<HTMLCanvasElement>("#game");
@@ -18,6 +18,7 @@ const assets = {
   armorRune: loadImage("/The_Game/The_Game/Images/armor_rune.png"),
   speedRune: loadImage("/The_Game/The_Game/Images/speed_rune.png"),
   armor: loadImage("/The_Game/The_Game/Images/armor.png"),
+  deathRabbit: loadImage("/v1-web/assets/rabbit-death.svg"),
   tiles: loadImage("/The_Game/The_Game/Maps/mapa.png")
 };
 
@@ -39,9 +40,10 @@ const PLAYER_SPAWNS: [Vec, Vec] = [
   { x: 210, y: 420 },
   { x: 1110, y: 420 }
 ];
-const RUNE_SPAWNS: [Rune, Rune] = [
+const RUNE_SPAWNS: Rune[] = [
   { type: "armor", position: { x: 660, y: 420 }, ttl: 999, pulseOffset: 0 },
-  { type: "speed", position: { x: 660, y: 210 }, ttl: 999, pulseOffset: 1.7 }
+  { type: "speed", position: { x: 660, y: 210 }, ttl: 999, pulseOffset: 1.7 },
+  { type: "scatter", position: { x: 660, y: 630 }, ttl: 999, pulseOffset: 3.4 }
 ];
 const RUNE_SPAWN_POOL: Vec[] = [
   { x: 660, y: 420 },
@@ -64,12 +66,15 @@ type Player = {
   hp: number;
   armor: number;
   speedUntil: number;
+  scatterUntil: number;
   shootCooldown: number;
   animationTime: number;
   hitFlash: number;
   pickupFlash: number;
   recoil: number;
   isSprinting: boolean;
+  deathTime: number;
+  deathDirection: Vec;
   controls: {
     up: string;
     down: string;
@@ -86,6 +91,8 @@ type Bullet = {
   direction: Vec;
   ttl: number;
   age: number;
+  damage: number;
+  color: string;
 };
 
 type Rune = {
@@ -124,12 +131,15 @@ const players: Player[] = [
     hp: 100,
     armor: 0,
     speedUntil: 0,
+    scatterUntil: 0,
     shootCooldown: 0,
     animationTime: 0,
     hitFlash: 0,
     pickupFlash: 0,
     recoil: 0,
     isSprinting: false,
+    deathTime: 0,
+    deathDirection: { x: 1, y: 0 },
     controls: {
       up: "KeyW",
       down: "KeyS",
@@ -148,12 +158,15 @@ const players: Player[] = [
     hp: 100,
     armor: 0,
     speedUntil: 0,
+    scatterUntil: 0,
     shootCooldown: 0,
     animationTime: 0,
     hitFlash: 0,
     pickupFlash: 0,
     recoil: 0,
     isSprinting: false,
+    deathTime: 0,
+    deathDirection: { x: -1, y: 0 },
     controls: {
       up: "ArrowUp",
       down: "ArrowDown",
@@ -168,7 +181,8 @@ const players: Player[] = [
 let bullets: Bullet[] = [];
 let runes: Rune[] = [
   { type: "armor", position: { x: 400, y: 260 }, ttl: 999, pulseOffset: 0.4 },
-  { type: "speed", position: { x: 760, y: 460 }, ttl: 999, pulseOffset: 2.1 }
+  { type: "speed", position: { x: 760, y: 460 }, ttl: 999, pulseOffset: 2.1 },
+  { type: "scatter", position: { x: 660, y: 420 }, ttl: 999, pulseOffset: 3.4 }
 ];
 let particles: Particle[] = [];
 let floatingTexts: FloatingText[] = [];
@@ -249,7 +263,7 @@ function update(dt: number): void {
     for (const player of players) {
       if (player.id === bullet.owner || player.hp <= 0) continue;
       if (distance(player.position, bullet.position) < 24) {
-        const result = applyDamage(player, 20);
+        const result = applyDamage(player, bullet.damage);
         spawnHitFeedback(player, result.damage, result.blocked);
         bullet.ttl = 0;
       }
@@ -326,27 +340,42 @@ function updatePlayer(player: Player, dt: number): void {
       x: player.position.x + player.direction.x * 24,
       y: player.position.y + player.direction.y * 24
     };
-    bullets.push({
-      owner: player.id,
-      position: muzzle,
-      direction: player.direction,
-      ttl: 1.6,
-      age: 0
-    });
+    const hasScatter = nowSeconds() < player.scatterUntil;
+    const directions = hasScatter
+      ? [-0.22, 0, 0.22].map((angle) => rotateVec(player.direction, angle))
+      : [player.direction];
+    for (const direction of directions) {
+      bullets.push({
+        owner: player.id,
+        position: { ...muzzle },
+        direction,
+        ttl: hasScatter ? 1.15 : 1.6,
+        age: 0,
+        damage: hasScatter ? 13 : 20,
+        color: hasScatter ? "#ff9a5a" : "#f9d36b"
+      });
+    }
     player.recoil = 1;
-    screenShake = Math.max(screenShake, 1.1);
+    screenShake = Math.max(screenShake, hasScatter ? 2.3 : 1.1);
     spawnMuzzleFlash(muzzle, player.direction);
-    player.shootCooldown = 0.35;
+    player.shootCooldown = hasScatter ? 0.42 : 0.35;
   }
 }
 
 function applyDamage(player: Player, amount: number): { damage: number; blocked: number } {
+  const wasAlive = player.hp > 0;
   const blocked = Math.min(player.armor, amount);
   player.armor -= blocked;
   const damage = amount - blocked;
   player.hp = Math.max(0, player.hp - damage);
   player.hitFlash = 0.24;
   screenShake = Math.max(screenShake, damage > 0 ? 5 : 2.5);
+  if (wasAlive && player.hp <= 0) {
+    player.deathTime = 0;
+    player.deathDirection = player.direction;
+    player.recoil = 1;
+    spawnDeathPuff(player.position);
+  }
   return { damage, blocked };
 }
 
@@ -354,17 +383,20 @@ function applyRune(player: Player, type: RuneType): void {
   if (type === "armor") {
     player.armor = 60;
     player.speedUntil = 0;
-  } else {
+  } else if (type === "speed") {
     player.speedUntil = nowSeconds() + 10;
     player.armor = 0;
+  } else {
+    player.scatterUntil = nowSeconds() + 8;
   }
   player.pickupFlash = 0.5;
 }
 
 function spawnRune(): void {
   const preferred = RUNE_SPAWN_POOL[Math.floor(Math.random() * RUNE_SPAWN_POOL.length)] ?? RUNE_SPAWN_POOL[0]!;
+  const runeTypes: RuneType[] = ["armor", "speed", "scatter"];
   runes.push({
-    type: Math.random() > 0.5 ? "armor" : "speed",
+    type: runeTypes[Math.floor(Math.random() * runeTypes.length)] ?? "armor",
     position: findOpenPosition(preferred, PLAYER_RADIUS),
     ttl: 12,
     pulseOffset: Math.random() * Math.PI * 2
@@ -444,12 +476,15 @@ function resetRound(): void {
     player.hp = 100;
     player.armor = 0;
     player.speedUntil = 0;
+    player.scatterUntil = 0;
     player.shootCooldown = 0;
     player.animationTime = 0;
     player.hitFlash = 0;
     player.pickupFlash = 0;
     player.recoil = 0;
     player.isSprinting = false;
+    player.deathTime = 0;
+    player.deathDirection = player.direction;
   }
   bullets = [];
   particles = [];
@@ -477,6 +512,13 @@ function finishRoundIfNeeded(): void {
 
 function updateEffects(dt: number): void {
   screenShake = Math.max(0, screenShake - dt * 12);
+
+  for (const player of players) {
+    if (player.hp <= 0) {
+      player.deathTime += dt;
+      player.recoil = Math.max(0, player.recoil - dt * 5);
+    }
+  }
 
   for (const particle of particles) {
     particle.age += dt;
@@ -561,7 +603,7 @@ function spawnHitFeedback(player: Player, damage: number, blocked: number): void
 }
 
 function spawnRunePickup(player: Player, type: RuneType): void {
-  const color = type === "armor" ? "#8fd0ff" : "#b5f56c";
+  const color = type === "armor" ? "#8fd0ff" : type === "speed" ? "#b5f56c" : "#ff9a5a";
   for (let i = 0; i < 26; i++) {
     const direction = randomUnitVector();
     particles.push({
@@ -577,7 +619,7 @@ function spawnRunePickup(player: Player, type: RuneType): void {
     });
   }
   floatingTexts.push({
-    text: type === "armor" ? "ARMOR" : "SPEED",
+    text: type === "armor" ? "ARMOR" : type === "speed" ? "SPEED" : "SCATTER",
     position: { x: player.position.x, y: player.position.y - 36 },
     velocity: { x: 0, y: -34 },
     color,
@@ -601,6 +643,23 @@ function spawnWinBurst(position: Vec, color: string): void {
       ttl: 1.1 + Math.random() * 0.7,
       age: 0,
       gravity: 120
+    });
+  }
+}
+
+function spawnDeathPuff(position: Vec): void {
+  for (let i = 0; i < 34; i++) {
+    const direction = randomUnitVector();
+    particles.push({
+      position: { ...position },
+      velocity: {
+        x: direction.x * (45 + Math.random() * 120),
+        y: direction.y * (45 + Math.random() * 120)
+      },
+      color: i % 2 === 0 ? "#f4efe2" : "#cfc6b6",
+      radius: 2 + Math.random() * 5,
+      ttl: 0.5 + Math.random() * 0.3,
+      age: 0
     });
   }
 }
@@ -825,6 +884,11 @@ function drawSpeedStreaks(player: Player, color: string): void {
 }
 
 function drawPlayer(player: Player): void {
+  if (player.hp <= 0) {
+    drawDeathPlayer(player);
+    return;
+  }
+
   const speedActive = nowSeconds() < player.speedUntil;
   const step = Math.sin(player.animationTime);
   const bob = player.hp > 0 ? Math.abs(step) * (speedActive ? 5 : player.isSprinting ? 4 : 2) : 0;
@@ -880,29 +944,57 @@ function drawPlayer(player: Player): void {
   ctx.restore();
 }
 
+function drawDeathPlayer(player: Player): void {
+  const image = assets.deathRabbit;
+  const frame = Math.min(3, Math.floor(player.deathTime / 0.16));
+  const angle = Math.atan2(player.deathDirection.y, player.deathDirection.x);
+  const settle = clamp(player.deathTime / 0.7, 0, 1);
+
+  ctx.save();
+  ctx.translate(player.position.x, player.position.y);
+  ctx.rotate(angle);
+  ctx.globalAlpha = 1 - clamp((player.deathTime - 1.3) / 0.8, 0, 0.45);
+  ctx.fillStyle = `rgba(0, 0, 0, ${0.28 * settle})`;
+  ctx.beginPath();
+  ctx.ellipse(0, 20, PLAYER_RADIUS + 12, 7, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  if (image.complete && image.naturalWidth > 0) {
+    const frameWidth = image.naturalWidth / 4;
+    ctx.drawImage(image, frame * frameWidth, 0, frameWidth, image.naturalHeight, -36, -46, 72, 72);
+  } else {
+    ctx.rotate(settle * Math.PI / 2);
+    ctx.fillStyle = "#bcb5aa";
+    ctx.beginPath();
+    ctx.ellipse(0, 0, PLAYER_RADIUS + 6, PLAYER_RADIUS, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
 function drawBullet(bullet: Bullet): void {
   ctx.save();
   ctx.translate(bullet.position.x, bullet.position.y);
   ctx.rotate(Math.atan2(bullet.direction.y, bullet.direction.x));
   ctx.globalAlpha = 0.45;
-  ctx.fillStyle = "#f9d36b";
+  ctx.fillStyle = bullet.color;
   ctx.fillRect(-22, -2, 18, 4);
   ctx.globalAlpha = 1;
   const image = assets.bullet;
   if (image.complete && image.naturalWidth > 0) {
     ctx.drawImage(image, -5, -3);
   } else {
-    ctx.fillStyle = "#f9f2a7";
+    ctx.fillStyle = bullet.color;
     ctx.fillRect(-6, -3, 12, 6);
   }
   ctx.restore();
 }
 
 function drawRune(rune: Rune): void {
-  const image = rune.type === "armor" ? assets.armorRune : assets.speedRune;
+  const image = rune.type === "armor" ? assets.armorRune : rune.type === "speed" ? assets.speedRune : null;
   const pulse = Math.sin(nowSeconds() * 5 + rune.pulseOffset);
   const scale = 1 + pulse * 0.08;
-  const color = rune.type === "armor" ? "#8fd0ff" : "#b5f56c";
+  const color = rune.type === "armor" ? "#8fd0ff" : rune.type === "speed" ? "#b5f56c" : "#ff9a5a";
 
   ctx.save();
   ctx.translate(rune.position.x, rune.position.y);
@@ -914,11 +1006,27 @@ function drawRune(rune: Rune): void {
   ctx.stroke();
   ctx.globalAlpha = 1;
   ctx.scale(scale, scale);
-  if (image.complete && image.naturalWidth > 0) {
+  if (image && image.complete && image.naturalWidth > 0) {
     ctx.drawImage(image, -15, -15);
   } else {
     ctx.fillStyle = color;
-    ctx.fillRect(-12, -12, 24, 24);
+    ctx.beginPath();
+    ctx.moveTo(0, -16);
+    ctx.lineTo(16, 12);
+    ctx.lineTo(-16, 12);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = "#231f20";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.strokeStyle = "#fff4a3";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-7, -2);
+    ctx.lineTo(7, -2);
+    ctx.moveTo(-10, 5);
+    ctx.lineTo(10, 5);
+    ctx.stroke();
   }
   ctx.restore();
 }
@@ -950,6 +1058,7 @@ function drawFloatingText(floatingText: FloatingText): void {
 
 function drawStatus(player: Player, x: number, y: number, width: number): void {
   const speedLeft = Math.max(0, player.speedUntil - nowSeconds());
+  const scatterLeft = Math.max(0, player.scatterUntil - nowSeconds());
   ctx.fillStyle = "#f8f4dc";
   ctx.font = "18px Arial";
   ctx.fillText(`${player.id}`, x, y);
@@ -964,6 +1073,10 @@ function drawStatus(player: Player, x: number, y: number, width: number): void {
   if (speedLeft > 0) {
     const speedWidth = Math.min(120, Math.max(80, width - barWidth - 310));
     drawBar("SP", speedLeft, 10, x + width - speedWidth, y - 14, speedWidth, "#a5d85e");
+  }
+  if (scatterLeft > 0) {
+    const scatterWidth = 92;
+    drawBar("SG", scatterLeft, 8, x + width - scatterWidth, y + 10, scatterWidth, "#ff9a5a");
   }
 }
 
@@ -999,6 +1112,15 @@ function distance(a: Vec, b: Vec): number {
 function randomUnitVector(): Vec {
   const angle = Math.random() * Math.PI * 2;
   return { x: Math.cos(angle), y: Math.sin(angle) };
+}
+
+function rotateVec(v: Vec, angle: number): Vec {
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  return normalize({
+    x: v.x * cos - v.y * sin,
+    y: v.x * sin + v.y * cos
+  });
 }
 
 function clamp(value: number, min: number, max: number): number {

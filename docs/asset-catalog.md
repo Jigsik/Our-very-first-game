@@ -29,6 +29,7 @@ This catalog records the reusable assets found in the old repository. License/so
 | `Grafika/rabbitx4.psd` | 36x152 | Photoshop source, RGB. |
 | `Grafika/rabbitx44.psd` | 36x152 | Photoshop source, RGBA. |
 | `The_Game/The_Game/Images/player_1.png` | 36x152 | Runtime player sheet used by newer `Player`; four vertical directions. |
+| `v1-web/assets/rabbit-death.svg` | 576x144 | New v1 web four-frame death/fall sprite sheet, generated locally after the image-generation service hit usage limits. |
 | `The_Game/The_Game/Images/player_11.png` | 96x128 | Runtime legacy player sheet. |
 | `The_Game/The_Game/Images/enemy_1.png` | 96x128 | Runtime enemy sheet. |
 

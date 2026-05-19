@@ -12,6 +12,7 @@ const types = new Map([
   [".js", "text/javascript; charset=utf-8"],
   [".css", "text/css; charset=utf-8"],
   [".png", "image/png"],
+  [".svg", "image/svg+xml; charset=utf-8"],
   [".gif", "image/gif"],
   [".txt", "text/plain; charset=utf-8"],
   [".wav", "audio/wav"],

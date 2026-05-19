@@ -11,8 +11,9 @@ Active implementation path for the first playable reboot. The old code remains i
 - Deterministic collision against selected solid tiles.
 - Shooting, HP, death, score, countdown, and restart.
 - Compact HUD with score, HP, armor, and speed bars.
-- Armor and speed runes.
+- Armor, speed, and scatter-shot runes.
 - Movement bob, rune pulses, muzzle flashes, hit feedback, wall sparks, dust trails, screen shake, and win burst effects.
+- Rabbit death/fall sprite animation.
 - Compact generated v1 arena using the old tileset.
 - Old sprite and tileset assets loaded from the repository without duplicating binaries.
 
@@ -37,6 +38,8 @@ http://localhost:5177/v1-web/
 - Restart after a win: R. Score persists across rounds.
 
 Sprint is intentionally kept because the old C++ prototype used Shift sprint. The speed rune is stronger, time-limited, visually louder, and temporarily overrides sprint instead of stacking with it.
+
+The scatter rune is a short weapon power-up. It fires a three-shot spread with lower per-projectile damage, so it is strongest in close fights and around corners.
 
 ## Verification
 

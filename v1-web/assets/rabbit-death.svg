@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="576" height="144" viewBox="0 0 576 144">
+  <defs>
+    <style>
+      .outline { stroke: #231f20; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+      .body { fill: #f4efe2; }
+      .belly { fill: #d9d1bf; }
+      .ear { fill: #f7f0e2; }
+      .inner { fill: #ddb7b2; }
+      .eye { fill: #231f20; }
+      .shock { fill: none; stroke: #fff4a3; stroke-width: 3; stroke-linecap: round; }
+    </style>
+    <g id="rabbit-upright">
+      <ellipse class="outline body" cx="0" cy="8" rx="18" ry="24"/>
+      <ellipse class="belly" cx="0" cy="15" rx="9" ry="11"/>
+      <path class="outline ear" d="M-9 -13 C-22 -46 -12 -61 -2 -22"/>
+      <path class="outline ear" d="M8 -14 C16 -51 31 -55 17 -18"/>
+      <path class="inner" d="M-8 -22 C-14 -43 -10 -50 -4 -24"/>
+      <path class="inner" d="M10 -23 C16 -43 23 -48 16 -24"/>
+      <circle class="eye" cx="-6" cy="1" r="2.3"/>
+      <circle class="eye" cx="7" cy="1" r="2.3"/>
+      <path class="outline" d="M-12 27 C-19 37 -11 42 -4 31" fill="none"/>
+      <path class="outline" d="M11 27 C20 36 13 42 5 31" fill="none"/>
+      <path class="outline" d="M-16 12 C-27 14 -28 24 -18 24" fill="none"/>
+      <path class="outline" d="M16 12 C28 14 29 24 19 24" fill="none"/>
+    </g>
+  </defs>
+
+  <g transform="translate(72 70)">
+    <use href="#rabbit-upright"/>
+    <path class="shock" d="M-30 -36 l-10 -12 M0 -45 l0 -15 M30 -36 l10 -12"/>
+  </g>
+
+  <g transform="translate(216 78) rotate(28)">
+    <use href="#rabbit-upright"/>
+    <path class="outline" d="M-30 28 C-42 39 -29 48 -15 34" fill="#f4efe2"/>
+    <path class="shock" d="M22 -44 l10 -13 M-22 -42 l-7 -14"/>
+  </g>
+
+  <g transform="translate(360 90) rotate(72)">
+    <use href="#rabbit-upright"/>
+    <ellipse cx="-5" cy="38" rx="30" ry="8" fill="rgba(0,0,0,0.18)"/>
+    <path class="outline" d="M23 -13 C38 -22 45 -12 32 0" fill="#f4efe2"/>
+  </g>
+
+  <g transform="translate(504 92) rotate(90)">
+    <use href="#rabbit-upright"/>
+    <ellipse cx="8" cy="40" rx="34" ry="9" fill="rgba(0,0,0,0.2)"/>
+    <path class="outline" d="M-10 2 l10 10 M0 2 l-10 10 M10 2 l10 10 M20 2 l-10 10" fill="none" stroke-width="3"/>
+  </g>
+</svg>

@@ -38,8 +38,10 @@ http://localhost:5177/v1-web/
 - Hits flash the target and show damage or block feedback.
 - Armor rune adds armor and removes active speed.
 - Speed rune increases speed and removes active armor.
+- Scatter rune enables a short three-shot spread and is strongest at close range.
 - Rune pickups pulse and burst so the pickup event is obvious.
 - A player wins when the other reaches 0 HP.
+- The losing rabbit plays a short fall-to-ground animation.
 - Score increments for the winner.
 - The win moment produces a short burst effect.
 - Pressing R after a win restarts the round and keeps score.
