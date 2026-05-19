@@ -22,15 +22,32 @@ const assets = {
 };
 
 const TILE = 30;
+const TILE_STONE = 0;
+const TILE_STUMP = 1;
+const TILE_CROP = 2;
+const TILE_BRICK = 3;
+const TILE_GRASS = 4;
+const TILE_SAND = 5;
+const TILE_WATER = 6;
+const TILE_FLAG = 7;
 const PLAYER_RADIUS = 18;
-const SOLID_TILE_IDS = new Set([0, 1, 3]);
+const SOLID_TILE_IDS = new Set([TILE_STONE, TILE_STUMP, TILE_BRICK]);
 const PLAYER_SPAWNS: [Vec, Vec] = [
-  { x: 720, y: 720 },
-  { x: 2100, y: 900 }
+  { x: 210, y: 420 },
+  { x: 1110, y: 420 }
 ];
 const RUNE_SPAWNS: [Rune, Rune] = [
-  { type: "armor", position: { x: 1350, y: 900 }, ttl: 999 },
-  { type: "speed", position: { x: 1680, y: 900 }, ttl: 999 }
+  { type: "armor", position: { x: 660, y: 420 }, ttl: 999 },
+  { type: "speed", position: { x: 660, y: 210 }, ttl: 999 }
+];
+const RUNE_SPAWN_POOL: Vec[] = [
+  { x: 660, y: 420 },
+  { x: 660, y: 210 },
+  { x: 660, y: 630 },
+  { x: 360, y: 210 },
+  { x: 960, y: 630 },
+  { x: 360, y: 630 },
+  { x: 960, y: 210 }
 ];
 const viewportGap = 8;
 let lastTime = performance.now();
@@ -116,8 +133,8 @@ let runes: Rune[] = [
 ];
 let runeTimer = 4;
 let map: number[][] = [];
-let mapWidth = 100;
-let mapHeight = 100;
+let mapWidth = 44;
+let mapHeight = 28;
 let roundState: RoundState = "countdown";
 let roundTimer = 3;
 let winnerId: string | null = null;
@@ -137,7 +154,7 @@ window.addEventListener("keyup", (event) => {
 void boot();
 
 async function boot(): Promise<void> {
-  map = await loadMap("/The_Game/The_Game/Maps/mapa.txt");
+  map = createV1Arena();
   resetRound();
   requestAnimationFrame(frame);
 }
@@ -273,15 +290,78 @@ function applyRune(player: Player, type: RuneType): void {
 }
 
 function spawnRune(): void {
-  const preferred = {
-    x: 120 + Math.random() * Math.min(900, mapWidth * TILE - 240),
-    y: 120 + Math.random() * Math.min(620, mapHeight * TILE - 240)
-  };
+  const preferred = RUNE_SPAWN_POOL[Math.floor(Math.random() * RUNE_SPAWN_POOL.length)] ?? RUNE_SPAWN_POOL[0]!;
   runes.push({
     type: Math.random() > 0.5 ? "armor" : "speed",
     position: findOpenPosition(preferred, PLAYER_RADIUS),
     ttl: 12
   });
+}
+
+function createV1Arena(): number[][] {
+  mapWidth = 44;
+  mapHeight = 28;
+  const arena = Array.from({ length: mapHeight }, () => Array.from({ length: mapWidth }, () => TILE_GRASS));
+
+  const setRect = (x: number, y: number, width: number, height: number, tile: number): void => {
+    for (let ty = y; ty < y + height; ty++) {
+      for (let tx = x; tx < x + width; tx++) {
+        if (arena[ty]?.[tx] !== undefined) arena[ty]![tx] = tile;
+      }
+    }
+  };
+
+  setRect(0, 0, mapWidth, 1, TILE_STONE);
+  setRect(0, mapHeight - 1, mapWidth, 1, TILE_STONE);
+  setRect(0, 0, 1, mapHeight, TILE_STONE);
+  setRect(mapWidth - 1, 0, 1, mapHeight, TILE_STONE);
+
+  setRect(2, 12, mapWidth - 4, 4, TILE_SAND);
+  setRect(20, 2, 4, mapHeight - 4, TILE_SAND);
+
+  setRect(21, 4, 2, 7, TILE_BRICK);
+  setRect(21, 17, 2, 7, TILE_BRICK);
+
+  setRect(7, 5, 4, 2, TILE_STONE);
+  setRect(33, 5, 4, 2, TILE_STONE);
+  setRect(7, 21, 4, 2, TILE_STONE);
+  setRect(33, 21, 4, 2, TILE_STONE);
+
+  setRect(13, 9, 2, 5, TILE_STUMP);
+  setRect(29, 14, 2, 5, TILE_STUMP);
+  setRect(13, 17, 2, 3, TILE_STUMP);
+  setRect(29, 8, 2, 3, TILE_STUMP);
+
+  setRect(5, 10, 5, 3, TILE_CROP);
+  setRect(34, 15, 5, 3, TILE_CROP);
+  setRect(5, 17, 5, 3, TILE_CROP);
+  setRect(34, 8, 5, 3, TILE_CROP);
+
+  setRect(17, 4, 2, 3, TILE_WATER);
+  setRect(25, 21, 2, 3, TILE_WATER);
+  setRect(17, 21, 2, 3, TILE_WATER);
+  setRect(25, 4, 2, 3, TILE_WATER);
+
+  arena[14]![21] = TILE_FLAG;
+  arena[13]![22] = TILE_FLAG;
+
+  for (const spawn of [...PLAYER_SPAWNS, ...RUNE_SPAWN_POOL]) {
+    clearAround(arena, spawn, 2);
+  }
+
+  return arena;
+}
+
+function clearAround(arena: number[][], point: Vec, radiusTiles: number): void {
+  const centerX = Math.floor(point.x / TILE);
+  const centerY = Math.floor(point.y / TILE);
+  for (let y = centerY - radiusTiles; y <= centerY + radiusTiles; y++) {
+    for (let x = centerX - radiusTiles; x <= centerX + radiusTiles; x++) {
+      if (x > 0 && y > 0 && x < mapWidth - 1 && y < mapHeight - 1) {
+        arena[y]![x] = Math.abs(x - centerX) + Math.abs(y - centerY) <= 1 ? TILE_SAND : TILE_GRASS;
+      }
+    }
+  }
 }
 
 function resetRound(): void {
@@ -455,10 +535,32 @@ function drawMap(camera: Vec, width: number, height: number): void {
         const sy = Math.floor(tileId / columns) * TILE;
         ctx.drawImage(tiles, sx, sy, TILE, TILE, tx * TILE, ty * TILE, TILE, TILE);
       } else {
-        ctx.fillStyle = tileId === 0 ? "#465b40" : tileId === 6 ? "#547b4a" : "#2f4e35";
+        ctx.fillStyle = fallbackTileColor(tileId);
         ctx.fillRect(tx * TILE, ty * TILE, TILE, TILE);
       }
     }
+  }
+}
+
+function fallbackTileColor(tileId: number): string {
+  switch (tileId) {
+    case TILE_STONE:
+      return "#707872";
+    case TILE_STUMP:
+      return "#865a27";
+    case TILE_CROP:
+      return "#e0c847";
+    case TILE_BRICK:
+      return "#7a4b39";
+    case TILE_SAND:
+      return "#bda747";
+    case TILE_WATER:
+      return "#68a8bd";
+    case TILE_FLAG:
+      return "#d52f31";
+    case TILE_GRASS:
+    default:
+      return "#3f9144";
   }
 }
 

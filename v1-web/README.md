@@ -11,8 +11,8 @@ Active implementation path for the first playable reboot. The old code remains i
 - Deterministic collision against selected solid tiles.
 - Shooting, HP, death, score, countdown, and restart.
 - Armor and speed runes.
-- Old map parsing from `The_Game/The_Game/Maps/mapa.txt`.
-- Old tileset and sprite assets loaded from the repository without duplicating binaries.
+- Compact generated v1 arena using the old tileset.
+- Old sprite and tileset assets loaded from the repository without duplicating binaries.
 
 ## Run
 
@@ -45,9 +45,11 @@ curl -fsS http://localhost:5177/v1-web/
 
 Visual screenshot verification is tracked separately because Playwright Chromium is not installed in the current environment.
 
-## Collision
+## Arena And Collision
 
-The old tileset is 4 columns by 2 rows, using 1-based IDs in `mapa.txt`. The implementation converts them to 0-based IDs.
+The active v1 game uses a compact generated arena instead of the archived 100x100 `The_Game/The_Game/Maps/mapa.txt`. The old map stays in the repo as source material, but the generated arena is faster to playtest and easier to balance.
+
+The old tileset is 4 columns by 2 rows. The generated arena uses the same 0-based tile IDs as the parsed old map.
 
 Solid in v1:
 
