@@ -71,6 +71,7 @@ build/
 cmake-build-*/
 out/
 dist/
+node_modules/
 
 # Runtime/editor noise
 *.tmp
