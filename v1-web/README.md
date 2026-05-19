@@ -14,6 +14,7 @@ Active implementation path for the first playable reboot. The old code remains i
 - Armor, speed, and scatter-shot runes.
 - Movement bob, rune pulses, muzzle flashes, hit feedback, wall sparks, dust trails, screen shake, and win burst effects.
 - Rabbit death/fall sprite animation.
+- Experimental aim grace on `experiment/keyboard-friendly-combat`: shots fired roughly toward the opponent bend toward a predicted target point and get a slightly wider hit radius, making keyboard split-screen combat less random without requiring mouse or gamepad aiming.
 - Compact generated v1 arena using the old tileset.
 - Old sprite and tileset assets loaded from the repository without duplicating binaries.
 
@@ -40,6 +41,8 @@ http://localhost:5177/v1-web/
 Sprint is intentionally kept because the old C++ prototype used Shift sprint. The speed rune is stronger, time-limited, visually louder, and temporarily overrides sprint instead of stacking with it.
 
 The scatter rune is a short weapon power-up. It fires a three-shot spread with lower per-projectile damage, so it is strongest in close fights and around corners.
+
+On the keyboard-friendly combat experiment branch, aim grace only triggers when the opponent is inside a forward cone and range limit. It does not shoot backward or lock across the whole map; it is meant to soften 8-direction keyboard aiming.
 
 ## Verification
 

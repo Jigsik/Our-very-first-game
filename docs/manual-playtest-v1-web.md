@@ -32,6 +32,7 @@ http://localhost:5177/v1-web/
 - P1 shoots with Space.
 - P2 shoots with slash.
 - Shooting produces recoil, muzzle flash, and a small camera kick.
+- On `experiment/keyboard-friendly-combat`, shots fired roughly toward a moving opponent bend slightly toward a predicted target point.
 - Bullets disappear on solid tiles.
 - Bullet impacts produce visible sparks.
 - Bullets damage the other player.

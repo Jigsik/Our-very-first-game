@@ -35,6 +35,11 @@ const PLAYER_RADIUS = 18;
 const BASE_PLAYER_SPEED = 170;
 const SPRINT_MULTIPLIER = 1.25;
 const SPEED_RUNE_MULTIPLIER = 1.55;
+const BULLET_SPEED = 440;
+const AIM_GRACE_RANGE = 620;
+const AIM_GRACE_MIN_DOT = 0.42;
+const AIM_GRACE_BLEND = 0.72;
+const AIM_GRACE_LEAD_SECONDS = 0.24;
 const SOLID_TILE_IDS = new Set([TILE_STONE, TILE_STUMP, TILE_BRICK]);
 const PLAYER_SPAWNS: [Vec, Vec] = [
   { x: 210, y: 420 },
@@ -93,6 +98,9 @@ type Bullet = {
   age: number;
   damage: number;
   color: string;
+  speed: number;
+  hitRadius: number;
+  assisted: boolean;
 };
 
 type Rune = {
@@ -249,8 +257,8 @@ function update(dt: number): void {
   }
 
   for (const bullet of bullets) {
-    bullet.position.x += bullet.direction.x * 420 * dt;
-    bullet.position.y += bullet.direction.y * 420 * dt;
+    bullet.position.x += bullet.direction.x * bullet.speed * dt;
+    bullet.position.y += bullet.direction.y * bullet.speed * dt;
     bullet.age += dt;
     bullet.ttl -= dt;
     if (isSolidAt(bullet.position)) {
@@ -262,7 +270,7 @@ function update(dt: number): void {
   for (const bullet of bullets) {
     for (const player of players) {
       if (player.id === bullet.owner || player.hp <= 0) continue;
-      if (distance(player.position, bullet.position) < 24) {
+      if (distance(player.position, bullet.position) < bullet.hitRadius) {
         const result = applyDamage(player, bullet.damage);
         spawnHitFeedback(player, result.damage, result.blocked);
         bullet.ttl = 0;
@@ -336,14 +344,15 @@ function updatePlayer(player: Player, dt: number): void {
 
   player.shootCooldown = Math.max(0, player.shootCooldown - dt);
   if (keys.has(player.controls.shoot) && player.shootCooldown === 0) {
+    const aim = findAimGrace(player, player.direction);
     const muzzle = {
-      x: player.position.x + player.direction.x * 24,
-      y: player.position.y + player.direction.y * 24
+      x: player.position.x + aim.direction.x * 24,
+      y: player.position.y + aim.direction.y * 24
     };
     const hasScatter = nowSeconds() < player.scatterUntil;
     const directions = hasScatter
-      ? [-0.22, 0, 0.22].map((angle) => rotateVec(player.direction, angle))
-      : [player.direction];
+      ? [-0.22, 0, 0.22].map((angle) => rotateVec(aim.direction, angle))
+      : [aim.direction];
     for (const direction of directions) {
       bullets.push({
         owner: player.id,
@@ -352,14 +361,63 @@ function updatePlayer(player: Player, dt: number): void {
         ttl: hasScatter ? 1.15 : 1.6,
         age: 0,
         damage: hasScatter ? 13 : 20,
-        color: hasScatter ? "#ff9a5a" : "#f9d36b"
+        color: hasScatter ? "#ff9a5a" : aim.assisted ? "#9edcff" : "#f9d36b",
+        speed: BULLET_SPEED,
+        hitRadius: aim.assisted ? 30 : 25,
+        assisted: aim.assisted
       });
     }
     player.recoil = 1;
     screenShake = Math.max(screenShake, hasScatter ? 2.3 : 1.1);
-    spawnMuzzleFlash(muzzle, player.direction);
+    spawnMuzzleFlash(muzzle, aim.direction);
+    if (aim.assisted) spawnAimGraceSpark(muzzle, aim.direction);
     player.shootCooldown = hasScatter ? 0.42 : 0.35;
   }
+}
+
+function findAimGrace(shooter: Player, baseDirection: Vec): { direction: Vec; assisted: boolean } {
+  let bestTarget: Player | null = null;
+  let bestScore = 0;
+
+  for (const target of players) {
+    if (target.id === shooter.id || target.hp <= 0) continue;
+    const predicted = {
+      x: target.position.x + target.velocity.x * AIM_GRACE_LEAD_SECONDS,
+      y: target.position.y + target.velocity.y * AIM_GRACE_LEAD_SECONDS
+    };
+    const toTarget = normalize({
+      x: predicted.x - shooter.position.x,
+      y: predicted.y - shooter.position.y
+    });
+    const range = distance(shooter.position, predicted);
+    const aimDot = dot(baseDirection, toTarget);
+    if (range > AIM_GRACE_RANGE || aimDot < AIM_GRACE_MIN_DOT) continue;
+
+    const score = aimDot * (1 - range / (AIM_GRACE_RANGE * 1.5));
+    if (score > bestScore) {
+      bestScore = score;
+      bestTarget = target;
+    }
+  }
+
+  if (!bestTarget) return { direction: baseDirection, assisted: false };
+
+  const predicted = {
+    x: bestTarget.position.x + bestTarget.velocity.x * AIM_GRACE_LEAD_SECONDS,
+    y: bestTarget.position.y + bestTarget.velocity.y * AIM_GRACE_LEAD_SECONDS
+  };
+  const desired = normalize({
+    x: predicted.x - shooter.position.x,
+    y: predicted.y - shooter.position.y
+  });
+
+  return {
+    direction: normalize({
+      x: baseDirection.x * (1 - AIM_GRACE_BLEND) + desired.x * AIM_GRACE_BLEND,
+      y: baseDirection.y * (1 - AIM_GRACE_BLEND) + desired.y * AIM_GRACE_BLEND
+    }),
+    assisted: true
+  };
 }
 
 function applyDamage(player: Player, amount: number): { damage: number; blocked: number } {
@@ -567,6 +625,26 @@ function spawnMuzzleFlash(position: Vec, direction: Vec): void {
       color: i % 2 === 0 ? "#ffe58a" : "#ff9a5a",
       radius: 2 + Math.random() * 2,
       ttl: 0.22 + Math.random() * 0.12,
+      age: 0
+    });
+  }
+}
+
+function spawnAimGraceSpark(position: Vec, direction: Vec): void {
+  for (let i = 0; i < 6; i++) {
+    const side = { x: -direction.y, y: direction.x };
+    particles.push({
+      position: {
+        x: position.x + side.x * (i - 2.5) * 3,
+        y: position.y + side.y * (i - 2.5) * 3
+      },
+      velocity: {
+        x: direction.x * (60 + Math.random() * 50) + side.x * (Math.random() - 0.5) * 50,
+        y: direction.y * (60 + Math.random() * 50) + side.y * (Math.random() - 0.5) * 50
+      },
+      color: "#9edcff",
+      radius: 1.8 + Math.random() * 1.6,
+      ttl: 0.24,
       age: 0
     });
   }
@@ -976,10 +1054,17 @@ function drawBullet(bullet: Bullet): void {
   ctx.save();
   ctx.translate(bullet.position.x, bullet.position.y);
   ctx.rotate(Math.atan2(bullet.direction.y, bullet.direction.x));
-  ctx.globalAlpha = 0.45;
+  ctx.globalAlpha = bullet.assisted ? 0.68 : 0.45;
   ctx.fillStyle = bullet.color;
-  ctx.fillRect(-22, -2, 18, 4);
+  ctx.fillRect(bullet.assisted ? -28 : -22, -2, bullet.assisted ? 24 : 18, 4);
   ctx.globalAlpha = 1;
+  if (bullet.assisted) {
+    ctx.strokeStyle = "#d5f3ff";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0, 0, 9, -0.7, 0.7);
+    ctx.stroke();
+  }
   const image = assets.bullet;
   if (image.complete && image.naturalWidth > 0) {
     ctx.drawImage(image, -5, -3);
@@ -1112,6 +1197,10 @@ function distance(a: Vec, b: Vec): number {
 function randomUnitVector(): Vec {
   const angle = Math.random() * Math.PI * 2;
   return { x: Math.cos(angle), y: Math.sin(angle) };
+}
+
+function dot(a: Vec, b: Vec): number {
+  return a.x * b.x + a.y * b.y;
 }
 
 function rotateVec(v: Vec, angle: number): Vec {
