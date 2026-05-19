@@ -53,8 +53,8 @@ Validation:
 Screenshot gate:
 
 - Attempted with `npx playwright screenshot --browser chromium http://localhost:5177/spikes/web/ /tmp/ofg-web-spike.png`.
-- Blocked because Playwright browser binaries are not installed.
-- The next command would be `npx playwright install chromium`, but that is a larger download and was not done automatically.
+- Blocked. Martin tried `npx playwright install --with-deps chromium`, but Playwright 1.60 reports that Chromium is not supported on `ubuntu26.04-x64`.
+- Keep #11 open and solve later via a supported browser path, pinned Playwright/browser version, system Chromium, or another screenshot tool.
 
 ### Godot 4
 
@@ -68,9 +68,9 @@ Implemented:
 
 Validation:
 
-- File review only.
-- Runtime blocked because `godot`/`godot4` is not installed.
-- apt preflight found `godot3`, not Godot 4, and sudo requires an interactive password.
+- `~/.local/bin/godot4 --headless --path spikes/godot --check-only --script scripts/arena.gd`
+- `~/.local/bin/godot4 --headless --path spikes/godot --quit-after 3`
+- Both passed after Martin installed Godot 4.4.1.
 
 ### Modern C++/SFML
 
@@ -89,8 +89,10 @@ Implemented:
 Validation:
 
 - `g++ -std=c++17 -I ../../SFML/include -DREPO_ROOT=... -fsyntax-only src/main.cpp` passed against the vendored SFML headers.
-- Full build blocked because `cmake` and Linux `libsfml-dev` are missing.
-- apt preflight shows candidates for `cmake` and `libsfml-dev`, but sudo requires an interactive password.
+- Updated the spike to SFML 3.0.2 after Martin installed native dependencies.
+- `cmake -S . -B build`
+- `cmake --build build`
+- Full build passed.
 
 ## First v1 Implementation Issues
 

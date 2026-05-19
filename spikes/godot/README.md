@@ -17,10 +17,8 @@ Minimal text-first Godot 4 project for comparing the engine path. The project is
 
 Current WSL preflight:
 
-- `godot`: missing
-- `godot4`: missing
-- apt has `godot3`, but not Godot 4 in the checked package names
-- sudo needs an interactive password
+- Godot 4.4.1 is available at `~/.local/bin/godot4`.
+- Headless script parse and scene smoke checks pass.
 
 ## Run
 
@@ -43,4 +41,4 @@ godot --path .
 
 ## Recommendation
 
-Maybe candidate. Godot is a strong fit for a 2D arena game, but this environment cannot currently run or export the spike. Keep it in contention only if installing/running Godot is acceptable.
+Maybe candidate. Godot is a strong fit for a 2D arena game and now runs headlessly, but the web path still has lower automation friction for the current v1.

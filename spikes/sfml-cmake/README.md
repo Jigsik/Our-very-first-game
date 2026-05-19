@@ -15,15 +15,14 @@ Minimal CMake project for testing whether a modernized SFML route is worth conti
 
 - CMake 3.22+
 - C++17 compiler
-- SFML 2.5/2.6 development libraries
+- SFML 3 development libraries
 
 Current WSL preflight:
 
 - `g++`: available
-- `cmake`: missing
-- `pkg-config sfml-graphics`: missing
-- `libsfml-dev`: not installed
-- apt candidate exists, but sudo needs an interactive password
+- `cmake`: available after Martin installed dependencies
+- `pkg-config sfml-graphics`: 3.0.2
+- `libsfml-dev`: installed
 
 ## Build
 
@@ -36,4 +35,4 @@ cmake --build build
 
 ## Recommendation
 
-Maybe candidate, but blocked on native dependencies in the current environment. Continue only if we intentionally want C++/SFML as part of the learning goal. For low-prompt AI iteration, this has higher friction than the web spike.
+Maybe candidate. The native build now works with SFML 3, but this remains higher-friction than the web path for low-prompt AI iteration.

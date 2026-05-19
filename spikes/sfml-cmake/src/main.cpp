@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -93,7 +94,7 @@ void updatePlayer(Player& player, float dt, sf::Keyboard::Key up, sf::Keyboard::
 } // namespace
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Our Very First Game - SFML spike");
+    sf::RenderWindow window(sf::VideoMode({1280, 720}), "Our Very First Game - SFML spike");
     window.setFramerateLimit(120);
 
     int mapWidth = 100;
@@ -106,8 +107,7 @@ int main() {
 
     sf::Texture playerTexture;
     const bool hasPlayerTexture = playerTexture.loadFromFile(repoPath("The_Game/The_Game/Images/player_1.png").string());
-    sf::Sprite playerSprite;
-    if (hasPlayerTexture) playerSprite.setTexture(playerTexture);
+    sf::Sprite playerSprite(playerTexture);
 
     Player p1{{220.f, 220.f}, {1.f, 0.f}, sf::Color(90, 190, 255)};
     Player p2{{580.f, 360.f}, {-1.f, 0.f}, sf::Color(255, 205, 100)};
@@ -115,19 +115,19 @@ int main() {
 
     sf::Clock clock;
     while (window.isOpen()) {
-        sf::Event event{};
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed ||
-                (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
+        while (const std::optional event = window.pollEvent()) {
+            const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
+            if (event->is<sf::Event::Closed>() ||
+                (keyPressed && keyPressed->code == sf::Keyboard::Key::Escape)) {
                 window.close();
             }
         }
 
         const float dt = std::min(clock.restart().asSeconds(), 0.033f);
-        updatePlayer(p1, dt, sf::Keyboard::W, sf::Keyboard::S, sf::Keyboard::A, sf::Keyboard::D,
-                     sf::Keyboard::Space, 1, bullets, mapSize);
-        updatePlayer(p2, dt, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right,
-                     sf::Keyboard::RControl, 2, bullets, mapSize);
+        updatePlayer(p1, dt, sf::Keyboard::Key::W, sf::Keyboard::Key::S, sf::Keyboard::Key::A, sf::Keyboard::Key::D,
+                     sf::Keyboard::Key::Space, 1, bullets, mapSize);
+        updatePlayer(p2, dt, sf::Keyboard::Key::Up, sf::Keyboard::Key::Down, sf::Keyboard::Key::Left, sf::Keyboard::Key::Right,
+                     sf::Keyboard::Key::RControl, 2, bullets, mapSize);
 
         for (auto& bullet : bullets) {
             bullet.position += bullet.direction * 420.f * dt;
@@ -149,17 +149,18 @@ int main() {
 
         for (int panel = 0; panel < 2; ++panel) {
             sf::View view;
-            view.setViewport(sf::FloatRect(panel == 0 ? 0.f : 0.503f, 0.f, 0.497f, 0.94f));
-            view.reset(sf::FloatRect(
+            view.setViewport(sf::FloatRect({panel == 0 ? 0.f : 0.503f, 0.f}, {0.497f, 0.94f}));
+            const sf::Vector2f viewSize{panelWidth, 676.f};
+            const sf::Vector2f viewPosition{
                 std::clamp(focuses[panel].x - panelWidth / 2.f, 0.f, mapSize.x - panelWidth),
-                std::clamp(focuses[panel].y - 338.f, 0.f, mapSize.y - 676.f),
-                panelWidth,
-                676.f
-            ));
+                std::clamp(focuses[panel].y - 338.f, 0.f, mapSize.y - 676.f)
+            };
+            view.setSize(viewSize);
+            view.setCenter(viewPosition + viewSize / 2.f);
             window.setView(view);
 
             if (hasTileset && !mapRows.empty()) {
-                sf::VertexArray quads(sf::Quads);
+                sf::VertexArray quads(sf::PrimitiveType::Triangles);
                 const int columns = static_cast<int>(tileset.getSize().x) / tileSize;
                 for (int y = 0; y < std::min<int>(mapRows.size(), mapHeight); ++y) {
                     for (int x = 0; x < std::min<int>(mapRows[y].size(), mapWidth); ++x) {
@@ -169,10 +170,16 @@ int main() {
                         const int tv = tile / columns;
                         const float px = static_cast<float>(x * tileSize);
                         const float py = static_cast<float>(y * tileSize);
-                        quads.append({{px, py}, {static_cast<float>(tu * tileSize), static_cast<float>(tv * tileSize)}});
-                        quads.append({{px + tileSize, py}, {static_cast<float>((tu + 1) * tileSize), static_cast<float>(tv * tileSize)}});
-                        quads.append({{px + tileSize, py + tileSize}, {static_cast<float>((tu + 1) * tileSize), static_cast<float>((tv + 1) * tileSize)}});
-                        quads.append({{px, py + tileSize}, {static_cast<float>(tu * tileSize), static_cast<float>((tv + 1) * tileSize)}});
+                        const sf::Vertex topLeft{{px, py}, sf::Color::White, {static_cast<float>(tu * tileSize), static_cast<float>(tv * tileSize)}};
+                        const sf::Vertex topRight{{px + tileSize, py}, sf::Color::White, {static_cast<float>((tu + 1) * tileSize), static_cast<float>(tv * tileSize)}};
+                        const sf::Vertex bottomRight{{px + tileSize, py + tileSize}, sf::Color::White, {static_cast<float>((tu + 1) * tileSize), static_cast<float>((tv + 1) * tileSize)}};
+                        const sf::Vertex bottomLeft{{px, py + tileSize}, sf::Color::White, {static_cast<float>(tu * tileSize), static_cast<float>((tv + 1) * tileSize)}};
+                        quads.append(topLeft);
+                        quads.append(topRight);
+                        quads.append(bottomRight);
+                        quads.append(topLeft);
+                        quads.append(bottomRight);
+                        quads.append(bottomLeft);
                     }
                 }
                 window.draw(quads, &tileset);
@@ -180,21 +187,21 @@ int main() {
 
             for (const auto& player : players) {
                 sf::CircleShape body(18.f);
-                body.setOrigin(18.f, 18.f);
+                body.setOrigin({18.f, 18.f});
                 body.setPosition(player.position);
                 body.setFillColor(player.hp <= 0 ? sf::Color(80, 80, 80) : player.color);
                 window.draw(body);
 
                 if (hasPlayerTexture) {
                     playerSprite.setPosition(player.position - sf::Vector2f{18.f, 28.f});
-                    playerSprite.setTextureRect(sf::IntRect(0, 0, 36, 38));
+                    playerSprite.setTextureRect(sf::IntRect({0, 0}, {36, 38}));
                     window.draw(playerSprite);
                 }
             }
 
             for (const auto& bullet : bullets) {
                 sf::CircleShape dot(4.f);
-                dot.setOrigin(4.f, 4.f);
+                dot.setOrigin({4.f, 4.f});
                 dot.setPosition(bullet.position);
                 dot.setFillColor(sf::Color(255, 244, 170));
                 window.draw(dot);
