@@ -42,3 +42,38 @@ Network Trash Folder
 Temporary Items
 .apdisk
 /Java/.nb-gradle/private/
+
+# Visual Studio / MSBuild outputs
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+Debug/
+Release/
+x64/
+Win32/
+ipch/
+*.obj
+*.pdb
+*.ilk
+*.idb
+*.tlog
+*.log
+*.lastbuildstate
+*.xdc
+
+# Local build folders for future spikes
+build/
+cmake-build-*/
+out/
+dist/
+
+# Runtime/editor noise
+*.tmp
+*.bak
+.vscode/
+.idea/
