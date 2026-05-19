@@ -1,5 +1,6 @@
 type Vec = { x: number; y: number };
 type RuneType = "armor" | "speed";
+type RoundState = "countdown" | "playing" | "finished";
 
 const canvasElement = document.querySelector<HTMLCanvasElement>("#game");
 if (!canvasElement) throw new Error("Canvas #game not found");
@@ -109,6 +110,10 @@ let runeTimer = 4;
 let map: number[][] = [];
 let mapWidth = 100;
 let mapHeight = 100;
+let roundState: RoundState = "countdown";
+let roundTimer = 3;
+let winnerId: string | null = null;
+const scores: Record<string, number> = { P1: 0, P2: 0 };
 
 window.addEventListener("keydown", (event) => {
   keys.add(event.code);
@@ -139,6 +144,22 @@ function frame(now: number): void {
 }
 
 function update(dt: number): void {
+  if (roundState === "countdown") {
+    roundTimer -= dt;
+    if (roundTimer <= 0) {
+      roundState = "playing";
+      roundTimer = 0;
+    }
+    return;
+  }
+
+  if (roundState === "finished") {
+    if (keys.has("KeyR")) {
+      resetRound();
+    }
+    return;
+  }
+
   for (const player of players) {
     updatePlayer(player, dt);
   }
@@ -187,9 +208,7 @@ function update(dt: number): void {
     runeTimer = 5 + Math.random() * 4;
   }
 
-  if (players.some((player) => player.hp <= 0) && keys.has("KeyR")) {
-    resetRound();
-  }
+  finishRoundIfNeeded();
 }
 
 function updatePlayer(player: Player, dt: number): void {
@@ -269,6 +288,18 @@ function resetRound(): void {
     { type: "armor", position: { x: 400, y: 260 }, ttl: 999 },
     { type: "speed", position: { x: 760, y: 460 }, ttl: 999 }
   ];
+  runeTimer = 4;
+  winnerId = null;
+  roundState = "countdown";
+  roundTimer = 3;
+}
+
+function finishRoundIfNeeded(): void {
+  const alive = players.filter((player) => player.hp > 0);
+  if (alive.length !== 1 || winnerId !== null) return;
+  winnerId = alive[0]!.id;
+  scores[winnerId] = (scores[winnerId] ?? 0) + 1;
+  roundState = "finished";
 }
 
 function moveWithCollision(position: Vec, delta: Vec): Vec {
@@ -328,14 +359,25 @@ function draw(): void {
   drawStatus(players[0]!, 24, panelHeight + 32);
   drawStatus(players[1]!, panelWidth + viewportGap + 24, panelHeight + 32);
 
-  const winner = players.find((player) => player.hp > 0 && players.some((other) => other.id !== player.id && other.hp <= 0));
-  if (winner) {
+  if (roundState === "countdown") {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.66)";
+    ctx.fillRect(canvas.width / 2 - 120, canvas.height / 2 - 56, 240, 112);
+    ctx.fillStyle = "#f8f4dc";
+    ctx.font = "42px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(Math.ceil(roundTimer).toString(), canvas.width / 2, canvas.height / 2 + 14);
+    ctx.font = "16px Arial";
+    ctx.fillText("get ready", canvas.width / 2, canvas.height / 2 + 40);
+    ctx.textAlign = "left";
+  }
+
+  if (roundState === "finished" && winnerId) {
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
     ctx.fillRect(canvas.width / 2 - 190, canvas.height / 2 - 44, 380, 88);
     ctx.fillStyle = "#f8f4dc";
     ctx.font = "24px Arial";
     ctx.textAlign = "center";
-    ctx.fillText(`${winner.id} wins - press R to restart`, canvas.width / 2, canvas.height / 2 + 8);
+    ctx.fillText(`${winnerId} wins - press R to restart`, canvas.width / 2, canvas.height / 2 + 8);
     ctx.textAlign = "left";
   }
 }
@@ -446,10 +488,10 @@ function drawStatus(player: Player, x: number, y: number): void {
   const speedLeft = Math.max(0, player.speedUntil - nowSeconds());
   ctx.fillStyle = "#f8f4dc";
   ctx.font = "18px Arial";
-  ctx.fillText(`${player.id} HP ${player.hp} Armor ${player.armor}`, x, y);
+  ctx.fillText(`${player.id} Score ${scores[player.id]} HP ${player.hp} Armor ${player.armor}`, x, y);
   if (speedLeft > 0) {
     ctx.fillStyle = "#b5f56c";
-    ctx.fillText(`Speed ${speedLeft.toFixed(1)}s`, x + 210, y);
+    ctx.fillText(`Speed ${speedLeft.toFixed(1)}s`, x + 290, y);
   }
 }
 

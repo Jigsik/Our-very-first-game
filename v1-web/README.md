@@ -9,7 +9,7 @@ Active implementation path for the first playable reboot. The old code remains i
 - Two local players.
 - Split-screen cameras.
 - Deterministic collision against selected solid tiles.
-- Shooting, HP, death, and restart.
+- Shooting, HP, death, score, countdown, and restart.
 - Armor and speed runes.
 - Old map parsing from `The_Game/The_Game/Maps/mapa.txt`.
 - Old tileset and sprite assets loaded from the repository without duplicating binaries.
@@ -32,7 +32,7 @@ http://localhost:5177/v1-web/
 
 - P1: WASD move, Left Shift sprint, Space shoot.
 - P2: Arrow keys move, Right Shift sprint, slash shoot.
-- Restart after a win: R.
+- Restart after a win: R. Score persists across rounds.
 
 ## Verification
 
