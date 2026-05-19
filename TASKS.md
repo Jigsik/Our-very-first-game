@@ -25,7 +25,7 @@ This file mirrors the first GitHub issues and keeps the intended order visible i
 
 - [x] Promote the web spike into `v1-web/` as the active implementation path.
 - [ ] Two local players with separate inputs.
-- [ ] One arena map with collisions.
+- [x] One arena map with collisions.
 - [ ] Shooting, hit detection, health, death, and restart.
 - [ ] Armor and speed runes.
 - [ ] Minimal menu or immediate restart loop.

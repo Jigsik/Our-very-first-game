@@ -21,6 +21,8 @@ const assets = {
 };
 
 const TILE = 30;
+const PLAYER_RADIUS = 18;
+const SOLID_TILE_IDS = new Set([0, 1, 3]);
 const viewportGap = 8;
 let lastTime = performance.now();
 
@@ -145,6 +147,9 @@ function update(dt: number): void {
     bullet.position.x += bullet.direction.x * 420 * dt;
     bullet.position.y += bullet.direction.y * 420 * dt;
     bullet.ttl -= dt;
+    if (isSolidAt(bullet.position)) {
+      bullet.ttl = 0;
+    }
   }
 
   for (const bullet of bullets) {
@@ -199,8 +204,10 @@ function updatePlayer(player: Player, dt: number): void {
   const baseSpeed = nowSeconds() < player.speedUntil ? 250 : 170;
   const sprint = keys.has(player.controls.sprint) ? 1.35 : 1;
   player.velocity = { x: normalized.x * baseSpeed * sprint, y: normalized.y * baseSpeed * sprint };
-  player.position.x = clamp(player.position.x + player.velocity.x * dt, 20, mapWidth * TILE - 20);
-  player.position.y = clamp(player.position.y + player.velocity.y * dt, 20, mapHeight * TILE - 20);
+  player.position = moveWithCollision(player.position, {
+    x: player.velocity.x * dt,
+    y: player.velocity.y * dt
+  });
 
   if (normalized.x !== 0 || normalized.y !== 0) {
     player.direction = normalized;
@@ -262,6 +269,47 @@ function resetRound(): void {
     { type: "armor", position: { x: 400, y: 260 }, ttl: 999 },
     { type: "speed", position: { x: 760, y: 460 }, ttl: 999 }
   ];
+}
+
+function moveWithCollision(position: Vec, delta: Vec): Vec {
+  const mapMax = {
+    x: mapWidth * TILE - PLAYER_RADIUS,
+    y: mapHeight * TILE - PLAYER_RADIUS
+  };
+  const nextX = {
+    x: clamp(position.x + delta.x, PLAYER_RADIUS, mapMax.x),
+    y: position.y
+  };
+  const afterX = circleHitsSolid(nextX, PLAYER_RADIUS) ? position : nextX;
+  const nextY = {
+    x: afterX.x,
+    y: clamp(afterX.y + delta.y, PLAYER_RADIUS, mapMax.y)
+  };
+  return circleHitsSolid(nextY, PLAYER_RADIUS) ? afterX : nextY;
+}
+
+function circleHitsSolid(center: Vec, radius: number): boolean {
+  const samples: Vec[] = [
+    { x: center.x - radius, y: center.y },
+    { x: center.x + radius, y: center.y },
+    { x: center.x, y: center.y - radius },
+    { x: center.x, y: center.y + radius },
+    { x: center.x - radius * 0.7, y: center.y - radius * 0.7 },
+    { x: center.x + radius * 0.7, y: center.y - radius * 0.7 },
+    { x: center.x - radius * 0.7, y: center.y + radius * 0.7 },
+    { x: center.x + radius * 0.7, y: center.y + radius * 0.7 }
+  ];
+  return samples.some(isSolidAt);
+}
+
+function isSolidAt(point: Vec): boolean {
+  if (point.x < 0 || point.y < 0 || point.x >= mapWidth * TILE || point.y >= mapHeight * TILE) {
+    return true;
+  }
+  const tileX = Math.floor(point.x / TILE);
+  const tileY = Math.floor(point.y / TILE);
+  const tileId = map[tileY]?.[tileX];
+  return tileId === undefined ? false : SOLID_TILE_IDS.has(tileId);
 }
 
 function draw(): void {
@@ -344,7 +392,7 @@ function drawPlayer(player: Player): void {
   ctx.translate(player.position.x, player.position.y);
   ctx.fillStyle = player.hp <= 0 ? "#555" : player.color;
   ctx.beginPath();
-  ctx.arc(0, 0, 18, 0, Math.PI * 2);
+  ctx.arc(0, 0, PLAYER_RADIUS, 0, Math.PI * 2);
   ctx.fill();
 
   const image = assets.player;
