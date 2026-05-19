@@ -462,35 +462,39 @@ function draw(): void {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const panelWidth = (canvas.width - viewportGap) / 2;
-  const panelHeight = canvas.height - 52;
+  const panelHeight = canvas.height - 76;
 
   drawViewport(players[0]!, 0, 0, panelWidth, panelHeight);
   drawViewport(players[1]!, panelWidth + viewportGap, 0, panelWidth, panelHeight);
 
   ctx.fillStyle = "#0d1110";
   ctx.fillRect(0, panelHeight, canvas.width, canvas.height - panelHeight);
-  drawStatus(players[0]!, 24, panelHeight + 32);
-  drawStatus(players[1]!, panelWidth + viewportGap + 24, panelHeight + 32);
+  ctx.fillStyle = "#25322b";
+  ctx.fillRect(panelWidth, panelHeight, viewportGap, canvas.height - panelHeight);
+  drawStatus(players[0]!, 24, panelHeight + 16, panelWidth - 48);
+  drawStatus(players[1]!, panelWidth + viewportGap + 24, panelHeight + 16, panelWidth - 48);
 
   if (roundState === "countdown") {
     ctx.fillStyle = "rgba(0, 0, 0, 0.66)";
-    ctx.fillRect(canvas.width / 2 - 120, canvas.height / 2 - 56, 240, 112);
+    ctx.fillRect(canvas.width / 2 - 130, canvas.height / 2 - 60, 260, 120);
     ctx.fillStyle = "#f8f4dc";
     ctx.font = "42px Arial";
     ctx.textAlign = "center";
     ctx.fillText(Math.ceil(roundTimer).toString(), canvas.width / 2, canvas.height / 2 + 14);
     ctx.font = "16px Arial";
-    ctx.fillText("get ready", canvas.width / 2, canvas.height / 2 + 40);
+    ctx.fillText("GET READY", canvas.width / 2, canvas.height / 2 + 42);
     ctx.textAlign = "left";
   }
 
   if (roundState === "finished" && winnerId) {
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-    ctx.fillRect(canvas.width / 2 - 190, canvas.height / 2 - 44, 380, 88);
+    ctx.fillRect(canvas.width / 2 - 210, canvas.height / 2 - 56, 420, 112);
     ctx.fillStyle = "#f8f4dc";
     ctx.font = "24px Arial";
     ctx.textAlign = "center";
-    ctx.fillText(`${winnerId} wins - press R to restart`, canvas.width / 2, canvas.height / 2 + 8);
+    ctx.fillText(`${winnerId} WINS`, canvas.width / 2, canvas.height / 2 - 8);
+    ctx.font = "16px Arial";
+    ctx.fillText(`Score ${scores.P1} : ${scores.P2}    Press R`, canvas.width / 2, canvas.height / 2 + 24);
     ctx.textAlign = "left";
   }
 }
@@ -619,26 +623,37 @@ function drawRune(rune: Rune): void {
   }
 }
 
-function drawStatus(player: Player, x: number, y: number): void {
+function drawStatus(player: Player, x: number, y: number, width: number): void {
   const speedLeft = Math.max(0, player.speedUntil - nowSeconds());
   ctx.fillStyle = "#f8f4dc";
   ctx.font = "18px Arial";
-  ctx.fillText(`${player.id} Score ${scores[player.id]} HP ${player.hp} Armor ${player.armor}`, x, y);
+  ctx.fillText(`${player.id}`, x, y);
+  ctx.font = "14px Arial";
+  ctx.fillText(`Score ${scores[player.id]}`, x + 42, y);
+
+  const barX = x + 120;
+  const barWidth = Math.min(170, Math.max(120, width - 310));
+  drawBar("HP", player.hp, 100, barX, y - 14, barWidth, "#d95d55");
+  drawBar("AR", player.armor, 60, barX + barWidth + 48, y - 14, 110, "#74b9d7");
+
   if (speedLeft > 0) {
-    ctx.fillStyle = "#b5f56c";
-    ctx.fillText(`Speed ${speedLeft.toFixed(1)}s`, x + 290, y);
+    const speedWidth = Math.min(120, Math.max(80, width - barWidth - 310));
+    drawBar("SP", speedLeft, 10, x + width - speedWidth, y - 14, speedWidth, "#a5d85e");
   }
 }
 
-async function loadMap(path: string): Promise<number[][]> {
-  const response = await fetch(path);
-  const text = await response.text();
-  const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
-  mapWidth = Number(lines.find((line) => line.startsWith("width="))?.split("=")[1] || 100);
-  mapHeight = Number(lines.find((line) => line.startsWith("height="))?.split("=")[1] || 100);
-  return lines
-    .filter((line) => /^\d/.test(line))
-    .map((line) => line.split(",").filter(Boolean).map((value) => Number(value) - 1));
+function drawBar(label: string, value: number, max: number, x: number, y: number, width: number, color: string): void {
+  const ratio = clamp(value / max, 0, 1);
+  ctx.fillStyle = "#161d19";
+  ctx.fillRect(x, y, width, 14);
+  ctx.fillStyle = color;
+  ctx.fillRect(x, y, width * ratio, 14);
+  ctx.strokeStyle = "#526058";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x + 0.5, y + 0.5, width - 1, 13);
+  ctx.fillStyle = "#f8f4dc";
+  ctx.font = "11px Arial";
+  ctx.fillText(label, x - 24, y + 11);
 }
 
 function loadImage(src: string): HTMLImageElement {

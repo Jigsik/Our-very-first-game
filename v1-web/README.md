@@ -10,6 +10,7 @@ Active implementation path for the first playable reboot. The old code remains i
 - Split-screen cameras.
 - Deterministic collision against selected solid tiles.
 - Shooting, HP, death, score, countdown, and restart.
+- Compact HUD with score, HP, armor, and speed bars.
 - Armor and speed runes.
 - Compact generated v1 arena using the old tileset.
 - Old sprite and tileset assets loaded from the repository without duplicating binaries.
