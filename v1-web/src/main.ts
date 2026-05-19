@@ -24,6 +24,14 @@ const assets = {
 const TILE = 30;
 const PLAYER_RADIUS = 18;
 const SOLID_TILE_IDS = new Set([0, 1, 3]);
+const PLAYER_SPAWNS: [Vec, Vec] = [
+  { x: 720, y: 720 },
+  { x: 2100, y: 900 }
+];
+const RUNE_SPAWNS: [Rune, Rune] = [
+  { type: "armor", position: { x: 1350, y: 900 }, ttl: 999 },
+  { type: "speed", position: { x: 1680, y: 900 }, ttl: 999 }
+];
 const viewportGap = 8;
 let lastTime = performance.now();
 
@@ -130,6 +138,7 @@ void boot();
 
 async function boot(): Promise<void> {
   map = await loadMap("/The_Game/The_Game/Maps/mapa.txt");
+  resetRound();
   requestAnimationFrame(frame);
 }
 
@@ -264,19 +273,20 @@ function applyRune(player: Player, type: RuneType): void {
 }
 
 function spawnRune(): void {
+  const preferred = {
+    x: 120 + Math.random() * Math.min(900, mapWidth * TILE - 240),
+    y: 120 + Math.random() * Math.min(620, mapHeight * TILE - 240)
+  };
   runes.push({
     type: Math.random() > 0.5 ? "armor" : "speed",
-    position: {
-      x: 120 + Math.random() * Math.min(900, mapWidth * TILE - 240),
-      y: 120 + Math.random() * Math.min(620, mapHeight * TILE - 240)
-    },
+    position: findOpenPosition(preferred, PLAYER_RADIUS),
     ttl: 12
   });
 }
 
 function resetRound(): void {
-  players[0]!.position = { x: 220, y: 220 };
-  players[1]!.position = { x: 580, y: 360 };
+  players[0]!.position = findOpenPosition(PLAYER_SPAWNS[0]);
+  players[1]!.position = findOpenPosition(PLAYER_SPAWNS[1]);
   for (const player of players) {
     player.hp = 100;
     player.armor = 0;
@@ -284,10 +294,10 @@ function resetRound(): void {
     player.shootCooldown = 0;
   }
   bullets = [];
-  runes = [
-    { type: "armor", position: { x: 400, y: 260 }, ttl: 999 },
-    { type: "speed", position: { x: 760, y: 460 }, ttl: 999 }
-  ];
+  runes = RUNE_SPAWNS.map((rune) => ({
+    ...rune,
+    position: findOpenPosition(rune.position, PLAYER_RADIUS)
+  }));
   runeTimer = 4;
   winnerId = null;
   roundState = "countdown";
@@ -317,6 +327,29 @@ function moveWithCollision(position: Vec, delta: Vec): Vec {
     y: clamp(afterX.y + delta.y, PLAYER_RADIUS, mapMax.y)
   };
   return circleHitsSolid(nextY, PLAYER_RADIUS) ? afterX : nextY;
+}
+
+function findOpenPosition(preferred: Vec, clearance = PLAYER_RADIUS + TILE): Vec {
+  const clamped = {
+    x: clamp(preferred.x, PLAYER_RADIUS, mapWidth * TILE - PLAYER_RADIUS),
+    y: clamp(preferred.y, PLAYER_RADIUS, mapHeight * TILE - PLAYER_RADIUS)
+  };
+  if (!circleHitsSolid(clamped, clearance)) return clamped;
+
+  for (let radius = TILE; radius < Math.max(mapWidth, mapHeight) * TILE; radius += TILE) {
+    for (let dy = -radius; dy <= radius; dy += TILE) {
+      for (let dx = -radius; dx <= radius; dx += TILE) {
+        if (Math.abs(dx) !== radius && Math.abs(dy) !== radius) continue;
+        const candidate = {
+          x: clamp(clamped.x + dx, PLAYER_RADIUS, mapWidth * TILE - PLAYER_RADIUS),
+          y: clamp(clamped.y + dy, PLAYER_RADIUS, mapHeight * TILE - PLAYER_RADIUS)
+        };
+        if (!circleHitsSolid(candidate, clearance)) return candidate;
+      }
+    }
+  }
+
+  return clamped;
 }
 
 function circleHitsSolid(center: Vec, radius: number): boolean {

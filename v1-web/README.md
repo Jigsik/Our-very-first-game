@@ -56,3 +56,5 @@ Solid in v1:
 - 3: wall/brick
 
 Water and crop are intentionally not solid yet. They can become hazards or hiding mechanics in later issues.
+
+Player and initial rune spawns are normalized through a nearest-open-position check so they do not start inside solid tiles or tiny blocked pockets.
