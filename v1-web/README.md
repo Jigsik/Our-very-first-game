@@ -1,0 +1,45 @@
+# v1 Web
+
+Active implementation path for the first playable reboot. The old code remains in the repository as the archive; this folder is where the new browser-based version should grow.
+
+## Current Features
+
+- TypeScript game loop.
+- Canvas renderer.
+- Two local players.
+- Split-screen cameras.
+- Shooting, HP, death, and restart.
+- Armor and speed runes.
+- Old map parsing from `The_Game/The_Game/Maps/mapa.txt`.
+- Old tileset and sprite assets loaded from the repository without duplicating binaries.
+
+## Run
+
+```bash
+cd v1-web
+npm install
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:5177/v1-web/
+```
+
+## Controls
+
+- P1: WASD move, Left Shift sprint, Space shoot.
+- P2: Arrow keys move, Right Shift sprint, slash shoot.
+- Restart after a win: R.
+
+## Verification
+
+```bash
+npm run check
+npm run build
+npm run dev
+curl -fsS http://localhost:5177/v1-web/
+```
+
+Visual screenshot verification is tracked separately because Playwright Chromium is not installed in the current environment.

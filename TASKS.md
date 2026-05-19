@@ -23,6 +23,7 @@ This file mirrors the first GitHub issues and keeps the intended order visible i
 
 ## Phase 3 - Playable v0
 
+- [x] Promote the web spike into `v1-web/` as the active implementation path.
 - [ ] Two local players with separate inputs.
 - [ ] One arena map with collisions.
 - [ ] Shooting, hit detection, health, death, and restart.

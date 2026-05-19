@@ -49,6 +49,8 @@ Use this repository as the canon archive for rules, assets, and history. Before 
 
 Pick the path by friction: how quickly an agent can implement, run, screenshot-test, and iterate on a playable slice.
 
+Current v1 implementation path: `v1-web/`.
+
 ## Definition Of v1
 
 A good first version is deliberately small:
