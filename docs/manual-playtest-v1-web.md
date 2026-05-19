@@ -25,17 +25,23 @@ http://localhost:5177/v1-web/
 - Countdown appears, then the round starts.
 - P1 moves with WASD and sprints with Left Shift.
 - P2 moves with arrow keys and sprints with Right Shift.
+- Sprint is visible as light dust/trails; the speed rune feels stronger and temporarily overrides sprint.
 - Both players start in open space.
 - Stone, stump, and brick tiles block movement.
 - Players can move through grass, sand, crop, water, and flag tiles.
 - P1 shoots with Space.
 - P2 shoots with slash.
+- Shooting produces recoil, muzzle flash, and a small camera kick.
 - Bullets disappear on solid tiles.
+- Bullet impacts produce visible sparks.
 - Bullets damage the other player.
+- Hits flash the target and show damage or block feedback.
 - Armor rune adds armor and removes active speed.
 - Speed rune increases speed and removes active armor.
+- Rune pickups pulse and burst so the pickup event is obvious.
 - A player wins when the other reaches 0 HP.
 - Score increments for the winner.
+- The win moment produces a short burst effect.
 - Pressing R after a win restarts the round and keeps score.
 - The arena feels small enough that players can find each other quickly.
 

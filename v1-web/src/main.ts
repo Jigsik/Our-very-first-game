@@ -31,14 +31,17 @@ const TILE_SAND = 5;
 const TILE_WATER = 6;
 const TILE_FLAG = 7;
 const PLAYER_RADIUS = 18;
+const BASE_PLAYER_SPEED = 170;
+const SPRINT_MULTIPLIER = 1.25;
+const SPEED_RUNE_MULTIPLIER = 1.55;
 const SOLID_TILE_IDS = new Set([TILE_STONE, TILE_STUMP, TILE_BRICK]);
 const PLAYER_SPAWNS: [Vec, Vec] = [
   { x: 210, y: 420 },
   { x: 1110, y: 420 }
 ];
 const RUNE_SPAWNS: [Rune, Rune] = [
-  { type: "armor", position: { x: 660, y: 420 }, ttl: 999 },
-  { type: "speed", position: { x: 660, y: 210 }, ttl: 999 }
+  { type: "armor", position: { x: 660, y: 420 }, ttl: 999, pulseOffset: 0 },
+  { type: "speed", position: { x: 660, y: 210 }, ttl: 999, pulseOffset: 1.7 }
 ];
 const RUNE_SPAWN_POOL: Vec[] = [
   { x: 660, y: 420 },
@@ -62,6 +65,11 @@ type Player = {
   armor: number;
   speedUntil: number;
   shootCooldown: number;
+  animationTime: number;
+  hitFlash: number;
+  pickupFlash: number;
+  recoil: number;
+  isSprinting: boolean;
   controls: {
     up: string;
     down: string;
@@ -77,12 +85,33 @@ type Bullet = {
   position: Vec;
   direction: Vec;
   ttl: number;
+  age: number;
 };
 
 type Rune = {
   type: RuneType;
   position: Vec;
   ttl: number;
+  pulseOffset: number;
+};
+
+type Particle = {
+  position: Vec;
+  velocity: Vec;
+  color: string;
+  radius: number;
+  ttl: number;
+  age: number;
+  gravity?: number;
+};
+
+type FloatingText = {
+  text: string;
+  position: Vec;
+  velocity: Vec;
+  color: string;
+  ttl: number;
+  age: number;
 };
 
 const players: Player[] = [
@@ -96,6 +125,11 @@ const players: Player[] = [
     armor: 0,
     speedUntil: 0,
     shootCooldown: 0,
+    animationTime: 0,
+    hitFlash: 0,
+    pickupFlash: 0,
+    recoil: 0,
+    isSprinting: false,
     controls: {
       up: "KeyW",
       down: "KeyS",
@@ -115,6 +149,11 @@ const players: Player[] = [
     armor: 0,
     speedUntil: 0,
     shootCooldown: 0,
+    animationTime: 0,
+    hitFlash: 0,
+    pickupFlash: 0,
+    recoil: 0,
+    isSprinting: false,
     controls: {
       up: "ArrowUp",
       down: "ArrowDown",
@@ -128,9 +167,11 @@ const players: Player[] = [
 
 let bullets: Bullet[] = [];
 let runes: Rune[] = [
-  { type: "armor", position: { x: 400, y: 260 }, ttl: 999 },
-  { type: "speed", position: { x: 760, y: 460 }, ttl: 999 }
+  { type: "armor", position: { x: 400, y: 260 }, ttl: 999, pulseOffset: 0.4 },
+  { type: "speed", position: { x: 760, y: 460 }, ttl: 999, pulseOffset: 2.1 }
 ];
+let particles: Particle[] = [];
+let floatingTexts: FloatingText[] = [];
 let runeTimer = 4;
 let map: number[][] = [];
 let mapWidth = 44;
@@ -138,6 +179,7 @@ let mapHeight = 28;
 let roundState: RoundState = "countdown";
 let roundTimer = 3;
 let winnerId: string | null = null;
+let screenShake = 0;
 const scores: Record<string, number> = { P1: 0, P2: 0 };
 
 window.addEventListener("keydown", (event) => {
@@ -170,6 +212,8 @@ function frame(now: number): void {
 }
 
 function update(dt: number): void {
+  updateEffects(dt);
+
   if (roundState === "countdown") {
     roundTimer -= dt;
     if (roundTimer <= 0) {
@@ -193,8 +237,10 @@ function update(dt: number): void {
   for (const bullet of bullets) {
     bullet.position.x += bullet.direction.x * 420 * dt;
     bullet.position.y += bullet.direction.y * 420 * dt;
+    bullet.age += dt;
     bullet.ttl -= dt;
     if (isSolidAt(bullet.position)) {
+      spawnImpact(bullet.position, "#f6d36b", 9);
       bullet.ttl = 0;
     }
   }
@@ -203,7 +249,8 @@ function update(dt: number): void {
     for (const player of players) {
       if (player.id === bullet.owner || player.hp <= 0) continue;
       if (distance(player.position, bullet.position) < 24) {
-        applyDamage(player, 20);
+        const result = applyDamage(player, 20);
+        spawnHitFeedback(player, result.damage, result.blocked);
         bullet.ttl = 0;
       }
     }
@@ -222,6 +269,7 @@ function update(dt: number): void {
     for (const player of players) {
       if (distance(player.position, rune.position) < 32) {
         applyRune(player, rune.type);
+        spawnRunePickup(player, rune.type);
         rune.ttl = 0;
       }
     }
@@ -246,9 +294,13 @@ function updatePlayer(player: Player, dt: number): void {
   };
 
   const normalized = normalize(input);
-  const baseSpeed = nowSeconds() < player.speedUntil ? 250 : 170;
-  const sprint = keys.has(player.controls.sprint) ? 1.35 : 1;
-  player.velocity = { x: normalized.x * baseSpeed * sprint, y: normalized.y * baseSpeed * sprint };
+  const hasSpeedRune = nowSeconds() < player.speedUntil;
+  player.isSprinting = !hasSpeedRune && keys.has(player.controls.sprint) && (normalized.x !== 0 || normalized.y !== 0);
+  const movementMultiplier = hasSpeedRune ? SPEED_RUNE_MULTIPLIER : player.isSprinting ? SPRINT_MULTIPLIER : 1;
+  player.velocity = {
+    x: normalized.x * BASE_PLAYER_SPEED * movementMultiplier,
+    y: normalized.y * BASE_PLAYER_SPEED * movementMultiplier
+  };
   player.position = moveWithCollision(player.position, {
     x: player.velocity.x * dt,
     y: player.velocity.y * dt
@@ -256,27 +308,46 @@ function updatePlayer(player: Player, dt: number): void {
 
   if (normalized.x !== 0 || normalized.y !== 0) {
     player.direction = normalized;
+    player.animationTime += dt * (hasSpeedRune ? 15 : player.isSprinting ? 12 : 8);
+    if ((hasSpeedRune || player.isSprinting) && Math.random() < dt * 18) {
+      spawnDust(player.position, hasSpeedRune ? "#b6f56d" : "#d8c783", player.direction);
+    }
+  } else {
+    player.animationTime += dt * 2.4;
   }
+
+  player.hitFlash = Math.max(0, player.hitFlash - dt);
+  player.pickupFlash = Math.max(0, player.pickupFlash - dt);
+  player.recoil = Math.max(0, player.recoil - dt * 8);
 
   player.shootCooldown = Math.max(0, player.shootCooldown - dt);
   if (keys.has(player.controls.shoot) && player.shootCooldown === 0) {
+    const muzzle = {
+      x: player.position.x + player.direction.x * 24,
+      y: player.position.y + player.direction.y * 24
+    };
     bullets.push({
       owner: player.id,
-      position: {
-        x: player.position.x + player.direction.x * 22,
-        y: player.position.y + player.direction.y * 22
-      },
+      position: muzzle,
       direction: player.direction,
-      ttl: 1.6
+      ttl: 1.6,
+      age: 0
     });
+    player.recoil = 1;
+    screenShake = Math.max(screenShake, 1.1);
+    spawnMuzzleFlash(muzzle, player.direction);
     player.shootCooldown = 0.35;
   }
 }
 
-function applyDamage(player: Player, amount: number): void {
+function applyDamage(player: Player, amount: number): { damage: number; blocked: number } {
   const blocked = Math.min(player.armor, amount);
   player.armor -= blocked;
-  player.hp = Math.max(0, player.hp - (amount - blocked));
+  const damage = amount - blocked;
+  player.hp = Math.max(0, player.hp - damage);
+  player.hitFlash = 0.24;
+  screenShake = Math.max(screenShake, damage > 0 ? 5 : 2.5);
+  return { damage, blocked };
 }
 
 function applyRune(player: Player, type: RuneType): void {
@@ -287,6 +358,7 @@ function applyRune(player: Player, type: RuneType): void {
     player.speedUntil = nowSeconds() + 10;
     player.armor = 0;
   }
+  player.pickupFlash = 0.5;
 }
 
 function spawnRune(): void {
@@ -294,7 +366,8 @@ function spawnRune(): void {
   runes.push({
     type: Math.random() > 0.5 ? "armor" : "speed",
     position: findOpenPosition(preferred, PLAYER_RADIUS),
-    ttl: 12
+    ttl: 12,
+    pulseOffset: Math.random() * Math.PI * 2
   });
 }
 
@@ -372,8 +445,16 @@ function resetRound(): void {
     player.armor = 0;
     player.speedUntil = 0;
     player.shootCooldown = 0;
+    player.animationTime = 0;
+    player.hitFlash = 0;
+    player.pickupFlash = 0;
+    player.recoil = 0;
+    player.isSprinting = false;
   }
   bullets = [];
+  particles = [];
+  floatingTexts = [];
+  screenShake = 0;
   runes = RUNE_SPAWNS.map((rune) => ({
     ...rune,
     position: findOpenPosition(rune.position, PLAYER_RADIUS)
@@ -390,6 +471,138 @@ function finishRoundIfNeeded(): void {
   winnerId = alive[0]!.id;
   scores[winnerId] = (scores[winnerId] ?? 0) + 1;
   roundState = "finished";
+  screenShake = Math.max(screenShake, 7);
+  spawnWinBurst(alive[0]!.position, alive[0]!.color);
+}
+
+function updateEffects(dt: number): void {
+  screenShake = Math.max(0, screenShake - dt * 12);
+
+  for (const particle of particles) {
+    particle.age += dt;
+    particle.position.x += particle.velocity.x * dt;
+    particle.position.y += particle.velocity.y * dt;
+    particle.velocity.y += (particle.gravity ?? 0) * dt;
+    particle.velocity.x *= Math.pow(0.06, dt);
+    particle.velocity.y *= Math.pow(0.18, dt);
+  }
+  particles = particles.filter((particle) => particle.age < particle.ttl);
+
+  for (const floatingText of floatingTexts) {
+    floatingText.age += dt;
+    floatingText.position.x += floatingText.velocity.x * dt;
+    floatingText.position.y += floatingText.velocity.y * dt;
+  }
+  floatingTexts = floatingTexts.filter((floatingText) => floatingText.age < floatingText.ttl);
+}
+
+function spawnDust(position: Vec, color: string, direction: Vec): void {
+  particles.push({
+    position: {
+      x: position.x - direction.x * 13 + (Math.random() - 0.5) * 8,
+      y: position.y - direction.y * 13 + 13 + (Math.random() - 0.5) * 8
+    },
+    velocity: {
+      x: -direction.x * 42 + (Math.random() - 0.5) * 42,
+      y: -direction.y * 42 + (Math.random() - 0.5) * 42
+    },
+    color,
+    radius: 3 + Math.random() * 3,
+    ttl: 0.42,
+    age: 0
+  });
+}
+
+function spawnMuzzleFlash(position: Vec, direction: Vec): void {
+  for (let i = 0; i < 8; i++) {
+    const spread = randomUnitVector();
+    particles.push({
+      position: { ...position },
+      velocity: {
+        x: direction.x * (95 + Math.random() * 90) + spread.x * 60,
+        y: direction.y * (95 + Math.random() * 90) + spread.y * 60
+      },
+      color: i % 2 === 0 ? "#ffe58a" : "#ff9a5a",
+      radius: 2 + Math.random() * 2,
+      ttl: 0.22 + Math.random() * 0.12,
+      age: 0
+    });
+  }
+}
+
+function spawnImpact(position: Vec, color: string, count: number): void {
+  for (let i = 0; i < count; i++) {
+    const direction = randomUnitVector();
+    particles.push({
+      position: { ...position },
+      velocity: {
+        x: direction.x * (70 + Math.random() * 110),
+        y: direction.y * (70 + Math.random() * 110)
+      },
+      color,
+      radius: 2 + Math.random() * 3,
+      ttl: 0.28 + Math.random() * 0.2,
+      age: 0
+    });
+  }
+}
+
+function spawnHitFeedback(player: Player, damage: number, blocked: number): void {
+  const blockedOnly = damage === 0 && blocked > 0;
+  spawnImpact(player.position, blockedOnly ? "#8fd0ff" : "#ff756b", blockedOnly ? 12 : 18);
+  floatingTexts.push({
+    text: blockedOnly ? "BLOCK" : `-${damage}`,
+    position: { x: player.position.x, y: player.position.y - 32 },
+    velocity: { x: (Math.random() - 0.5) * 18, y: -38 },
+    color: blockedOnly ? "#bcecff" : "#ffd1c7",
+    ttl: 0.75,
+    age: 0
+  });
+}
+
+function spawnRunePickup(player: Player, type: RuneType): void {
+  const color = type === "armor" ? "#8fd0ff" : "#b5f56c";
+  for (let i = 0; i < 26; i++) {
+    const direction = randomUnitVector();
+    particles.push({
+      position: { ...player.position },
+      velocity: {
+        x: direction.x * (75 + Math.random() * 90),
+        y: direction.y * (75 + Math.random() * 90)
+      },
+      color,
+      radius: 2 + Math.random() * 3,
+      ttl: 0.45 + Math.random() * 0.24,
+      age: 0
+    });
+  }
+  floatingTexts.push({
+    text: type === "armor" ? "ARMOR" : "SPEED",
+    position: { x: player.position.x, y: player.position.y - 36 },
+    velocity: { x: 0, y: -34 },
+    color,
+    ttl: 0.9,
+    age: 0
+  });
+}
+
+function spawnWinBurst(position: Vec, color: string): void {
+  for (let i = 0; i < 70; i++) {
+    const direction = randomUnitVector();
+    const confettiColor = i % 3 === 0 ? color : i % 3 === 1 ? "#ffe58a" : "#f8f4dc";
+    particles.push({
+      position: { ...position },
+      velocity: {
+        x: direction.x * (90 + Math.random() * 240),
+        y: direction.y * (90 + Math.random() * 240) - 60
+      },
+      color: confettiColor,
+      radius: 2 + Math.random() * 4,
+      ttl: 1.1 + Math.random() * 0.7,
+      age: 0,
+      gravity: 120
+    });
+  }
 }
 
 function moveWithCollision(position: Vec, delta: Vec): Vec {
@@ -509,12 +722,18 @@ function drawViewport(focus: Player, x: number, y: number, width: number, height
   ctx.beginPath();
   ctx.rect(x, y, width, height);
   ctx.clip();
-  ctx.translate(x - camera.x, y - camera.y);
+  const shake = screenShake > 0 ? {
+    x: (Math.random() - 0.5) * screenShake,
+    y: (Math.random() - 0.5) * screenShake
+  } : { x: 0, y: 0 };
+  ctx.translate(x - camera.x + shake.x, y - camera.y + shake.y);
 
   drawMap(camera, width, height);
+  for (const particle of particles) drawParticle(particle);
   for (const rune of runes) drawRune(rune);
   for (const bullet of bullets) drawBullet(bullet);
   for (const player of players) drawPlayer(player);
+  for (const floatingText of floatingTexts) drawFloatingText(floatingText);
 
   ctx.restore();
   ctx.strokeStyle = "#9ca38d";
@@ -542,6 +761,7 @@ function drawMap(camera: Vec, width: number, height: number): void {
         ctx.fillStyle = fallbackTileColor(tileId);
         ctx.fillRect(tx * TILE, ty * TILE, TILE, TILE);
       }
+      drawTileMotion(tileId, tx * TILE, ty * TILE);
     }
   }
 }
@@ -568,10 +788,63 @@ function fallbackTileColor(tileId: number): string {
   }
 }
 
+function drawTileMotion(tileId: number, x: number, y: number): void {
+  const t = nowSeconds();
+  if (tileId === TILE_WATER) {
+    ctx.fillStyle = `rgba(188, 232, 255, ${0.1 + (Math.sin(t * 4 + x * 0.13 + y * 0.07) + 1) * 0.045})`;
+    ctx.fillRect(x + 3, y + 8, TILE - 6, 3);
+    ctx.fillRect(x + 7, y + 18, TILE - 12, 2);
+  }
+  if (tileId === TILE_CROP) {
+    const sway = Math.sin(t * 3 + x * 0.08 + y * 0.11) * 2;
+    ctx.strokeStyle = "rgba(255, 245, 145, 0.28)";
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 3; i++) {
+      const bladeX = x + 8 + i * 7;
+      ctx.beginPath();
+      ctx.moveTo(bladeX, y + 23);
+      ctx.lineTo(bladeX + sway, y + 9);
+      ctx.stroke();
+    }
+  }
+}
+
+function drawSpeedStreaks(player: Player, color: string): void {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.globalAlpha = 0.45;
+  for (let i = -1; i <= 1; i++) {
+    const side = { x: -player.direction.y * i * 8, y: player.direction.x * i * 8 };
+    ctx.beginPath();
+    ctx.moveTo(-player.direction.x * 10 + side.x, -player.direction.y * 10 + side.y);
+    ctx.lineTo(-player.direction.x * 34 + side.x, -player.direction.y * 34 + side.y);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 function drawPlayer(player: Player): void {
+  const speedActive = nowSeconds() < player.speedUntil;
+  const step = Math.sin(player.animationTime);
+  const bob = player.hp > 0 ? Math.abs(step) * (speedActive ? 5 : player.isSprinting ? 4 : 2) : 0;
+  const squash = player.hp > 0 ? 1 + Math.abs(step) * 0.05 : 1;
+  const recoilOffset = player.recoil * 5;
+
   ctx.save();
   ctx.translate(player.position.x, player.position.y);
-  ctx.fillStyle = player.hp <= 0 ? "#555" : player.color;
+  ctx.fillStyle = "rgba(0, 0, 0, 0.28)";
+  ctx.beginPath();
+  ctx.ellipse(0, 14, PLAYER_RADIUS + 4, 7, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  if (speedActive || player.isSprinting) {
+    drawSpeedStreaks(player, speedActive ? "#b6f56d" : "#f1d875");
+  }
+
+  ctx.translate(-player.direction.x * recoilOffset, -player.direction.y * recoilOffset - bob);
+  ctx.scale(squash, 1 / squash);
+  ctx.fillStyle = player.hp <= 0 ? "#555" : player.hitFlash > 0 ? "#fff0c0" : player.color;
   ctx.beginPath();
   ctx.arc(0, 0, PLAYER_RADIUS, 0, Math.PI * 2);
   ctx.fill();
@@ -580,6 +853,14 @@ function drawPlayer(player: Player): void {
   if (image.complete && image.naturalWidth > 0) {
     const row = directionRow(player.direction);
     ctx.drawImage(image, 0, row * 38, 36, 38, -18, -28, 36, 38);
+  }
+
+  if (player.pickupFlash > 0) {
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.75)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0, 0, 28 + (1 - player.pickupFlash) * 16, 0, Math.PI * 2);
+    ctx.stroke();
   }
 
   ctx.strokeStyle = "#101010";
@@ -603,6 +884,10 @@ function drawBullet(bullet: Bullet): void {
   ctx.save();
   ctx.translate(bullet.position.x, bullet.position.y);
   ctx.rotate(Math.atan2(bullet.direction.y, bullet.direction.x));
+  ctx.globalAlpha = 0.45;
+  ctx.fillStyle = "#f9d36b";
+  ctx.fillRect(-22, -2, 18, 4);
+  ctx.globalAlpha = 1;
   const image = assets.bullet;
   if (image.complete && image.naturalWidth > 0) {
     ctx.drawImage(image, -5, -3);
@@ -615,12 +900,52 @@ function drawBullet(bullet: Bullet): void {
 
 function drawRune(rune: Rune): void {
   const image = rune.type === "armor" ? assets.armorRune : assets.speedRune;
+  const pulse = Math.sin(nowSeconds() * 5 + rune.pulseOffset);
+  const scale = 1 + pulse * 0.08;
+  const color = rune.type === "armor" ? "#8fd0ff" : "#b5f56c";
+
+  ctx.save();
+  ctx.translate(rune.position.x, rune.position.y);
+  ctx.globalAlpha = 0.25 + (pulse + 1) * 0.12;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(0, 0, 23 + pulse * 4, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+  ctx.scale(scale, scale);
   if (image.complete && image.naturalWidth > 0) {
-    ctx.drawImage(image, rune.position.x - 15, rune.position.y - 15);
+    ctx.drawImage(image, -15, -15);
   } else {
-    ctx.fillStyle = rune.type === "armor" ? "#8fd0ff" : "#b5f56c";
-    ctx.fillRect(rune.position.x - 12, rune.position.y - 12, 24, 24);
+    ctx.fillStyle = color;
+    ctx.fillRect(-12, -12, 24, 24);
   }
+  ctx.restore();
+}
+
+function drawParticle(particle: Particle): void {
+  const alpha = clamp(1 - particle.age / particle.ttl, 0, 1);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = particle.color;
+  ctx.beginPath();
+  ctx.arc(particle.position.x, particle.position.y, particle.radius * (0.6 + alpha * 0.4), 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawFloatingText(floatingText: FloatingText): void {
+  const alpha = clamp(1 - floatingText.age / floatingText.ttl, 0, 1);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = floatingText.color;
+  ctx.font = "bold 14px Arial";
+  ctx.textAlign = "center";
+  ctx.strokeStyle = "rgba(0, 0, 0, 0.75)";
+  ctx.lineWidth = 3;
+  ctx.strokeText(floatingText.text, floatingText.position.x, floatingText.position.y);
+  ctx.fillText(floatingText.text, floatingText.position.x, floatingText.position.y);
+  ctx.restore();
 }
 
 function drawStatus(player: Player, x: number, y: number, width: number): void {
@@ -669,6 +994,11 @@ function normalize(v: Vec): Vec {
 
 function distance(a: Vec, b: Vec): number {
   return Math.hypot(a.x - b.x, a.y - b.y);
+}
+
+function randomUnitVector(): Vec {
+  const angle = Math.random() * Math.PI * 2;
+  return { x: Math.cos(angle), y: Math.sin(angle) };
 }
 
 function clamp(value: number, min: number, max: number): number {
